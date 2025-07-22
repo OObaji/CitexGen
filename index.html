@@ -42,6 +42,7 @@
         .theme-switch-wrapper {
             display: flex;
             align-items: center;
+            gap: 8px;
         }
         .theme-switch {
             display: inline-block;
@@ -110,10 +111,12 @@
                 <p class="text-md text-gray-600 dark:text-gray-400 mt-2">Create formatted questions for your learning app with ease.</p>
                 <!-- Dark Mode Toggle -->
                 <div class="absolute top-0 right-0 theme-switch-wrapper">
+                     <svg class="w-6 h-6 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
                     <label class="theme-switch" for="checkbox">
                         <input type="checkbox" id="checkbox" />
                         <div class="slider round"></div>
                     </label>
+                    <svg class="w-6 h-6 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
                 </div>
             </header>
 
@@ -191,21 +194,23 @@
             archives: ['The National Archives, Kew', 'Library of Congress, Washington, D.C.', 'Bodleian Libraries, Oxford']
         };
 
+        const baseSources = [
+            { value: 'journal', text: 'Journal Article (2 Authors)' }, { value: 'journal_many', text: 'Journal Article (3+ Authors)' }, { value: 'book_chapter', text: 'Chapter in Edited Book' }, { value: 'website', text: 'Website (Organization)' }, { value: 'youtube', text: 'YouTube Video' }
+        ];
+
+        const bookSources = [
+            { value: 'book_single', text: 'Book (1 Author)' }, { value: 'book_multiple', text: 'Book (2 Authors)' }, { value: 'book_edited_single', text: 'Edited Book (1 Editor)' }, { value: 'book_edited_multiple', text: 'Edited Book (2+ Editors)' }
+        ];
+
         const sourceTypeMap = {
-            apa7: [
-                { value: 'book', text: 'Book (Single Author)' }, { value: 'journal', text: 'Journal Article (2 Authors)' }, { value: 'journal_many', text: 'Journal Article (3+ Authors)' }, { value: 'book_chapter', text: 'Chapter in Edited Book' }, { value: 'website', text: 'Website (Organization)' }, { value: 'youtube', text: 'YouTube Video' }
-            ],
-            mla9: [
-                { value: 'book', text: 'Book (Single Author)' }, { value: 'journal', text: 'Journal Article (2 Authors)' }, { value: 'journal_many', text: 'Journal Article (3+ Authors)' }, { value: 'book_chapter', text: 'Chapter in Edited Book' }, { value: 'website', text: 'Website (Organization)' }, { value: 'youtube', text: 'YouTube Video' }
-            ],
-            harvard: [
-                { value: 'book', text: 'Book (Single Author)' }, { value: 'journal', text: 'Journal Article (2 Authors)' }, { value: 'journal_many', text: 'Journal Article (3+ Authors)' }, { value: 'book_chapter', text: 'Chapter in Edited Book' }, { value: 'website', text: 'Website (Organization)' }, { value: 'youtube', text: 'YouTube Video' }
-            ],
+            apa7: [ ...bookSources, ...baseSources ],
+            mla9: [ ...bookSources, ...baseSources ],
+            harvard: [ ...bookSources, ...baseSources ],
             chicago: [
-                { value: 'book', text: 'Book' }, { value: 'journal', text: 'Journal Article' }, { value: 'book_chapter', text: 'Chapter in Edited Book' }, { value: 'newspaper', text: 'Newspaper Article' }, { value: 'primary_source', text: 'Primary Source (Letter)' }, { value: 'website', text: 'Website' }, { value: 'youtube', text: 'YouTube Video' }
+                ...bookSources, { value: 'journal', text: 'Journal Article' }, { value: 'book_chapter', text: 'Chapter in Edited Book' }, { value: 'newspaper', text: 'Newspaper Article' }, { value: 'primary_source', text: 'Primary Source (Letter)' }, { value: 'website', text: 'Website' }, { value: 'youtube', text: 'YouTube Video' }
             ],
             mhra: [
-                { value: 'book', text: 'Book' }, { value: 'journal', text: 'Journal Article' }, { value: 'book_chapter', text: 'Chapter in Edited Book' }, { value: 'thesis', text: 'Thesis/Dissertation' }, { value: 'website', text: 'Website' }, { value: 'youtube', text: 'YouTube Video' }
+                ...bookSources, { value: 'journal', text: 'Journal Article' }, { value: 'book_chapter', text: 'Chapter in Edited Book' }, { value: 'thesis', text: 'Thesis/Dissertation' }, { value: 'website', text: 'Website' }, { value: 'youtube', text: 'YouTube Video' }
             ]
         };
 
@@ -251,11 +256,11 @@
             let questionData = {};
             
             const generatorMap = {
-                'apa7-book': generateApaBook, 'apa7-journal': generateApaJournal, 'apa7-journal_many': generateApaJournalMultipleAuthors, 'apa7-website': generateApaWebsite, 'apa7-book_chapter': generateApaBookChapter, 'apa7-youtube': generateApaYouTube,
-                'mla9-book': generateMlaBook, 'mla9-journal': generateMlaJournal, 'mla9-journal_many': generateMlaJournalMultipleAuthors, 'mla9-book_chapter': generateMlaBookChapter, 'mla9-youtube': generateMlaYouTube, 'mla9-website': generateMlaWebsite,
-                'harvard-book': generateHarvardBook, 'harvard-journal': generateHarvardJournal, 'harvard-journal_many': generateHarvardJournalMultipleAuthors, 'harvard-website': generateHarvardWebsite, 'harvard-book_chapter': generateHarvardBookChapter, 'harvard-youtube': generateHarvardYouTube,
-                'chicago-book': generateChicagoBook, 'chicago-journal': generateChicagoJournal, 'chicago-journal_many': generateChicagoJournalMultipleAuthors, 'chicago-website': generateChicagoWebsite, 'chicago-book_chapter': generateChicagoBookChapter, 'chicago-newspaper': generateChicagoNewspaper, 'chicago-primary_source': generateChicagoPrimarySource, 'chicago-youtube': generateChicagoYouTube,
-                'mhra-book': generateMhraBook, 'mhra-journal': generateMhraJournal, 'mhra-journal_many': generateMhraJournalMultipleAuthors, 'mhra-website': generateMhraWebsite, 'mhra-book_chapter': generateMhraBookChapter, 'mhra-thesis': generateMhraThesis, 'mhra-youtube': generateMhraYouTube,
+                'apa7-book_single': () => generateApaBook(1), 'apa7-book_multiple': () => generateApaBook(2), 'apa7-book_edited_single': () => generateApaEditedBook(1), 'apa7-book_edited_multiple': () => generateApaEditedBook(2), 'apa7-journal': generateApaJournal, 'apa7-journal_many': generateApaJournalMultipleAuthors, 'apa7-website': generateApaWebsite, 'apa7-book_chapter': generateApaBookChapter, 'apa7-youtube': generateApaYouTube,
+                'mla9-book_single': () => generateMlaBook(1), 'mla9-book_multiple': () => generateMlaBook(2), 'mla9-book_edited_single': () => generateMlaEditedBook(1), 'mla9-book_edited_multiple': () => generateMlaEditedBook(2), 'mla9-journal': generateMlaJournal, 'mla9-journal_many': generateMlaJournalMultipleAuthors, 'mla9-book_chapter': generateMlaBookChapter, 'mla9-youtube': generateMlaYouTube, 'mla9-website': generateMlaWebsite,
+                'harvard-book_single': () => generateHarvardBook(1), 'harvard-book_multiple': () => generateHarvardBook(2), 'harvard-book_edited_single': () => generateHarvardEditedBook(1), 'harvard-book_edited_multiple': () => generateHarvardEditedBook(2), 'harvard-journal': generateHarvardJournal, 'harvard-journal_many': generateHarvardJournalMultipleAuthors, 'harvard-website': generateHarvardWebsite, 'harvard-book_chapter': generateHarvardBookChapter, 'harvard-youtube': generateHarvardYouTube,
+                'chicago-book_single': () => generateChicagoBook(1), 'chicago-book_multiple': () => generateChicagoBook(2), 'chicago-book_edited_single': () => generateChicagoEditedBook(1), 'chicago-book_edited_multiple': () => generateChicagoEditedBook(2), 'chicago-journal': generateChicagoJournal, 'chicago-journal_many': generateChicagoJournalMultipleAuthors, 'chicago-website': generateChicagoWebsite, 'chicago-book_chapter': generateChicagoBookChapter, 'chicago-newspaper': generateChicagoNewspaper, 'chicago-primary_source': generateChicagoPrimarySource, 'chicago-youtube': generateChicagoYouTube,
+                'mhra-book_single': () => generateMhraBook(1), 'mhra-book_multiple': () => generateMhraBook(2), 'mhra-book_edited_single': () => generateMhraEditedBook(1), 'mhra-book_edited_multiple': () => generateMhraEditedBook(2), 'mhra-journal': generateMhraJournal, 'mhra-journal_many': generateMhraJournalMultipleAuthors, 'mhra-website': generateMhraWebsite, 'mhra-book_chapter': generateMhraBookChapter, 'mhra-thesis': generateMhraThesis, 'mhra-youtube': generateMhraYouTube,
             };
 
             const generatorKey = `${citationStyle}-${sourceType}`;
@@ -305,20 +310,42 @@
         }
 
         // --- APA 7 Generators ---
-        function generateApaBook() {
-            const author = getRandomItem(data.authors);
+        function generateApaBook(numAuthors = 1) {
+            const authors = [];
+            while(authors.length < numAuthors) { const author = getRandomItem(data.authors); if (!authors.find(a => a.last === author.last)) authors.push(author); }
+            const authorList = authors.map(a => `${a.last}, ${a.first.charAt(0)}.`);
+            const authorString = authorList.length > 1 ? authorList.slice(0, -1).join(', ') + ', & ' + authorList.slice(-1) : authorList[0];
             const title = getRandomItem(data.bookTitles);
             const publisher = getRandomItem(data.publishers);
             const year = new Date().getFullYear() - Math.floor(Math.random() * 5);
-            const scenario = `In ${year}, sociologist ${author.first} ${author.last} released the work, <i>${title}</i>, through the publisher ${publisher}.`;
+            const scenario = `In ${year}, ${authors.map(a => `${a.first} ${a.last}`).join(' & ')} released the work, <i>${title}</i>, through the publisher ${publisher}.`;
             const formattedTitle = `<i>${title}</i>`;
             
             const components = {
-                correct: [ `${author.last}, ${author.first.charAt(0)}.`, `(${year}).`, `${formattedTitle}.`, `${publisher}.` ],
-                distractors: [ `${author.last}, ${author.first}.`, `"${title}"`, `in press`, `${publisher}, ${year}.` ]
+                correct: [ `${authorString}.`, `(${year}).`, `${formattedTitle}.`, `${publisher}.` ],
+                distractors: [ `${authors.map(a => `${a.last}, ${a.first}`).join(' & ')}.`, `"${title}"`, `in press`, `${publisher}, ${year}.` ]
             };
             
-            return { title: '01 - APA 7 - Book - Single Author', scenario, fullReference: components.correct.join(' '), components, hint: 'For a book reference in APA 7, the title of the book is italicized and written in sentence case.', originalTitle: title };
+            return { title: `01 - APA 7 - Book - ${numAuthors} Author(s)`, scenario, fullReference: components.correct.join(' '), components, hint: 'For a book reference in APA 7, the title of the book is italicized and written in sentence case.', originalTitle: title };
+        }
+        function generateApaEditedBook(numEditors = 1) {
+            const editors = [];
+            while(editors.length < numEditors) { const editor = getRandomItem(data.editors); if (!editors.find(e => e.last === editor.last)) editors.push(editor); }
+            const editorList = editors.map(e => `${e.last}, ${e.first.charAt(0)}.`);
+            const editorString = editorList.length > 1 ? editorList.slice(0, -1).join(', ') + ', & ' + editorList.slice(-1) : editorList[0];
+            const title = getRandomItem(data.bookTitles);
+            const publisher = getRandomItem(data.publishers);
+            const year = new Date().getFullYear() - Math.floor(Math.random() * 5);
+            const scenario = `You are citing an entire edited book titled <i>${title}</i>, edited by ${editors.map(e => `${e.first} ${e.last}`).join(' & ')}. It was published by ${publisher} in ${year}.`;
+            const formattedTitle = `<i>${title}</i>`;
+            const edLabel = numEditors > 1 ? '(Eds.).' : '(Ed.).';
+            
+            const components = {
+                correct: [ `${editorString} ${edLabel}`, `(${year}).`, `${formattedTitle}.`, `${publisher}.` ],
+                distractors: [ `${editorString} (ed.).`, `(Editors).`, `"${title}."`, `Published by ${publisher}` ]
+            };
+            
+            return { title: `01a - APA 7 - Edited Book - ${numEditors} Editor(s)`, scenario, fullReference: components.correct.join(' '), components, hint: 'For an edited book, the editor\'s name is followed by (Ed.) for one editor or (Eds.) for multiple editors.', originalTitle: title };
         }
         function generateApaJournal() { return generateApaJournalMultipleAuthors(2); }
         function generateApaJournalMultipleAuthors(numAuthors = 0) {
@@ -391,18 +418,45 @@
         }
 
         // --- MLA 9 Generators ---
-        function generateMlaBook() {
-            const author = getRandomItem(data.authors);
+        function generateMlaBook(numAuthors = 1) {
+            const authors = [];
+            while(authors.length < numAuthors) { const author = getRandomItem(data.authors); if (!authors.find(a => a.last === author.last)) authors.push(author); }
+            let authorString;
+            if (numAuthors === 1) {
+                authorString = `${authors[0].last}, ${authors[0].first}`;
+            } else {
+                authorString = `${authors[0].last}, ${authors[0].first}, and ${authors[1].first} ${authors[1].last}`;
+            }
             const title = getRandomItem(data.bookTitles);
             const publisher = getRandomItem(data.publishers);
             const year = new Date().getFullYear() - Math.floor(Math.random() * 5);
             const formattedTitle = `<i>${title}</i>`;
             
             const components = {
-                correct: [ `${author.last}, ${author.first}.`, `${formattedTitle}.`, `${publisher},`, `${year}.` ],
-                distractors: [ `${author.last}, ${author.first.charAt(0)}.`, `(${year}).`, `"${title}."`, `Published by ${publisher}` ]
+                correct: [ `${authorString}.`, `${formattedTitle}.`, `${publisher},`, `${year}.` ],
+                distractors: [ `${authors[0].last}, ${authors[0].first.charAt(0)}.`, `(${year}).`, `"${title}."`, `Published by ${publisher}` ]
             };
-            return { title: '07 - MLA 9 - Book - Single Author', scenario: `You need to create a reference for the book <i>${title}</i>, written by ${author.first} ${author.last}. It was published in ${year} by the publisher ${publisher}.`, fullReference: components.correct.join(' '), components, hint: 'MLA style uses the author\'s full name (Last Name, First Name) and places the publication year at the very end of the citation. The book title is italicized.', originalTitle: title };
+            return { title: `07 - MLA 9 - Book - ${numAuthors} Author(s)`, scenario: `You need to create a reference for the book <i>${title}</i>, written by ${authors.map(a => `${a.first} ${a.last}`).join(' and ')}. It was published in ${year} by the publisher ${publisher}.`, fullReference: components.correct.join(' '), components, hint: 'MLA style uses the author\'s full name and places the publication year at the very end. The book title is italicized.', originalTitle: title };
+        }
+        function generateMlaEditedBook(numEditors = 1) {
+            const editors = [];
+            while(editors.length < numEditors) { const editor = getRandomItem(data.editors); if (!editors.find(e => e.last === editor.last)) editors.push(editor); }
+            let editorString;
+            if (numEditors === 1) {
+                editorString = `${editors[0].last}, ${editors[0].first}, editor.`;
+            } else {
+                editorString = `${editors[0].last}, ${editors[0].first}, and ${editors[1].first} ${editors[1].last}, editors.`;
+            }
+            const title = getRandomItem(data.bookTitles);
+            const publisher = getRandomItem(data.publishers);
+            const year = new Date().getFullYear() - Math.floor(Math.random() * 5);
+            const formattedTitle = `<i>${title}</i>`;
+            
+            const components = {
+                correct: [ `${editorString}`, `${formattedTitle}.`, `${publisher},`, `${year}.` ],
+                distractors: [ `${editors.map(e => `${e.last}, ${e.first}`).join(' and ')} (Eds.).`, `"${title}."`, `(Editors)`, `${publisher}, ${year}` ]
+            };
+            return { title: `07a - MLA 9 - Edited Book - ${numEditors} Editor(s)`, scenario: `You are citing an entire edited book, <i>${title}</i>, with ${editors.map(e => `${e.first} ${e.last}`).join(' and ')} as the editor(s). It was published in ${year}.`, fullReference: components.correct.join(' '), components, hint: 'For an edited book in MLA, list the editor(s) name followed by the label "editor" or "editors".', originalTitle: title };
         }
         function generateMlaJournal() { return generateMlaJournalMultipleAuthors(2); }
         function generateMlaJournalMultipleAuthors(numAuthors = 0) {
@@ -476,8 +530,11 @@
         }
 
         // --- Harvard Generators ---
-        function generateHarvardBook() {
-            const author = getRandomItem(data.authors);
+        function generateHarvardBook(numAuthors = 1) {
+            const authors = [];
+            while(authors.length < numAuthors) { const author = getRandomItem(data.authors); if (!authors.find(a => a.last === author.last)) authors.push(author); }
+            const authorList = authors.map(a => `${a.last}, ${a.first.charAt(0)}.`);
+            const authorString = authorList.join(' and ');
             const title = getRandomItem(data.bookTitles);
             const publisher = getRandomItem(data.publishers);
             const location = getRandomItem(data.locations);
@@ -485,10 +542,28 @@
             const formattedTitle = `<i>${title}</i>`;
 
             const components = {
-                correct: [ `${author.last}, ${author.first.charAt(0)}.`, `(${year})`, `${formattedTitle}.`, `${location}: ${publisher}.` ],
-                distractors: [ `${author.last}, ${author.first}.`, `${year},`, `'${title}'.`, `${publisher}, ${location}.` ]
+                correct: [ `${authorString}.`, `(${year})`, `${formattedTitle}.`, `${location}: ${publisher}.` ],
+                distractors: [ `${authors.map(a => `${a.last}, ${a.first}`).join(' and ')}.`, `${year},`, `'${title}'.`, `${publisher}, ${location}.` ]
             };
-            return { title: '12 - Harvard - Book - Single Author', scenario: `You are referencing a book from your reading list: <i>${title}</i> by ${author.first} ${author.last}, published in ${location} by ${publisher} in ${year}.`, fullReference: components.correct.join(' '), components, hint: 'In Harvard style, the year is in parentheses after the author\'s name. The book title is italicized.', originalTitle: title };
+            return { title: `12 - Harvard - Book - ${numAuthors} Author(s)`, scenario: `You are referencing a book from your reading list: <i>${title}</i> by ${authors.map(a => `${a.first} ${a.last}`).join(' and ')}, published in ${location} by ${publisher} in ${year}.`, fullReference: components.correct.join(' '), components, hint: 'In Harvard style, the year is in parentheses after the author\'s name. The book title is italicized.', originalTitle: title };
+        }
+        function generateHarvardEditedBook(numEditors = 1) {
+            const editors = [];
+            while(editors.length < numEditors) { const editor = getRandomItem(data.editors); if (!editors.find(e => e.last === editor.last)) editors.push(editor); }
+            const editorList = editors.map(e => `${e.last}, ${e.first.charAt(0)}.`);
+            const editorString = editorList.join(' and ');
+            const title = getRandomItem(data.bookTitles);
+            const publisher = getRandomItem(data.publishers);
+            const location = getRandomItem(data.locations);
+            const year = new Date().getFullYear() - Math.floor(Math.random() * 5);
+            const formattedTitle = `<i>${title}</i>`;
+            const edLabel = numEditors > 1 ? '(eds.)' : '(ed.)';
+
+            const components = {
+                correct: [ `${editorString} ${edLabel}`, `(${year})`, `${formattedTitle}.`, `${location}: ${publisher}.` ],
+                distractors: [ `${editorString} (Editor)`, `${year}`, `"${title}."`, `${publisher}.` ]
+            };
+            return { title: `12a - Harvard - Edited Book - ${numEditors} Editor(s)`, scenario: `You are citing an entire edited book, <i>${title}</i>, edited by ${editors.map(e => `${e.first} ${e.last}`).join(' and ')}, published in ${year}.`, fullReference: components.correct.join(' '), components, hint: 'For an entire edited book in Harvard style, the editor\'s name is followed by (ed.) or (eds.).', originalTitle: title };
         }
         function generateHarvardJournal() { return generateHarvardJournalMultipleAuthors(2); }
         function generateHarvardJournalMultipleAuthors(numAuthors = 0) {
@@ -565,8 +640,11 @@
         }
 
         // --- Chicago (NB) Generators ---
-        function generateChicagoBook() {
-            const author = getRandomItem(data.authors);
+        function generateChicagoBook(numAuthors = 1) {
+            const authors = [];
+            while(authors.length < numAuthors) { const author = getRandomItem(data.authors); if (!authors.find(a => a.last === author.last)) authors.push(author); }
+            const authorList = authors.map((a, i) => i === 0 ? `${a.last}, ${a.first}` : `${a.first} ${a.last}`);
+            const authorString = authorList.join(', and ');
             const title = getRandomItem(data.bookTitles);
             const publisher = getRandomItem(data.publishers);
             const location = getRandomItem(data.locations);
@@ -574,10 +652,28 @@
             const formattedTitle = `<i>${title}</i>`;
 
             const components = {
-                correct: [ `${author.last}, ${author.first}.`, `${formattedTitle}.`, `${location}: ${publisher},`, `${year}.` ],
-                distractors: [ `${author.first} ${author.last}.`, `(${year}).`, `"${title}."`, `${publisher} (${location})` ]
+                correct: [ `${authorString}.`, `${formattedTitle}.`, `${location}: ${publisher},`, `${year}.` ],
+                distractors: [ `${authors.map(a => `${a.first} ${a.last}`).join(', ')}.`, `(${year}).`, `"${title}."`, `${publisher} (${location})` ]
             };
-            return { title: '17 - Chicago (NB) - Book', scenario: `For a history paper, you're using <i>${title}</i>, a book by ${author.first} ${author.last} published by ${publisher}.`, fullReference: components.correct.join(' '), components, hint: 'In a Chicago bibliography, the author\'s full name is used (last, first). The book title is italicized.', originalTitle: title };
+            return { title: `17 - Chicago (NB) - Book - ${numAuthors} Author(s)`, scenario: `For a history paper, you're using <i>${title}</i>, a book by ${authors.map(a => `${a.first} ${a.last}`).join(' and ')} published by ${publisher}.`, fullReference: components.correct.join(' '), components, hint: 'In a Chicago bibliography, the author\'s full name is used. The book title is italicized.', originalTitle: title };
+        }
+        function generateChicagoEditedBook(numEditors = 1) {
+            const editors = [];
+            while(editors.length < numEditors) { const editor = getRandomItem(data.editors); if (!editors.find(e => e.last === editor.last)) editors.push(editor); }
+            const editorList = editors.map((e, i) => i === 0 ? `${e.last}, ${e.first}` : `${e.first} ${e.last}`);
+            const editorString = editorList.join(' and ');
+            const title = getRandomItem(data.bookTitles);
+            const publisher = getRandomItem(data.publishers);
+            const location = getRandomItem(data.locations);
+            const year = new Date().getFullYear() - Math.floor(Math.random() * 5);
+            const formattedTitle = `<i>${title}</i>`;
+            const edLabel = numEditors > 1 ? 'eds.' : 'ed.';
+
+            const components = {
+                correct: [ `${editorString}, ${edLabel}`, `${formattedTitle}.`, `${location}: ${publisher},`, `${year}.` ],
+                distractors: [ `${editors.map(e => `${e.first} ${e.last}`).join(', ')}, ${edLabel}`, `"${title}."`, `(Editor).`, `${publisher}, ${year}` ]
+            };
+            return { title: `17a - Chicago (NB) - Edited Book - ${numEditors} Editor(s)`, scenario: `You are citing an entire edited book, <i>${title}</i>, edited by ${editors.map(e => `${e.first} ${e.last}`).join(' and ')}.`, fullReference: components.correct.join(' '), components, hint: 'For an entire edited book in Chicago, list the editor\'s name followed by "ed." or "eds.". The book title is italicized.', originalTitle: title };
         }
         function generateChicagoJournal() { return generateChicagoJournalMultipleAuthors(2); }
         function generateChicagoJournalMultipleAuthors(numAuthors = 0) {
@@ -677,8 +773,10 @@
         }
 
         // --- MHRA Generators ---
-        function generateMhraBook() {
-            const author = getRandomItem(data.authors);
+        function generateMhraBook(numAuthors = 1) {
+            const authors = [];
+            while(authors.length < numAuthors) { const author = getRandomItem(data.authors); if (!authors.find(a => a.last === author.last)) authors.push(author); }
+            const authorString = authors.map(a => `${a.last}, ${a.first}`).join(' and ');
             const title = getRandomItem(data.bookTitles);
             const publisher = getRandomItem(data.publishers);
             const location = getRandomItem(data.locations);
@@ -686,10 +784,27 @@
             const formattedTitle = `<i>${title}</i>`;
             
             const components = {
-                correct: [ `${author.last}, ${author.first},`, `${formattedTitle}`, `(${location}: ${publisher}, ${year})` ],
-                distractors: [ `${author.first} ${author.last},`, `"${title}"`, `${location}: ${publisher}, ${year}` ]
+                correct: [ `${authorString},`, `${formattedTitle}`, `(${location}: ${publisher}, ${year})` ],
+                distractors: [ `${authors.map(a => `${a.first} ${a.last}`).join(' and ')},`, `"${title}"`, `${location}: ${publisher}, ${year}` ]
             };
-            return { title: '22 - MHRA - Book', scenario: `For your humanities dissertation, you are referencing the book <i>${title}</i> by ${author.first} ${author.last}.`, fullReference: components.correct.join(' '), components, hint: 'In MHRA, the publication details (place, publisher, year) are enclosed in parentheses. The book title is italicized.', originalTitle: title };
+            return { title: `22 - MHRA - Book - ${numAuthors} Author(s)`, scenario: `For your humanities dissertation, you are referencing the book <i>${title}</i> by ${authors.map(a => `${a.first} ${a.last}`).join(' and ')}.`, fullReference: components.correct.join(' '), components, hint: 'In MHRA, the publication details (place, publisher, year) are enclosed in parentheses. The book title is italicized.', originalTitle: title };
+        }
+        function generateMhraEditedBook(numEditors = 1) {
+            const editors = [];
+            while(editors.length < numEditors) { const editor = getRandomItem(data.editors); if (!editors.find(e => e.last === editor.last)) editors.push(editor); }
+            const editorString = editors.map(e => `${e.last}, ${e.first}`).join(' and ');
+            const title = getRandomItem(data.bookTitles);
+            const publisher = getRandomItem(data.publishers);
+            const location = getRandomItem(data.locations);
+            const year = new Date().getFullYear() - Math.floor(Math.random() * 5);
+            const formattedTitle = `<i>${title}</i>`;
+            const edLabel = numEditors > 1 ? 'eds,' : 'ed.,';
+            
+            const components = {
+                correct: [ `${editorString}, ${edLabel}`, `${formattedTitle}`, `(${location}: ${publisher}, ${year})` ],
+                distractors: [ `${editorString}, (ed.)`, `"${title}"`, `${location}: ${publisher}, ${year}` ]
+            };
+            return { title: `22a - MHRA - Edited Book - ${numEditors} Editor(s)`, scenario: `You are citing an entire edited book, <i>${title}</i>, edited by ${editors.map(e => `${e.first} ${e.last}`).join(' and ')}.`, fullReference: components.correct.join(' '), components, hint: 'For an entire edited book in MHRA, list the editor\'s name followed by "ed." or "eds.". The book title is italicized.', originalTitle: title };
         }
         function generateMhraJournal() { return generateMhraJournalMultipleAuthors(2); }
         function generateMhraJournalMultipleAuthors(numAuthors = 0) {
@@ -828,8 +943,23 @@
 
             // Dark mode toggle
             const toggle = document.getElementById('checkbox');
+            const html = document.documentElement;
+
+            // Set initial theme based on localStorage or system preference
+            const currentTheme = localStorage.getItem('theme');
+            if (currentTheme === 'dark' || (!currentTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                html.classList.add('dark');
+                toggle.checked = true;
+            }
+
             toggle.addEventListener('change', () => {
-                document.documentElement.classList.toggle('dark');
+                if (toggle.checked) {
+                    html.classList.add('dark');
+                    localStorage.setItem('theme', 'dark');
+                } else {
+                    html.classList.remove('dark');
+                    localStorage.setItem('theme', 'light');
+                }
             });
 
             // Generator controls
