@@ -123,7 +123,14 @@
             <main class="bg-white dark:bg-gray-800 p-6 sm:p-8 rounded-2xl shadow-lg">
                 
                 <!-- Configuration Section -->
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                    <div>
+                        <label for="questionCategory" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Question Category</label>
+                        <select id="questionCategory" class="w-full p-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-lg shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition">
+                            <option value="reference_list">Reference List Entry</option>
+                            <option value="in_text">In-text Citation</option>
+                        </select>
+                    </div>
                     <div>
                         <label for="citationStyle" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Citation Style</label>
                         <select id="citationStyle" class="w-full p-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-lg shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition">
@@ -194,23 +201,24 @@
             archives: ['The National Archives, Kew', 'Library of Congress, Washington, D.C.', 'Bodleian Libraries, Oxford']
         };
 
-        const baseSources = [
-            { value: 'journal', text: 'Journal Article (2 Authors)' }, { value: 'journal_many', text: 'Journal Article (3+ Authors)' }, { value: 'book_chapter', text: 'Chapter in Edited Book' }, { value: 'website', text: 'Website (Organization)' }, { value: 'youtube', text: 'YouTube Video' }
-        ];
+        const referenceListSources = {
+            base: [ { value: 'journal', text: 'Journal Article (2 Authors)' }, { value: 'journal_many', text: 'Journal Article (3+ Authors)' }, { value: 'book_chapter', text: 'Chapter in Edited Book' }, { value: 'website', text: 'Website (Organization)' }, { value: 'youtube', text: 'YouTube Video' } ],
+            book: [ { value: 'book_single', text: 'Book (1 Author)' }, { value: 'book_multiple', text: 'Book (2 Authors)' }, { value: 'book_edited_single', text: 'Edited Book (1 Editor)' }, { value: 'book_edited_multiple', text: 'Edited Book (2+ Editors)' } ]
+        };
 
-        const bookSources = [
-            { value: 'book_single', text: 'Book (1 Author)' }, { value: 'book_multiple', text: 'Book (2 Authors)' }, { value: 'book_edited_single', text: 'Edited Book (1 Editor)' }, { value: 'book_edited_multiple', text: 'Edited Book (2+ Editors)' }
+        const inTextSources = [
+            { value: 'in_text_single', text: 'Single Author' }, { value: 'in_text_two', text: 'Two Authors' }, { value: 'in_text_three_plus', text: 'Three or More Authors' }
         ];
 
         const sourceTypeMap = {
-            apa7: [ ...bookSources, ...baseSources ],
-            mla9: [ ...bookSources, ...baseSources ],
-            harvard: [ ...bookSources, ...baseSources ],
+            apa7: [ ...referenceListSources.book, ...referenceListSources.base ],
+            mla9: [ ...referenceListSources.book, ...referenceListSources.base ],
+            harvard: [ ...referenceListSources.book, ...referenceListSources.base ],
             chicago: [
-                ...bookSources, { value: 'journal', text: 'Journal Article' }, { value: 'book_chapter', text: 'Chapter in Edited Book' }, { value: 'newspaper', text: 'Newspaper Article' }, { value: 'primary_source', text: 'Primary Source (Letter)' }, { value: 'website', text: 'Website' }, { value: 'youtube', text: 'YouTube Video' }
+                ...referenceListSources.book, { value: 'journal', text: 'Journal Article' }, { value: 'book_chapter', text: 'Chapter in Edited Book' }, { value: 'newspaper', text: 'Newspaper Article' }, { value: 'primary_source', text: 'Primary Source (Letter)' }, { value: 'website', text: 'Website' }, { value: 'youtube', text: 'YouTube Video' }
             ],
             mhra: [
-                ...bookSources, { value: 'journal', text: 'Journal Article' }, { value: 'book_chapter', text: 'Chapter in Edited Book' }, { value: 'thesis', text: 'Thesis/Dissertation' }, { value: 'website', text: 'Website' }, { value: 'youtube', text: 'YouTube Video' }
+                ...referenceListSources.book, { value: 'journal', text: 'Journal Article' }, { value: 'book_chapter', text: 'Chapter in Edited Book' }, { value: 'thesis', text: 'Thesis/Dissertation' }, { value: 'website', text: 'Website' }, { value: 'youtube', text: 'YouTube Video' }
             ]
         };
 
@@ -227,13 +235,15 @@
         }
 
         function updateSourceTypes() {
+            const category = document.getElementById('questionCategory').value;
             const style = document.getElementById('citationStyle').value;
             const sourceDropdown = document.getElementById('sourceType');
             const currentSourceValue = sourceDropdown.value;
             
             sourceDropdown.innerHTML = '';
             
-            const sources = sourceTypeMap[style];
+            const sources = category === 'in_text' ? inTextSources : sourceTypeMap[style];
+            
             sources.forEach(source => {
                 const option = document.createElement('option');
                 option.value = source.value;
@@ -256,11 +266,11 @@
             let questionData = {};
             
             const generatorMap = {
-                'apa7-book_single': () => generateApaBook(1), 'apa7-book_multiple': () => generateApaBook(2), 'apa7-book_edited_single': () => generateApaEditedBook(1), 'apa7-book_edited_multiple': () => generateApaEditedBook(2), 'apa7-journal': generateApaJournal, 'apa7-journal_many': generateApaJournalMultipleAuthors, 'apa7-website': generateApaWebsite, 'apa7-book_chapter': generateApaBookChapter, 'apa7-youtube': generateApaYouTube,
-                'mla9-book_single': () => generateMlaBook(1), 'mla9-book_multiple': () => generateMlaBook(2), 'mla9-book_edited_single': () => generateMlaEditedBook(1), 'mla9-book_edited_multiple': () => generateMlaEditedBook(2), 'mla9-journal': generateMlaJournal, 'mla9-journal_many': generateMlaJournalMultipleAuthors, 'mla9-book_chapter': generateMlaBookChapter, 'mla9-youtube': generateMlaYouTube, 'mla9-website': generateMlaWebsite,
-                'harvard-book_single': () => generateHarvardBook(1), 'harvard-book_multiple': () => generateHarvardBook(2), 'harvard-book_edited_single': () => generateHarvardEditedBook(1), 'harvard-book_edited_multiple': () => generateHarvardEditedBook(2), 'harvard-journal': generateHarvardJournal, 'harvard-journal_many': generateHarvardJournalMultipleAuthors, 'harvard-website': generateHarvardWebsite, 'harvard-book_chapter': generateHarvardBookChapter, 'harvard-youtube': generateHarvardYouTube,
-                'chicago-book_single': () => generateChicagoBook(1), 'chicago-book_multiple': () => generateChicagoBook(2), 'chicago-book_edited_single': () => generateChicagoEditedBook(1), 'chicago-book_edited_multiple': () => generateChicagoEditedBook(2), 'chicago-journal': generateChicagoJournal, 'chicago-journal_many': generateChicagoJournalMultipleAuthors, 'chicago-website': generateChicagoWebsite, 'chicago-book_chapter': generateChicagoBookChapter, 'chicago-newspaper': generateChicagoNewspaper, 'chicago-primary_source': generateChicagoPrimarySource, 'chicago-youtube': generateChicagoYouTube,
-                'mhra-book_single': () => generateMhraBook(1), 'mhra-book_multiple': () => generateMhraBook(2), 'mhra-book_edited_single': () => generateMhraEditedBook(1), 'mhra-book_edited_multiple': () => generateMhraEditedBook(2), 'mhra-journal': generateMhraJournal, 'mhra-journal_many': generateMhraJournalMultipleAuthors, 'mhra-website': generateMhraWebsite, 'mhra-book_chapter': generateMhraBookChapter, 'mhra-thesis': generateMhraThesis, 'mhra-youtube': generateMhraYouTube,
+                'apa7-book_single': () => generateApaBook(1), 'apa7-book_multiple': () => generateApaBook(2), 'apa7-book_edited_single': () => generateApaEditedBook(1), 'apa7-book_edited_multiple': () => generateApaEditedBook(2), 'apa7-journal': generateApaJournal, 'apa7-journal_many': generateApaJournalMultipleAuthors, 'apa7-website': generateApaWebsite, 'apa7-book_chapter': generateApaBookChapter, 'apa7-youtube': generateApaYouTube, 'apa7-in_text_single': () => generateApaInText(1), 'apa7-in_text_two': () => generateApaInText(2), 'apa7-in_text_three_plus': () => generateApaInText(3),
+                'mla9-book_single': () => generateMlaBook(1), 'mla9-book_multiple': () => generateMlaBook(2), 'mla9-book_edited_single': () => generateMlaEditedBook(1), 'mla9-book_edited_multiple': () => generateMlaEditedBook(2), 'mla9-journal': generateMlaJournal, 'mla9-journal_many': generateMlaJournalMultipleAuthors, 'mla9-book_chapter': generateMlaBookChapter, 'mla9-youtube': generateMlaYouTube, 'mla9-website': generateMlaWebsite, 'mla9-in_text_single': () => generateMlaInText(1), 'mla9-in_text_two': () => generateMlaInText(2), 'mla9-in_text_three_plus': () => generateMlaInText(3),
+                'harvard-book_single': () => generateHarvardBook(1), 'harvard-book_multiple': () => generateHarvardBook(2), 'harvard-book_edited_single': () => generateHarvardEditedBook(1), 'harvard-book_edited_multiple': () => generateHarvardEditedBook(2), 'harvard-journal': generateHarvardJournal, 'harvard-journal_many': generateHarvardJournalMultipleAuthors, 'harvard-website': generateHarvardWebsite, 'harvard-book_chapter': generateHarvardBookChapter, 'harvard-youtube': generateHarvardYouTube, 'harvard-in_text_single': () => generateHarvardInText(1), 'harvard-in_text_two': () => generateHarvardInText(2), 'harvard-in_text_three_plus': () => generateHarvardInText(3),
+                'chicago-book_single': () => generateChicagoBook(1), 'chicago-book_multiple': () => generateChicagoBook(2), 'chicago-book_edited_single': () => generateChicagoEditedBook(1), 'chicago-book_edited_multiple': () => generateChicagoEditedBook(2), 'chicago-journal': generateChicagoJournal, 'chicago-journal_many': generateChicagoJournalMultipleAuthors, 'chicago-website': generateChicagoWebsite, 'chicago-book_chapter': generateChicagoBookChapter, 'chicago-newspaper': generateChicagoNewspaper, 'chicago-primary_source': generateChicagoPrimarySource, 'chicago-youtube': generateChicagoYouTube, 'chicago-in_text_single': () => generateChicagoInText(1), 'chicago-in_text_two': () => generateChicagoInText(2), 'chicago-in_text_three_plus': () => generateChicagoInText(3),
+                'mhra-book_single': () => generateMhraBook(1), 'mhra-book_multiple': () => generateMhraBook(2), 'mhra-book_edited_single': () => generateMhraEditedBook(1), 'mhra-book_edited_multiple': () => generateMhraEditedBook(2), 'mhra-journal': generateMhraJournal, 'mhra-journal_many': generateMhraJournalMultipleAuthors, 'mhra-website': generateMhraWebsite, 'mhra-book_chapter': generateMhraBookChapter, 'mhra-thesis': generateMhraThesis, 'mhra-youtube': generateMhraYouTube, 'mhra-in_text_single': () => generateMhraInText(1), 'mhra-in_text_two': () => generateMhraInText(2), 'mhra-in_text_three_plus': () => generateMhraInText(3),
             };
 
             const generatorKey = `${citationStyle}-${sourceType}`;
@@ -274,10 +284,10 @@
             }
             
             let finalOutput;
-            if (questionType === 'mcq') {
-                finalOutput = convertToMcq(questionData, citationStyle);
+            if (sourceType.startsWith('in_text')) {
+                finalOutput = questionType === 'mcq' ? convertToMcq(questionData) : buildInTextDragAndDrop(questionData);
             } else {
-                finalOutput = buildDragAndDrop(questionData);
+                finalOutput = questionType === 'mcq' ? convertToMcq(questionData) : buildDragAndDrop(questionData);
             }
 
             document.getElementById('htmlOutput').innerHTML = finalOutput.htmlOutput;
@@ -308,6 +318,16 @@
             const html = `<b>Question Title:</b>\n${title}\n\n<b>Scenario:</b>\n${scenario}\n\n<b>Full Correct Reference:</b>\n${fullReference}\n\n<b>Question Parts (Correct Drag Items):</b>\n${draggableItems.join('\n')}\n\n<b>Fixed Parts:</b>\n${fixedPartsString}\n\n<b>Confusing Words (Distractor Drag Items):</b>\n${components.distractors.join('\n')}\n\n<b>Hint:</b>\n${hint}`;
             return { htmlOutput: html, originalTitle: questionData.originalTitle };
         }
+
+        function buildInTextDragAndDrop(questionData) {
+            const { title, scenario, fullReference, components, hint } = questionData;
+            const fixedPartsString = scenario.replace('||', ' || ');
+            const draggableItems = components.correct;
+            
+            const html = `<b>Question Title:</b>\n${title}\n\n<b>Scenario:</b>\n${scenario.replace('||', fullReference)}\n\n<b>Full Correct Reference:</b>\n${fullReference}\n\n<b>Question Parts (Correct Drag Items):</b>\n${draggableItems.join('\n')}\n\n<b>Fixed Parts:</b>\n${fixedPartsString}\n\n<b>Confusing Words (Distractor Drag Items):</b>\n${components.distractors.join('\n')}\n\n<b>Hint:</b>\n${hint}`;
+            return { htmlOutput: html, originalTitle: questionData.originalTitle };
+        }
+
 
         // --- APA 7 Generators ---
         function generateApaBook(numAuthors = 1) {
@@ -415,6 +435,23 @@
                 distractors: [ `Uploaded by ${channel},`, `'${title}'`, `<i>YouTube</i>.`, `Available at: ${url}` ]
             };
             return { title: '06 - APA 7 - YouTube Video', scenario: `You are citing a YouTube video titled "<i>${title}</i>", which was uploaded to the channel "${channel}" on ${month} ${day}, ${year}.`, fullReference: components.correct.join(' '), components, hint: 'In APA 7, the title of the YouTube video is italicized. Include "[Video]" in brackets after the title.', originalTitle: title };
+        }
+        function generateApaInText(numAuthors) {
+            const authors = [];
+            while(authors.length < numAuthors) { const author = getRandomItem(data.authors); if (!authors.find(a => a.last === author.last)) authors.push(author); }
+            const year = new Date().getFullYear() - Math.floor(Math.random() * 5);
+            const page = Math.floor(Math.random() * 200) + 20;
+            let authorString;
+            if (numAuthors === 1) authorString = authors[0].last;
+            else if (numAuthors === 2) authorString = `${authors[0].last} & ${authors[1].last}`;
+            else authorString = `${authors[0].last} et al.`;
+            
+            const scenario = `You are quoting a line from page ${page} of a source by ${authors.map(a => a.first + ' ' + a.last).join(', ')}, published in ${year}. Your sentence ends here ||.`;
+            const components = {
+                correct: [`(${authorString}, ${year}, p. ${page})`],
+                distractors: [ `(${authorString}, ${year})`, `(${authorString}, p. ${page})`, `(${authors[0].last}, ${year}, p. ${page})`, `(${authorString.replace('&', 'and')}, ${year}, p. ${page})` ]
+            };
+            return { title: `30 - APA 7 - In-Text Citation`, scenario, fullReference: components.correct[0], components, hint: 'APA in-text citations for quotes require Author, Year, and Page Number. Use "&" for two authors and "et al." for three or more.', originalTitle: 'in-text' };
         }
 
         // --- MLA 9 Generators ---
@@ -528,6 +565,22 @@
             };
             return { title: '11 - MLA 9 - YouTube Video', scenario: `You are citing a YouTube video titled "${title}", which was uploaded to the channel "${channel}" on ${day} ${month}. ${year}.`, fullReference: components.correct.join(' '), components, hint: 'In MLA 9, the video title is placed in quotation marks. The platform name (YouTube) is italicized.', originalTitle: 'YouTube' };
         }
+        function generateMlaInText(numAuthors) {
+            const authors = [];
+            while(authors.length < numAuthors) { const author = getRandomItem(data.authors); if (!authors.find(a => a.last === author.last)) authors.push(author); }
+            const page = Math.floor(Math.random() * 200) + 20;
+            let authorString;
+            if (numAuthors === 1) authorString = authors[0].last;
+            else if (numAuthors === 2) authorString = `${authors[0].last} and ${authors[1].last}`;
+            else authorString = `${authors[0].last} et al.`;
+            
+            const scenario = `You are paraphrasing a concept from page ${page} of a source by ${authors.map(a => a.first + ' ' + a.last).join(', ')}. Your sentence ends here ||.`;
+            const components = {
+                correct: [`(${authorString} ${page})`],
+                distractors: [ `(${authorString}, ${page})`, `(${authorString}, p. ${page})`, `(${authors[0].last} ${page})`, `(${authorString})` ]
+            };
+            return { title: `31 - MLA 9 - In-Text Citation`, scenario, fullReference: components.correct[0], components, hint: 'MLA in-text citations require only the Author and Page Number inside the parentheses.', originalTitle: 'in-text' };
+        }
 
         // --- Harvard Generators ---
         function generateHarvardBook(numAuthors = 1) {
@@ -637,6 +690,23 @@
                 distractors: [ `'${title}'.`, `[Video].`, `YouTube.`, `[accessed ${accessDate}]` ]
             };
             return { title: '16 - Harvard - YouTube Video', scenario: `You watched a video on the '${channel}' YouTube channel called <i>${title}</i>, which was posted in ${year}.`, fullReference: components.correct.join(' '), components, hint: 'For YouTube videos in Harvard style, the title is italicized and you should include the platform name and an access date.', originalTitle: title };
+        }
+        function generateHarvardInText(numAuthors) {
+            const authors = [];
+            while(authors.length < numAuthors) { const author = getRandomItem(data.authors); if (!authors.find(a => a.last === author.last)) authors.push(author); }
+            const year = new Date().getFullYear() - Math.floor(Math.random() * 5);
+            const page = Math.floor(Math.random() * 200) + 20;
+            let authorString;
+            if (numAuthors === 1) authorString = authors[0].last;
+            else if (numAuthors <= 3) authorString = authors.map(a => a.last).join(' and ');
+            else authorString = `${authors[0].last} et al.`;
+            
+            const scenario = `You are quoting a line from page ${page} of a source by ${authors.map(a => a.first + ' ' + a.last).join(', ')}, published in ${year}. Your sentence ends here ||.`;
+            const components = {
+                correct: [`(${authorString}, ${year}, p. ${page})`],
+                distractors: [ `(${authorString} ${year}: ${page})`, `(${authorString}, p. ${page})`, `(${authors[0].last}, ${year}, page ${page})`, `(${authorString.replace('and', '&')}, ${year}, p. ${page})` ]
+            };
+            return { title: `32 - Harvard - In-Text Citation`, scenario, fullReference: components.correct[0], components, hint: 'Harvard in-text citations for quotes require Author, Year, and Page Number. Use "et al." for four or more authors.', originalTitle: 'in-text' };
         }
 
         // --- Chicago (NB) Generators ---
@@ -771,6 +841,23 @@
             };
             return { title: '21 - Chicago (NB) - YouTube Video', scenario: `A video from the ${channel} YouTube channel, titled "${title}," is part of your research. It was posted on ${month} ${day}, ${year}.`, fullReference: components.correct.join(' '), components, hint: 'In Chicago style, the video title is in quotes. Include the platform, date, and URL.', originalTitle: title };
         }
+        function generateChicagoInText(numAuthors) {
+            const authors = [];
+            while(authors.length < numAuthors) { const author = getRandomItem(data.authors); if (!authors.find(a => a.last === author.last)) authors.push(author); }
+            const year = new Date().getFullYear() - Math.floor(Math.random() * 5);
+            const page = Math.floor(Math.random() * 200) + 20;
+            let authorString;
+            if (numAuthors === 1) authorString = authors[0].last;
+            else if (numAuthors <= 3) authorString = authors.map(a => a.last).join(' and ');
+            else authorString = `${authors[0].last} et al.`;
+            
+            const scenario = `You are paraphrasing a concept from page ${page} of a source by ${authors.map(a => a.first + ' ' + a.last).join(', ')}, published in ${year}. Your sentence ends here ||.`;
+            const components = {
+                correct: [`(${authorString} ${year}, ${page})`],
+                distractors: [ `(${authorString}, ${year}, p. ${page})`, `(${authorString} ${page})`, `(${authors[0].last}, ${year})`, `[${authorString} ${year}, ${page}]` ]
+            };
+            return { title: `33 - Chicago (NB) - In-Text Citation`, scenario, fullReference: components.correct[0], components, hint: 'A Chicago (Author-Date) in-text citation includes the Author, Year, and Page Number inside parentheses.', originalTitle: 'in-text' };
+        }
 
         // --- MHRA Generators ---
         function generateMhraBook(numAuthors = 1) {
@@ -883,26 +970,44 @@
             };
             return { title: '26 - MHRA - YouTube Video', scenario: `You need to cite a video from YouTube called '${title}' from the ${channel} channel.`, fullReference: components.correct.join(' '), components, hint: 'In MHRA, the video title is in single quotes and the platform name (YouTube) is italicized. Include the URL and access date.', originalTitle: title };
         }
+        function generateMhraInText(numAuthors) {
+            // MHRA uses footnotes, not in-text citations. This is a simplified representation.
+            const authors = [];
+            while(authors.length < numAuthors) { const author = getRandomItem(data.authors); if (!authors.find(a => a.last === author.last)) authors.push(author); }
+            const page = Math.floor(Math.random() * 200) + 20;
+            let authorString = authors.map(a => `${a.first} ${a.last}`).join(' and ');
+            if (numAuthors > 3) authorString = `${authors[0].first} ${authors[0].last} and others`;
+            
+            const scenario = `You are adding a footnote for a source by ${authors.map(a => a.first + ' ' + a.last).join(', ')}, referring to page ${page}. Your sentence ends here ||.`;
+            const components = {
+                correct: [`${authorString}, p. ${page}`],
+                distractors: [ `(${authorString}, p. ${page})`, `${authorString}, page ${page}`, `${authors[0].last}, p. ${page}` ]
+            };
+             return { title: `34 - MHRA - Footnote Citation`, scenario, fullReference: components.correct[0], components, hint: 'MHRA uses footnotes. A simplified footnote includes the author(s) name(s) and the page number preceded by "p.". No parentheses are used.', originalTitle: 'in-text' };
+        }
         
         function convertToMcq(questionData, style) {
-            const { title, scenario, fullReference, hint, originalTitle } = questionData;
+            const { title, scenario, fullReference, hint, originalTitle, components } = questionData;
             const correctRefHtml = fullReference;
 
             let options = new Set([correctRefHtml]);
             
-            // Generate varied and relevant distractors
-            options.add(correctRefHtml.replace(/\./g, ',')); // Punctuation error
-            options.add(correctRefHtml.replace(/<i>(.*?)<\/i>/g, '"$1"')); // Italic vs. quote error
-            options.add(correctRefHtml.replace(/\((.*?)\)/g, '[$1]')); // Parentheses vs. bracket error
-            
-            if (style === 'apa7') options.add(correctRefHtml.replace(/\(Ed\.\)/g, '(Editor)'));
-            if (style === 'mla9') options.add(correctRefHtml.replace(/, et al./g, ' et al.'));
-            if (style === 'harvard') options.add(correctRefHtml.replace(/'(.*?)'/g, '<i>$1</i>'));
-            if (style === 'chicago') options.add(correctRefHtml.replace(/, no. \d+/g, ''));
-            if (style === 'mhra') options.add(correctRefHtml.replace(/<([^>]*)>/g, '($1)'));
+            // Add pre-defined distractors
+            components.distractors.forEach(d => options.add(d));
 
+            // Generate more distractors if needed
             while (options.size < 4) {
-                options.add(correctRefHtml.replace(originalTitle, getRandomItem(data.bookTitles)));
+                let newDistractor = correctRefHtml;
+                const transformations = [
+                    (s) => s.replace(/\./g, ','),
+                    (s) => s.replace(/<i>(.*?)<\/i>/g, '"$1"'),
+                    (s) => s.replace(/\((.*?)\)/g, '[$1]'),
+                    (s) => s.replace(originalTitle, getRandomItem(data.bookTitles))
+                ];
+                newDistractor = getRandomItem(transformations)(newDistractor);
+                if (newDistractor !== correctRefHtml) {
+                    options.add(newDistractor);
+                }
             }
 
             let optionsArray = Array.from(options);
@@ -915,7 +1020,7 @@
 
             optionsArray = shuffleArray(optionsArray);
             
-            const mcqHtml = `<b>Question Title:</b>\n${title} (MCQ)\n\n<b>Scenario:</b>\n${scenario}\n\n<b>Question:</b>\nBased on the scenario, which of the following is the correct reference?\n\n<b>Options:</b>\nA) ${optionsArray[0]}\nB) ${optionsArray[1]}\nC) ${optionsArray[2]}\nD) ${optionsArray[3]}\n\n<b>Correct Answer:</b>\n${String.fromCharCode(65 + optionsArray.indexOf(correctRefHtml))}\n\n<b>Hint/Explanation:</b>\n${hint}`;
+            const mcqHtml = `<b>Question Title:</b>\n${title} (MCQ)\n\n<b>Scenario:</b>\n${scenario.replace('||', '')}\n\n<b>Question:</b>\nBased on the scenario, which of the following is the correct reference?\n\n<b>Options:</b>\nA) ${optionsArray[0]}\nB) ${optionsArray[1]}\nC) ${optionsArray[2]}\nD) ${optionsArray[3]}\n\n<b>Correct Answer:</b>\n${String.fromCharCode(65 + optionsArray.indexOf(correctRefHtml))}\n\n<b>Hint/Explanation:</b>\n${hint}`;
             
             return { htmlOutput: mcqHtml, originalTitle: originalTitle };
         }
@@ -964,6 +1069,10 @@
 
             // Generator controls
             document.getElementById('generateBtn').addEventListener('click', generateQuestion);
+            document.getElementById('questionCategory').addEventListener('change', () => {
+                updateSourceTypes();
+                generateQuestion();
+            });
             document.getElementById('citationStyle').addEventListener('change', () => {
                 updateSourceTypes();
                 generateQuestion();
