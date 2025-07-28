@@ -107,7 +107,7 @@
     <div id="generatorPage" class="hidden">
         <div class="container mx-auto p-4 sm:p-6 md:p-8 max-w-4xl">
             <header class="text-center mb-8 relative">
-                <h1 class="text-4xl font-bold text-gray-900 dark:text-white">Citex Question Generator</h1>
+                <h1 id="homeTitle" class="text-4xl font-bold text-gray-900 dark:text-white cursor-pointer" title="Back to Home">Citex Question Generator</h1>
                 <p class="text-md text-gray-600 dark:text-gray-400 mt-2">Create formatted questions for your learning app with ease.</p>
                 <!-- Dark Mode Toggle -->
                 <div class="absolute top-0 right-0 theme-switch-wrapper">
@@ -123,7 +123,17 @@
             <main class="bg-white dark:bg-gray-800 p-6 sm:p-8 rounded-2xl shadow-lg">
                 
                 <!-- Configuration Section -->
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+                    <div>
+                        <label for="exerciseType" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Exercise</label>
+                        <select id="exerciseType" class="w-full p-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-lg shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition">
+                            <option value="ex1">Exercise 1</option>
+                            <option value="ex2">Exercise 2</option>
+                            <option value="ex3">Exercise 3</option>
+                            <option value="ex4">Exercise 4</option>
+                            <option value="ex5">Exercise 5</option>
+                        </select>
+                    </div>
                     <div>
                         <label for="questionCategory" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Question Category</label>
                         <select id="questionCategory" class="w-full p-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-lg shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition">
@@ -141,13 +151,13 @@
                             <option value="mhra">MHRA</option>
                         </select>
                     </div>
-                    <div>
+                    <div class="lg:col-span-1">
                         <label for="sourceType" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Source Type</label>
                         <select id="sourceType" class="w-full p-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-lg shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition">
                             <!-- Options will be populated dynamically -->
                         </select>
                     </div>
-                    <div>
+                    <div class="lg:col-span-1">
                         <label for="questionType" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Question Type</label>
                         <select id="questionType" class="w-full p-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-lg shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition">
                             <option value="dnd">Drag and Drop</option>
@@ -283,6 +293,13 @@
                 return;
             }
             
+            // Construct the dynamic title
+            const exercise = document.getElementById('exerciseType').selectedOptions[0].text;
+            const sourceTypeText = document.getElementById('sourceType').selectedOptions[0].text;
+            const questionTypeText = document.getElementById('questionType').value === 'dnd' ? 'Drag and Drop' : 'MCQ';
+            const citationStyleText = document.getElementById('citationStyle').selectedOptions[0].text;
+            questionData.title = `${exercise} - ${sourceTypeText} - ${questionTypeText} - ${citationStyleText}`;
+
             let finalOutput;
             if (sourceType.startsWith('in_text')) {
                 finalOutput = questionType === 'mcq' ? convertToMcq(questionData) : buildInTextDragAndDrop(questionData);
@@ -346,7 +363,7 @@
                 distractors: [ `${authors.map(a => `${a.last}, ${a.first}`).join(' & ')}.`, `"${title}"`, `in press`, `${publisher}, ${year}.` ]
             };
             
-            return { title: `01 - APA 7 - Book - ${numAuthors} Author(s)`, scenario, fullReference: components.correct.join(' '), components, hint: 'For a book reference in APA 7, the title of the book is italicized and written in sentence case.', originalTitle: title };
+            return { scenario, fullReference: components.correct.join(' '), components, hint: 'For a book reference in APA 7, the title of the book is italicized and written in sentence case.', originalTitle: title };
         }
         function generateApaEditedBook(numEditors = 1) {
             const editors = [];
@@ -365,7 +382,7 @@
                 distractors: [ `${editorString} (ed.).`, `(Editors).`, `"${title}."`, `Published by ${publisher}` ]
             };
             
-            return { title: `01a - APA 7 - Edited Book - ${numEditors} Editor(s)`, scenario, fullReference: components.correct.join(' '), components, hint: 'For an edited book, the editor\'s name is followed by (Ed.) for one editor or (Eds.) for multiple editors.', originalTitle: title };
+            return { scenario, fullReference: components.correct.join(' '), components, hint: 'For an edited book, the editor\'s name is followed by (Ed.) for one editor or (Eds.) for multiple editors.', originalTitle: title };
         }
         function generateApaJournal() { return generateApaJournalMultipleAuthors(2); }
         function generateApaJournalMultipleAuthors(numAuthors = 0) {
@@ -388,7 +405,7 @@
                 correct: [ `${authorString} (${year}).`, `${articleTitle}.`, `${formattedJournal},`, `${pages}.`, `${doi}` ],
                 distractors: [ `'${articleTitle}'`, `<i>${articleTitle}</i>.`, `pp. ${pages}.`, `doi:${doi.replace('https://doi.org/','')}` ]
             };
-            return { title: `02 - APA 7 - Journal Article - ${numAuthors} Authors`, scenario, fullReference: components.correct.join(' '), components, hint: 'In APA 7, the journal title and volume number are italicized. The article title is not.', originalTitle: journalTitle };
+            return { scenario, fullReference: components.correct.join(' '), components, hint: 'In APA 7, the journal title and volume number are italicized. The article title is not.', originalTitle: journalTitle };
         }
         function generateApaWebsite() { 
             const org = getRandomItem(data.organizations);
@@ -403,7 +420,7 @@
                 correct: [ `${org}.`, `(${year}, ${month} ${day}).`, `${formattedTitle}.`, `${url}` ],
                 distractors: [ `(${year}).`, `"${title}."`, `Retrieved from ${url}`, `[accessed ${day} ${month} ${year}]` ]
             };
-            return { title: '04 - APA 7 - Website - Organisation as Author', scenario: `You are citing a webpage on the ${org}'s website. The page is titled "<i>${title}</i>". The page was published on ${month} ${day}, ${year}.`, fullReference: components.correct.join(' '), components, hint: 'When a webpage has a specific publication date, include it in the reference. In APA 7, the title of a standalone webpage is italicized.', originalTitle: title };
+            return { scenario: `You are citing a webpage on the ${org}'s website. The page is titled "<i>${title}</i>". The page was published on ${month} ${day}, ${year}.`, fullReference: components.correct.join(' '), components, hint: 'When a webpage has a specific publication date, include it in the reference. In APA 7, the title of a standalone webpage is italicized.', originalTitle: title };
         }
         function generateApaBookChapter() {
             const author = getRandomItem(data.authors);
@@ -419,7 +436,7 @@
                 correct: [ `${author.last}, ${author.first.charAt(0)}. (${year}).`, `${chapterTitle}.`, `In ${editor.first.charAt(0)}. ${editor.last} (Ed.),`, `${formattedBookTitle} (pp. ${pages}).`, `${publisher}.` ],
                 distractors: [ `'${chapterTitle}'.`, `ed. by ${editor.first} ${editor.last},`, `(pages ${pages}).`, `In <i>${chapterTitle}</i>,` ]
             };
-            return { title: '05 - APA 7 - Chapter in Edited Book', scenario: `You are citing a chapter titled "${chapterTitle}" by ${author.first} ${author.last}. It appears in an edited book titled <i>${bookTitle}</i>, edited by ${editor.first} ${editor.last}, and published in ${year} by ${publisher}. The chapter is on pages ${pages}.`, fullReference: components.correct.join(' '), components, hint: 'In APA 7, the book title is italicized, but the chapter title is not. The editor\'s name follows "In".', originalTitle: bookTitle };
+            return { scenario: `You are citing a chapter titled "${chapterTitle}" by ${author.first} ${author.last}. It appears in an edited book titled <i>${bookTitle}</i>, edited by ${editor.first} ${editor.last}, and published in ${year} by ${publisher}. The chapter is on pages ${pages}.`, fullReference: components.correct.join(' '), components, hint: 'In APA 7, the book title is italicized, but the chapter title is not. The editor\'s name follows "In".', originalTitle: bookTitle };
         }
         function generateApaYouTube() { 
             const channel = getRandomItem(data.youtubeChannels);
@@ -434,7 +451,7 @@
                 correct: [ `${channel}.`, `(${year}, ${month} ${day}).`, `${formattedTitle} [Video].`, `YouTube.`, `${url}` ],
                 distractors: [ `Uploaded by ${channel},`, `'${title}'`, `<i>YouTube</i>.`, `Available at: ${url}` ]
             };
-            return { title: '06 - APA 7 - YouTube Video', scenario: `You are citing a YouTube video titled "<i>${title}</i>", which was uploaded to the channel "${channel}" on ${month} ${day}, ${year}.`, fullReference: components.correct.join(' '), components, hint: 'In APA 7, the title of the YouTube video is italicized. Include "[Video]" in brackets after the title.', originalTitle: title };
+            return { scenario: `You are citing a YouTube video titled "<i>${title}</i>", which was uploaded to the channel "${channel}" on ${month} ${day}, ${year}.`, fullReference: components.correct.join(' '), components, hint: 'In APA 7, the title of the YouTube video is italicized. Include "[Video]" in brackets after the title.', originalTitle: title };
         }
         function generateApaInText(numAuthors) {
             const authors = [];
@@ -451,7 +468,7 @@
                 correct: [`(${authorString}, ${year}, p. ${page})`],
                 distractors: [ `(${authorString}, ${year})`, `(${authorString}, p. ${page})`, `(${authors[0].last}, ${year}, p. ${page})`, `(${authorString.replace('&', 'and')}, ${year}, p. ${page})` ]
             };
-            return { title: `30 - APA 7 - In-Text Citation`, scenario, fullReference: components.correct[0], components, hint: 'APA in-text citations for quotes require Author, Year, and Page Number. Use "&" for two authors and "et al." for three or more.', originalTitle: 'in-text' };
+            return { scenario, fullReference: components.correct[0], components, hint: 'APA in-text citations for quotes require Author, Year, and Page Number. Use "&" for two authors and "et al." for three or more.', originalTitle: 'in-text' };
         }
 
         // --- MLA 9 Generators ---
@@ -473,7 +490,7 @@
                 correct: [ `${authorString}.`, `${formattedTitle}.`, `${publisher},`, `${year}.` ],
                 distractors: [ `${authors[0].last}, ${authors[0].first.charAt(0)}.`, `(${year}).`, `"${title}."`, `Published by ${publisher}` ]
             };
-            return { title: `07 - MLA 9 - Book - ${numAuthors} Author(s)`, scenario: `You need to create a reference for the book <i>${title}</i>, written by ${authors.map(a => `${a.first} ${a.last}`).join(' and ')}. It was published in ${year} by the publisher ${publisher}.`, fullReference: components.correct.join(' '), components, hint: 'MLA style uses the author\'s full name and places the publication year at the very end. The book title is italicized.', originalTitle: title };
+            return { scenario: `You need to create a reference for the book <i>${title}</i>, written by ${authors.map(a => `${a.first} ${a.last}`).join(' and ')}. It was published in ${year} by the publisher ${publisher}.`, fullReference: components.correct.join(' '), components, hint: 'MLA style uses the author\'s full name and places the publication year at the very end. The book title is italicized.', originalTitle: title };
         }
         function generateMlaEditedBook(numEditors = 1) {
             const editors = [];
@@ -493,7 +510,7 @@
                 correct: [ `${editorString}`, `${formattedTitle}.`, `${publisher},`, `${year}.` ],
                 distractors: [ `${editors.map(e => `${e.last}, ${e.first}`).join(' and ')} (Eds.).`, `"${title}."`, `(Editors)`, `${publisher}, ${year}` ]
             };
-            return { title: `07a - MLA 9 - Edited Book - ${numEditors} Editor(s)`, scenario: `You are citing an entire edited book, <i>${title}</i>, with ${editors.map(e => `${e.first} ${e.last}`).join(' and ')} as the editor(s). It was published in ${year}.`, fullReference: components.correct.join(' '), components, hint: 'For an edited book in MLA, list the editor(s) name followed by the label "editor" or "editors".', originalTitle: title };
+            return { scenario: `You are citing an entire edited book, <i>${title}</i>, with ${editors.map(e => `${e.first} ${e.last}`).join(' and ')} as the editor(s). It was published in ${year}.`, fullReference: components.correct.join(' '), components, hint: 'For an edited book in MLA, list the editor(s) name followed by the label "editor" or "editors".', originalTitle: title };
         }
         function generateMlaJournal() { return generateMlaJournalMultipleAuthors(2); }
         function generateMlaJournalMultipleAuthors(numAuthors = 0) {
@@ -518,7 +535,7 @@
                 correct: [ `${authorString}.`, `"${articleTitle}."`, `${formattedJournal},`, `vol. ${volume}, no. ${issue},`, `${year},`, `pp. ${pages}.` ],
                 distractors: [ `'${articleTitle}.'`, `(${year}),`, `Volume ${volume}, Issue ${issue},`, `pages ${pages}.` ]
             };
-            return { title: `08 - MLA 9 - Journal Article - ${numAuthors > 2 ? '3+' : '2'} Authors`, scenario: `You are referencing a journal article titled "${articleTitle}" by ${numAuthors} authors. It was published in <i>${journalTitle}</i>, volume ${volume}, issue ${issue}, in ${year}.`, fullReference: components.correct.join(' '), components, hint: 'In MLA 9, the article title is in quotes, and the journal title is italicized. For 3+ authors, use "et al.".', originalTitle: journalTitle };
+            return { scenario: `You are referencing a journal article titled "${articleTitle}" by ${numAuthors} authors. It was published in <i>${journalTitle}</i>, volume ${volume}, issue ${issue}, in ${year}.`, fullReference: components.correct.join(' '), components, hint: 'In MLA 9, the article title is in quotes, and the journal title is italicized. For 3+ authors, use "et al.".', originalTitle: journalTitle };
         }
         function generateMlaWebsite() {
             const org = getRandomItem(data.organizations);
@@ -532,7 +549,7 @@
                 correct: [ `"${title}."`, `<i>${org}</i>,`, `${day} ${month}. ${year},`, `${url}.` ],
                 distractors: [ `<i>${title}</i>.`, `${org},`, `(${year}),`, `Available at: ${url}` ]
             };
-            return { title: '09 - MLA 9 - Website', scenario: `You are citing an article titled "${title}" from the website of the <i>${org}</i>, published on ${day} ${month} ${year}.`, fullReference: components.correct.join(' '), components, hint: 'In MLA 9, the article/page title is in quotes, and the overall website name is italicized.', originalTitle: org };
+            return { scenario: `You are citing an article titled "${title}" from the website of the <i>${org}</i>, published on ${day} ${month} ${year}.`, fullReference: components.correct.join(' '), components, hint: 'In MLA 9, the article/page title is in quotes, and the overall website name is italicized.', originalTitle: org };
         }
         function generateMlaBookChapter() {
             const author = getRandomItem(data.authors);
@@ -548,7 +565,7 @@
                 correct: [ `${author.last}, ${author.first}.`, `"${chapterTitle}."`, `${formattedBookTitle},`, `edited by ${editor.first} ${editor.last},`, `${publisher},`, `${year},`, `pp. ${pages}.` ],
                 distractors: [ `'${chapterTitle}.'`, `In ${formattedBookTitle},`, `Editor, ${editor.first} ${editor.last},`, `pages ${pages}.` ]
             };
-            return { title: '10 - MLA 9 - Chapter in Edited Book', scenario: `You are citing a chapter titled "${chapterTitle}" by ${author.first} ${author.last}. It appears in a book titled <i>${bookTitle}</i>, edited by ${editor.first} ${editor.last}, published in ${year} by ${publisher}.`, fullReference: components.correct.join(' '), components, hint: 'In MLA 9, the chapter title is in quotes and the book title is italicized.', originalTitle: bookTitle };
+            return { scenario: `You are citing a chapter titled "${chapterTitle}" by ${author.first} ${author.last}. It appears in a book titled <i>${bookTitle}</i>, edited by ${editor.first} ${editor.last}, published in ${year} by ${publisher}.`, fullReference: components.correct.join(' '), components, hint: 'In MLA 9, the chapter title is in quotes and the book title is italicized.', originalTitle: bookTitle };
         }
         function generateMlaYouTube() {
             const channel = getRandomItem(data.youtubeChannels);
@@ -563,7 +580,7 @@
                 correct: [ `"${title}."`, `${formattedPlatform},`, `uploaded by ${channel},`, `${day} ${month}. ${year},`, `${url}.` ],
                 distractors: [ `<i>${title}</i>.`, `YouTube.`, `[Video].`, `(${year}).` ]
             };
-            return { title: '11 - MLA 9 - YouTube Video', scenario: `You are citing a YouTube video titled "${title}", which was uploaded to the channel "${channel}" on ${day} ${month}. ${year}.`, fullReference: components.correct.join(' '), components, hint: 'In MLA 9, the video title is placed in quotation marks. The platform name (YouTube) is italicized.', originalTitle: 'YouTube' };
+            return { scenario: `You are citing a YouTube video titled "${title}", which was uploaded to the channel "${channel}" on ${day} ${month}. ${year}.`, fullReference: components.correct.join(' '), components, hint: 'In MLA 9, the video title is placed in quotation marks. The platform name (YouTube) is italicized.', originalTitle: 'YouTube' };
         }
         function generateMlaInText(numAuthors) {
             const authors = [];
@@ -1031,8 +1048,15 @@
             const landingPage = document.getElementById('landingPage');
             const generatorPage = document.getElementById('generatorPage');
             const getStartedBtn = document.getElementById('getStartedBtn');
+            const homeTitle = document.getElementById('homeTitle');
+
+            if (localStorage.getItem('currentPage') === 'generator') {
+                landingPage.style.display = 'none';
+                generatorPage.style.display = 'block';
+            }
 
             getStartedBtn.addEventListener('click', () => {
+                localStorage.setItem('currentPage', 'generator');
                 landingPage.style.transition = 'opacity 0.5s';
                 landingPage.style.opacity = '0';
                 setTimeout(() => {
@@ -1044,6 +1068,11 @@
                         generatorPage.style.opacity = '1';
                     }, 50);
                 }, 500);
+            });
+            
+            homeTitle.addEventListener('click', () => {
+                localStorage.removeItem('currentPage');
+                window.location.reload();
             });
 
             // Dark mode toggle
@@ -1079,6 +1108,7 @@
             });
             document.getElementById('sourceType').addEventListener('change', generateQuestion);
             document.getElementById('questionType').addEventListener('change', generateQuestion);
+            document.getElementById('exerciseType').addEventListener('change', generateQuestion);
             
             // Initial setup
             updateSourceTypes();
