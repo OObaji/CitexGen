@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Citex Question Generator</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/docx@8.5.0/build/index.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         body {
@@ -85,6 +87,13 @@
         .slider.round:before {
             border-radius: 50%;
         }
+        /* Multi-select styling */
+        select[multiple] {
+            height: 120px;
+        }
+        select[multiple] option {
+            padding: 8px;
+        }
     </style>
 </head>
 <body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200 transition-colors duration-300">
@@ -123,7 +132,7 @@
             <main class="bg-white dark:bg-gray-800 p-6 sm:p-8 rounded-2xl shadow-lg">
                 
                 <!-- Configuration Section -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
                     <div>
                         <label for="exerciseType" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Exercise</label>
                         <select id="exerciseType" class="w-full p-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-lg shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition">
@@ -133,6 +142,10 @@
                             <option value="ex4">Exercise 4</option>
                             <option value="ex5">Exercise 5</option>
                         </select>
+                    </div>
+                     <div>
+                        <label for="numQuestions" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Number of Questions</label>
+                        <input type="number" id="numQuestions" value="5" min="1" max="20" class="w-full p-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-lg shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition">
                     </div>
                     <div>
                         <label for="questionCategory" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Question Category</label>
@@ -151,25 +164,34 @@
                             <option value="mhra">MHRA</option>
                         </select>
                     </div>
-                    <div class="lg:col-span-1">
-                        <label for="sourceType" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Source Type</label>
-                        <select id="sourceType" class="w-full p-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-lg shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition">
+                    <div class="md:col-span-1">
+                        <label for="sourceType" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Source Type (Ctrl/Cmd + Click for multiple)</label>
+                        <select id="sourceType" multiple class="w-full p-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-lg shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition">
                             <!-- Options will be populated dynamically -->
                         </select>
                     </div>
-                    <div class="lg:col-span-1">
-                        <label for="questionType" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Question Type</label>
-                        <select id="questionType" class="w-full p-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-lg shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition">
-                            <option value="dnd">Drag and Drop</option>
-                            <option value="mcq">MCQ</option>
-                        </select>
+                    <div class="md:col-span-1">
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Question Type</label>
+                        <div class="mt-2 space-y-2">
+                            <div class="flex items-center">
+                                <input id="dndCheckbox" name="questionType" type="checkbox" checked class="h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500">
+                                <label for="dndCheckbox" class="ml-3 block text-sm font-medium text-gray-700 dark:text-gray-300">Drag and Drop</label>
+                            </div>
+                            <div class="flex items-center">
+                                <input id="mcqCheckbox" name="questionType" type="checkbox" checked class="h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500">
+                                <label for="mcqCheckbox" class="ml-3 block text-sm font-medium text-gray-700 dark:text-gray-300">MCQ</label>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
                 <!-- Generate Button -->
-                <div class="text-center mb-8">
+                <div class="text-center mb-8 flex gap-4 justify-center">
                     <button id="generateBtn" class="bg-indigo-600 text-white font-bold py-3 px-8 rounded-lg shadow-md hover:bg-indigo-700 focus:outline-none focus:ring-4 focus:ring-indigo-500/50 transform hover:-translate-y-0.5 transition-all duration-300">
-                        Generate Question
+                        Generate Questions
+                    </button>
+                    <button id="downloadBtn" class="bg-green-600 text-white font-bold py-3 px-8 rounded-lg shadow-md hover:bg-green-700 focus:outline-none focus:ring-4 focus:ring-green-500/50 transform hover:-translate-y-0.5 transition-all duration-300 hidden">
+                        Download as Word
                     </button>
                 </div>
 
@@ -190,6 +212,9 @@
     </div>
 
     <script>
+        // Global variable to store the last generated questions
+        let lastGeneratedQuestions = [];
+        
         // --- Data for Generation ---
         const data = {
             authors: [
@@ -212,23 +237,25 @@
         };
 
         const referenceListSources = {
-            base: [ { value: 'journal', text: 'Journal Article (2 Authors)' }, { value: 'journal_many', text: 'Journal Article (3+ Authors)' }, { value: 'book_chapter', text: 'Chapter in Edited Book' }, { value: 'website', text: 'Website (Organization)' }, { value: 'youtube', text: 'YouTube Video' } ],
-            book: [ { value: 'book_single', text: 'Book (1 Author)' }, { value: 'book_multiple', text: 'Book (2 Authors)' }, { value: 'book_edited_single', text: 'Edited Book (1 Editor)' }, { value: 'book_edited_multiple', text: 'Edited Book (2+ Editors)' } ]
+            book: [ { value: 'book', text: 'Books' } ],
+            edited_book: [ { value: 'edited_book', text: 'Edited Books' } ],
+            journal: [ { value: 'journal', text: 'Journal Articles' } ],
+            web: [ { value: 'website', text: 'Web Resources (Website)' } ]
         };
 
         const inTextSources = [
-            { value: 'in_text_single', text: 'Single Author' }, { value: 'in_text_two', text: 'Two Authors' }, { value: 'in_text_three_plus', text: 'Three or More Authors' }
+            { value: 'in_text_single', text: 'Single author' }, 
+            { value: 'in_text_two', text: 'Two authors' }, 
+            { value: 'in_text_three', text: 'Three authors' },
+            { value: 'in_text_four_plus', text: 'More than 3 authors' }
         ];
 
         const sourceTypeMap = {
-            apa7: [ ...referenceListSources.book, ...referenceListSources.base ],
-            mla9: [ ...referenceListSources.book, ...referenceListSources.base ],
-            harvard: [ ...referenceListSources.book, ...referenceListSources.base ],
-            chicago: [
-                ...referenceListSources.book, { value: 'journal', text: 'Journal Article' }, { value: 'book_chapter', text: 'Chapter in Edited Book' }, { value: 'newspaper', text: 'Newspaper Article' }, { value: 'primary_source', text: 'Primary Source (Letter)' }, { value: 'website', text: 'Website' }, { value: 'youtube', text: 'YouTube Video' }
-            ],
-            mhra: [
-                ...referenceListSources.book, { value: 'journal', text: 'Journal Article' }, { value: 'book_chapter', text: 'Chapter in Edited Book' }, { value: 'thesis', text: 'Thesis/Dissertation' }, { value: 'website', text: 'Website' }, { value: 'youtube', text: 'YouTube Video' }
+            all: [
+                { group: 'Books', options: referenceListSources.book },
+                { group: 'Edited Books', options: referenceListSources.edited_book },
+                { group: 'Journal Articles', options: referenceListSources.journal },
+                { group: 'Web Resources', options: referenceListSources.web }
             ]
         };
 
@@ -246,69 +273,101 @@
 
         function updateSourceTypes() {
             const category = document.getElementById('questionCategory').value;
-            const style = document.getElementById('citationStyle').value;
             const sourceDropdown = document.getElementById('sourceType');
-            const currentSourceValue = sourceDropdown.value;
+            const currentSourceValues = Array.from(sourceDropdown.selectedOptions).map(opt => opt.value);
             
             sourceDropdown.innerHTML = '';
             
-            const sources = category === 'in_text' ? inTextSources : sourceTypeMap[style];
+            const sources = category === 'in_text' ? inTextSources : sourceTypeMap.all;
             
-            sources.forEach(source => {
-                const option = document.createElement('option');
-                option.value = source.value;
-                option.textContent = source.text;
-                sourceDropdown.appendChild(option);
-            });
-
-            if (sources.some(s => s.value === currentSourceValue)) {
-                sourceDropdown.value = currentSourceValue;
+            if (category === 'in_text') {
+                sources.forEach(source => {
+                    const option = document.createElement('option');
+                    option.value = source.value;
+                    option.textContent = source.text;
+                    sourceDropdown.appendChild(option);
+                });
             } else {
-                sourceDropdown.selectedIndex = 0;
+                sources.forEach(group => {
+                    const optgroup = document.createElement('optgroup');
+                    optgroup.label = group.group;
+                    group.options.forEach(source => {
+                        const option = document.createElement('option');
+                        option.value = source.value;
+                        option.textContent = source.text;
+                        optgroup.appendChild(option);
+                    });
+                    sourceDropdown.appendChild(optgroup);
+                });
+            }
+
+
+            if (sourceDropdown.selectedOptions.length === 0) {
+                 sourceDropdown.selectedIndex = 0;
             }
         }
 
-        function generateQuestion() {
+        function generateQuestions() {
+            const numQuestions = parseInt(document.getElementById('numQuestions').value) || 1;
             const citationStyle = document.getElementById('citationStyle').value;
-            const sourceType = document.getElementById('sourceType').value;
-            const questionType = document.getElementById('questionType').value;
+            const selectedSourceTypes = Array.from(document.getElementById('sourceType').selectedOptions).map(opt => opt.value);
+            const selectedQuestionTypes = [];
+            if (document.getElementById('dndCheckbox').checked) selectedQuestionTypes.push('dnd');
+            if (document.getElementById('mcqCheckbox').checked) selectedQuestionTypes.push('mcq');
 
-            let questionData = {};
-            
-            const generatorMap = {
-                'apa7-book_single': () => generateApaBook(1), 'apa7-book_multiple': () => generateApaBook(2), 'apa7-book_edited_single': () => generateApaEditedBook(1), 'apa7-book_edited_multiple': () => generateApaEditedBook(2), 'apa7-journal': generateApaJournal, 'apa7-journal_many': generateApaJournalMultipleAuthors, 'apa7-website': generateApaWebsite, 'apa7-book_chapter': generateApaBookChapter, 'apa7-youtube': generateApaYouTube, 'apa7-in_text_single': () => generateApaInText(1), 'apa7-in_text_two': () => generateApaInText(2), 'apa7-in_text_three_plus': () => generateApaInText(3),
-                'mla9-book_single': () => generateMlaBook(1), 'mla9-book_multiple': () => generateMlaBook(2), 'mla9-book_edited_single': () => generateMlaEditedBook(1), 'mla9-book_edited_multiple': () => generateMlaEditedBook(2), 'mla9-journal': generateMlaJournal, 'mla9-journal_many': generateMlaJournalMultipleAuthors, 'mla9-book_chapter': generateMlaBookChapter, 'mla9-youtube': generateMlaYouTube, 'mla9-website': generateMlaWebsite, 'mla9-in_text_single': () => generateMlaInText(1), 'mla9-in_text_two': () => generateMlaInText(2), 'mla9-in_text_three_plus': () => generateMlaInText(3),
-                'harvard-book_single': () => generateHarvardBook(1), 'harvard-book_multiple': () => generateHarvardBook(2), 'harvard-book_edited_single': () => generateHarvardEditedBook(1), 'harvard-book_edited_multiple': () => generateHarvardEditedBook(2), 'harvard-journal': generateHarvardJournal, 'harvard-journal_many': generateHarvardJournalMultipleAuthors, 'harvard-website': generateHarvardWebsite, 'harvard-book_chapter': generateHarvardBookChapter, 'harvard-youtube': generateHarvardYouTube, 'harvard-in_text_single': () => generateHarvardInText(1), 'harvard-in_text_two': () => generateHarvardInText(2), 'harvard-in_text_three_plus': () => generateHarvardInText(3),
-                'chicago-book_single': () => generateChicagoBook(1), 'chicago-book_multiple': () => generateChicagoBook(2), 'chicago-book_edited_single': () => generateChicagoEditedBook(1), 'chicago-book_edited_multiple': () => generateChicagoEditedBook(2), 'chicago-journal': generateChicagoJournal, 'chicago-journal_many': generateChicagoJournalMultipleAuthors, 'chicago-website': generateChicagoWebsite, 'chicago-book_chapter': generateChicagoBookChapter, 'chicago-newspaper': generateChicagoNewspaper, 'chicago-primary_source': generateChicagoPrimarySource, 'chicago-youtube': generateChicagoYouTube, 'chicago-in_text_single': () => generateChicagoInText(1), 'chicago-in_text_two': () => generateChicagoInText(2), 'chicago-in_text_three_plus': () => generateChicagoInText(3),
-                'mhra-book_single': () => generateMhraBook(1), 'mhra-book_multiple': () => generateMhraBook(2), 'mhra-book_edited_single': () => generateMhraEditedBook(1), 'mhra-book_edited_multiple': () => generateMhraEditedBook(2), 'mhra-journal': generateMhraJournal, 'mhra-journal_many': generateMhraJournalMultipleAuthors, 'mhra-website': generateMhraWebsite, 'mhra-book_chapter': generateMhraBookChapter, 'mhra-thesis': generateMhraThesis, 'mhra-youtube': generateMhraYouTube, 'mhra-in_text_single': () => generateMhraInText(1), 'mhra-in_text_two': () => generateMhraInText(2), 'mhra-in_text_three_plus': () => generateMhraInText(3),
-            };
-
-            const generatorKey = `${citationStyle}-${sourceType}`;
-            const generatorFunction = generatorMap[generatorKey];
-
-            if (generatorFunction) {
-                questionData = generatorFunction();
-            } else {
-                alert("This combination is not yet supported. Please try another selection.");
+            if (selectedSourceTypes.length === 0 || selectedQuestionTypes.length === 0) {
+                alert("Please select at least one Source Type and one Question Type.");
                 return;
             }
-            
-            // Construct the dynamic title
-            const exercise = document.getElementById('exerciseType').selectedOptions[0].text;
-            const sourceTypeText = document.getElementById('sourceType').selectedOptions[0].text;
-            const questionTypeText = document.getElementById('questionType').value === 'dnd' ? 'Drag and Drop' : 'MCQ';
-            const citationStyleText = document.getElementById('citationStyle').selectedOptions[0].text;
-            questionData.title = `${exercise} - ${sourceTypeText} - ${questionTypeText} - ${citationStyleText}`;
 
-            let finalOutput;
-            if (sourceType.startsWith('in_text')) {
-                finalOutput = questionType === 'mcq' ? convertToMcq(questionData) : buildInTextDragAndDrop(questionData);
-            } else {
-                finalOutput = questionType === 'mcq' ? convertToMcq(questionData) : buildDragAndDrop(questionData);
+            let allQuestionsOutput = '';
+            lastGeneratedQuestions = [];
+
+            for (let i = 0; i < numQuestions; i++) {
+                const sourceType = getRandomItem(selectedSourceTypes);
+                const questionType = getRandomItem(selectedQuestionTypes);
+                let questionData = {};
+                
+                const generatorMap = {
+                    'apa7-book': () => generateApaBook(getRandomItem([1,2,3])), 'apa7-edited_book': () => generateApaEditedBook(getRandomItem([1,2])), 'apa7-journal': () => generateApaJournal(getRandomItem([1,2,3])), 'apa7-website': generateApaWebsite, 'apa7-book_chapter': generateApaBookChapter, 'apa7-youtube': generateApaYouTube, 'apa7-in_text_single': () => generateApaInText(1), 'apa7-in_text_two': () => generateApaInText(2), 'apa7-in_text_three': () => generateApaInText(3), 'apa7-in_text_four_plus': () => generateApaInText(4),
+                    'mla9-book': () => generateMlaBook(getRandomItem([1,2,3])), 'mla9-edited_book': () => generateMlaEditedBook(getRandomItem([1,2])), 'mla9-journal': () => generateMlaJournal(getRandomItem([1,2,3])), 'mla9-book_chapter': generateMlaBookChapter, 'mla9-youtube': generateMlaYouTube, 'mla9-website': generateMlaWebsite, 'mla9-in_text_single': () => generateMlaInText(1), 'mla9-in_text_two': () => generateMlaInText(2), 'mla9-in_text_three': () => generateMlaInText(3), 'mla9-in_text_four_plus': () => generateMlaInText(4),
+                    'harvard-book': () => generateHarvardBook(getRandomItem([1,2,3])), 'harvard-edited_book': () => generateHarvardEditedBook(getRandomItem([1,2])), 'harvard-journal': () => generateHarvardJournal(getRandomItem([1,2,3])), 'harvard-website': generateHarvardWebsite, 'harvard-book_chapter': generateHarvardBookChapter, 'harvard-youtube': generateHarvardYouTube, 'harvard-in_text_single': () => generateHarvardInText(1), 'harvard-in_text_two': () => generateHarvardInText(2), 'harvard-in_text_three': () => generateHarvardInText(3), 'harvard-in_text_four_plus': () => generateHarvardInText(4),
+                    'chicago-book': () => generateChicagoBook(getRandomItem([1,2,3])), 'chicago-edited_book': () => generateChicagoEditedBook(getRandomItem([1,2])), 'chicago-journal': () => generateChicagoJournal(getRandomItem([1,2,3])), 'chicago-website': generateChicagoWebsite, 'chicago-book_chapter': generateChicagoBookChapter, 'chicago-newspaper': generateChicagoNewspaper, 'chicago-primary_source': generateChicagoPrimarySource, 'chicago-youtube': generateChicagoYouTube, 'chicago-in_text_single': () => generateChicagoInText(1), 'chicago-in_text_two': () => generateChicagoInText(2), 'chicago-in_text_three': () => generateChicagoInText(3), 'chicago-in_text_four_plus': () => generateChicagoInText(4),
+                    'mhra-book': () => generateMhraBook(getRandomItem([1,2,3])), 'mhra-edited_book': () => generateMhraEditedBook(getRandomItem([1,2])), 'mhra-journal': () => generateMhraJournal(getRandomItem([1,2,3])), 'mhra-website': generateMhraWebsite, 'mhra-book_chapter': generateMhraBookChapter, 'mhra-thesis': generateMhraThesis, 'mhra-youtube': generateMhraYouTube, 'mhra-in_text_single': () => generateMhraInText(1), 'mhra-in_text_two': () => generateMhraInText(2), 'mhra-in_text_three': () => generateMhraInText(3), 'mhra-in_text_four_plus': () => generateMhraInText(4),
+                };
+
+                const generatorKey = `${citationStyle}-${sourceType}`;
+                const generatorFunction = generatorMap[generatorKey];
+
+                if (generatorFunction) {
+                    questionData = generatorFunction();
+                } else {
+                    console.error("Generator function not found for key:", generatorKey);
+                    continue; 
+                }
+                
+                const exercise = document.getElementById('exerciseType').selectedOptions[0].text;
+                const sourceTypeText = document.querySelector(`#sourceType option[value='${sourceType}']`).textContent;
+                const questionTypeText = questionType === 'dnd' ? 'Drag and Drop' : 'MCQ';
+                const citationStyleText = document.getElementById('citationStyle').selectedOptions[0].text;
+                questionData.title = `${exercise} - ${sourceTypeText} - ${questionTypeText} - ${citationStyleText}`;
+
+                let finalOutput;
+                if (sourceType.startsWith('in_text')) {
+                    finalOutput = questionType === 'mcq' ? convertToMcq(questionData) : buildInTextDragAndDrop(questionData);
+                } else {
+                    finalOutput = questionType === 'mcq' ? convertToMcq(questionData) : buildDragAndDrop(questionData);
+                }
+                
+                const questionHeader = `Question ${i + 1}\n-----------------\n`;
+                const questionText = questionHeader + finalOutput.htmlOutput;
+                allQuestionsOutput += questionText + '\n\n--- NEW QUESTION ---\n\n';
+                lastGeneratedQuestions.push(questionText);
             }
 
-            document.getElementById('htmlOutput').innerText = finalOutput.htmlOutput;
+            document.getElementById('htmlOutput').innerText = allQuestionsOutput.slice(0, -22); // Remove last separator
             document.getElementById('output').classList.remove('hidden');
+            document.getElementById('downloadBtn').classList.remove('hidden');
         }
 
         function buildDragAndDrop(questionData) {
@@ -350,7 +409,7 @@
         function generateApaBook(numAuthors = 1) {
             const authors = [];
             while(authors.length < numAuthors) { const author = getRandomItem(data.authors); if (!authors.find(a => a.last === author.last)) authors.push(author); }
-            const authorList = authors.map(a => `${a.last}, ${a.first.charAt(0)}`);
+            const authorList = authors.map(a => `${a.last}, ${a.first.charAt(0)}.`);
             const authorString = authorList.length > 1 ? authorList.slice(0, -1).join(', ') + ', & ' + authorList.slice(-1) : authorList[0];
             const title = getRandomItem(data.bookTitles);
             const publisher = getRandomItem(data.publishers);
@@ -374,19 +433,17 @@
             const publisher = getRandomItem(data.publishers);
             const year = new Date().getFullYear() - Math.floor(Math.random() * 5);
             const scenario = `You are citing an entire edited book titled ${title}, edited by ${editors.map(e => `${e.first} ${e.last}`).join(' & ')}. It was published by ${publisher} in ${year}.`;
-            const edLabel = numEditors > 1 ? '(Eds.)' : '(Ed.)';
+            const edLabel = numEditors > 1 ? '(Eds.).' : '(Ed.).';
             
             const components = {
                 content: [ `${editorString}`, `${year}`, `${title}`, `${publisher}` ],
-                structure: `{0} ${edLabel}. ({1}). {2}. {3}.`,
-                distractors: [ `${editorString} (ed.)`, `(Editors).`, `"${title}."`, `Published by ${publisher}` ]
+                structure: `{0} ${edLabel} ({1}). {2}. {3}.`,
+                distractors: [ `${editorString} (ed.).`, `(Editors).`, `"${title}."`, `Published by ${publisher}` ]
             };
             
             return { scenario, fullReference: components.structure.replace('{0}', components.content[0]).replace('{1}', components.content[1]).replace('{2}', components.content[2]).replace('{3}', components.content[3]), components, hint: 'For an edited book, the editor\'s name is followed by (Ed.) for one editor or (Eds.) for multiple editors.', originalTitle: title };
         }
-        function generateApaJournal() { return generateApaJournalMultipleAuthors(2); }
-        function generateApaJournalMultipleAuthors(numAuthors = 0) {
-            if (numAuthors === 0) numAuthors = Math.floor(Math.random() * 3) + 3;
+        function generateApaJournal(numAuthors = 1) {
             const authors = [];
             while(authors.length < numAuthors) { const author = getRandomItem(data.authors); if (!authors.find(a => a.last === author.last)) authors.push(author); }
             const authorList = authors.map(a => `${a.last}, ${a.first.charAt(0)}.`);
@@ -478,8 +535,10 @@
             let authorString;
             if (numAuthors === 1) {
                 authorString = `${authors[0].last}, ${authors[0].first}`;
-            } else {
+            } else if (numAuthors === 2) {
                 authorString = `${authors[0].last}, ${authors[0].first}, and ${authors[1].first} ${authors[1].last}`;
+            } else {
+                 authorString = `${authors[0].last}, ${authors[0].first}, et al`;
             }
             const title = getRandomItem(data.bookTitles);
             const publisher = getRandomItem(data.publishers);
@@ -511,13 +570,13 @@
             };
             return { scenario: `You are citing an entire edited book, ${title}, with ${editors.map(e => `${e.first} ${e.last}`).join(' and ')} as the editor(s). It was published in ${year}.`, fullReference: `${components.content[0]}. ${components.content[1]}. ${components.content[2]}, ${components.content[3]}.`, components, hint: 'For an edited book in MLA, list the editor(s) name followed by the label "editor" or "editors".', originalTitle: title };
         }
-        function generateMlaJournal() { return generateMlaJournalMultipleAuthors(2); }
-        function generateMlaJournalMultipleAuthors(numAuthors = 0) {
-            if (numAuthors === 0) numAuthors = Math.floor(Math.random() * 3) + 3;
+        function generateMlaJournal(numAuthors = 1) {
             const authors = [];
             while(authors.length < numAuthors) { const author = getRandomItem(data.authors); if (!authors.find(a => a.last === author.last)) authors.push(author); }
             let authorString;
-            if (numAuthors === 2) {
+            if (numAuthors === 1) {
+                authorString = `${authors[0].last}, ${authors[0].first}`;
+            } else if (numAuthors === 2) {
                 authorString = `${authors[0].last}, ${authors[0].first}, and ${authors[1].first} ${authors[1].last}`;
             } else {
                 authorString = `${authors[0].last}, ${authors[0].first}, et al`;
@@ -635,14 +694,12 @@
             };
             return { scenario: `You are citing an entire edited book, ${title}, edited by ${editors.map(e => `${e.first} ${e.last}`).join(' and ')}, published in ${year}.`, fullReference: components.structure.replace('{0}', components.content[0]).replace('{1}', components.content[1]).replace('{2}', components.content[2]).replace('{3}', components.content[3]), components, hint: 'For an entire edited book in Harvard style, the editor\'s name is followed by (ed.) or (eds.).', originalTitle: title };
         }
-        function generateHarvardJournal() { return generateHarvardJournalMultipleAuthors(2); }
-        function generateHarvardJournalMultipleAuthors(numAuthors = 0) {
-            if (numAuthors === 0) numAuthors = Math.floor(Math.random() * 3) + 3;
+        function generateHarvardJournal(numAuthors = 1) {
             const authors = [];
             while(authors.length < numAuthors) { const author = getRandomItem(data.authors); if (!authors.find(a => a.last === author.last)) authors.push(author); }
             const authorList = authors.map(a => `${a.last}, ${a.first.charAt(0)}.`);
             let authorString;
-            if (numAuthors <= 3) {
+             if (numAuthors <= 3) {
                 authorString = authorList.join(' and ');
             } else {
                 authorString = `${authorList[0]} et al.`;
@@ -761,9 +818,7 @@
             };
             return { scenario: `You are citing an entire edited book, ${title}, edited by ${editors.map(e => `${e.first} ${e.last}`).join(' and ')}.`, fullReference: `${components.correct[0]}. ${components.correct[1]}. ${components.correct[2]}, ${components.correct[3]}.`, components, hint: 'For an entire edited book in Chicago, list the editor\'s name followed by "ed." or "eds.". The book title is italicized.', originalTitle: title };
         }
-        function generateChicagoJournal() { return generateChicagoJournalMultipleAuthors(2); }
-        function generateChicagoJournalMultipleAuthors(numAuthors = 0) {
-            if (numAuthors === 0) numAuthors = Math.floor(Math.random() * 3) + 3;
+        function generateChicagoJournal(numAuthors = 1) {
             const authors = [];
             while(authors.length < numAuthors) { const author = getRandomItem(data.authors); if (!authors.find(a => a.last === author.last)) authors.push(author); }
             const authorList = authors.map((a, i) => i === 0 ? `${a.last}, ${a.first}` : `${a.first} ${a.last}`);
@@ -912,9 +967,7 @@
             };
             return { scenario: `You are citing an entire edited book, ${title}, edited by ${editors.map(e => `${e.first} ${e.last}`).join(' and ')}.`, fullReference: components.structure.replace('{0}', components.content[0]).replace('{1}', components.content[1]).replace('{2}', components.content[2]), components, hint: 'For an entire edited book in MHRA, list the editor\'s name followed by "ed." or "eds.". The book title is italicized.', originalTitle: title };
         }
-        function generateMhraJournal() { return generateMhraJournalMultipleAuthors(2); }
-        function generateMhraJournalMultipleAuthors(numAuthors = 0) {
-            if (numAuthors === 0) numAuthors = Math.floor(Math.random() * 3) + 3;
+        function generateMhraJournal(numAuthors = 1) {
             const authors = [];
             while(authors.length < numAuthors) { const author = getRandomItem(data.authors); if (!authors.find(a => a.last === author.last)) authors.push(author); }
             const authorString = authors.map(a => `${a.last}, ${a.first}`).join(' and ');
@@ -1101,22 +1154,22 @@
             });
 
             // Generator controls
-            document.getElementById('generateBtn').addEventListener('click', generateQuestion);
+            document.getElementById('generateBtn').addEventListener('click', generateQuestions);
+            document.getElementById('downloadBtn').addEventListener('click', generateDocx);
             document.getElementById('questionCategory').addEventListener('change', () => {
                 updateSourceTypes();
-                generateQuestion();
+                generateQuestions();
             });
             document.getElementById('citationStyle').addEventListener('change', () => {
                 updateSourceTypes();
-                generateQuestion();
+                generateQuestions();
             });
-            document.getElementById('sourceType').addEventListener('change', generateQuestion);
-            document.getElementById('questionType').addEventListener('change', generateQuestion);
-            document.getElementById('exerciseType').addEventListener('change', generateQuestion);
+            document.getElementById('sourceType').addEventListener('change', generateQuestions);
+            document.getElementById('exerciseType').addEventListener('change', generateQuestions);
             
             // Initial setup
             updateSourceTypes();
-            generateQuestion();
+            generateQuestions();
 
             // Landing Page Canvas Animation
             const canvas = document.getElementById('landingCanvas');
@@ -1255,6 +1308,48 @@
                 console.error('Failed to copy text: ', err);
             }
             document.body.removeChild(textArea);
+        }
+
+        function generateDocx() {
+            if (lastGeneratedQuestions.length === 0) {
+                alert("Please generate some questions first!");
+                return;
+            }
+
+            const doc = new docx.Document({
+                sections: [{
+                    properties: {},
+                    children: lastGeneratedQuestions.flatMap((q, index) => {
+                        const lines = q.split('\n');
+                        const children = [];
+                        
+                        // Add "Question X" as a heading
+                        children.push(new docx.Paragraph({
+                            text: `Question ${index + 1}`,
+                            heading: docx.HeadingLevel.HEADING_1,
+                            spacing: { after: 200 }
+                        }));
+                        
+                        // Add the rest of the question content as normal text
+                        lines.slice(2).forEach(line => {
+                            if (line.trim() !== '') {
+                                children.push(new docx.Paragraph({ text: line }));
+                            }
+                        });
+                        
+                        // Add a page break after each question except the last one
+                        if (index < lastGeneratedQuestions.length - 1) {
+                            children.push(new docx.Paragraph({ children: [new docx.PageBreak()] }));
+                        }
+
+                        return children;
+                    }),
+                }],
+            });
+
+            docx.Packer.toBlob(doc).then(blob => {
+                saveAs(blob, "citex-questions.docx");
+            });
         }
 
     </script>
