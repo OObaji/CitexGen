@@ -120,7 +120,7 @@
                 <p class="text-md text-gray-600 dark:text-gray-400 mt-2">Create formatted questions for your learning app with ease.</p>
                 <!-- Dark Mode Toggle -->
                 <div class="absolute top-0 right-0 theme-switch-wrapper">
-                     <svg class="w-6 h-6 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                    <svg class="w-6 h-6 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
                     <label class="theme-switch" for="checkbox">
                         <input type="checkbox" id="checkbox" />
                         <div class="slider round"></div>
@@ -193,8 +193,8 @@
                         <button class="copy-btn" onclick="copyToClipboard('htmlOutput')">Copy</button>
                     </div>
                 </div>
-                 <!-- Message Box -->
-                <div id="messageBox" class="hidden fixed top-5 right-5 bg-green-500 text-white py-2 px-4 rounded-lg shadow-lg transition-opacity duration-300">
+                  <!-- Message Box -->
+                <div id="messageBox" class="hidden fixed top-5 right-5 text-white py-2 px-4 rounded-lg shadow-lg transition-opacity duration-300">
                     Copied to clipboard!
                 </div>
             </main>
@@ -202,7 +202,7 @@
     </div>
 
     <script>
-        // Global variable to store the last generated questions
+        // Global variable to store the last generated questions for DOCX export
         let lastGeneratedQuestions = [];
         
         // --- Data for Generation ---
@@ -226,13 +226,20 @@
             archives: ['The National Archives, Kew', 'Library of Congress, Washington, D.C.', 'Bodleian Libraries, Oxford']
         };
 
+        // Source types for "Reference List Entry" category
         const referenceListSources = [
             { value: 'book', text: 'Books' },
             { value: 'edited_book', text: 'Edited Books' },
             { value: 'journal', text: 'Journal Articles' },
-            { value: 'website', text: 'Web Resources' }
+            { value: 'website', text: 'Web Resources' },
+            { value: 'book_chapter', text: 'Book Chapter' },
+            { value: 'youtube', text: 'YouTube Video' },
+            { value: 'newspaper', text: 'Newspaper Article (Chicago only)' }, // Specific to Chicago
+            { value: 'primary_source', text: 'Primary Source (Chicago only)' }, // Specific to Chicago
+            { value: 'thesis', text: 'Thesis (MHRA only)' } // Specific to MHRA
         ];
 
+        // Source types for "In-text Citation" category
         const inTextSources = [
             { value: 'in_text_single', text: 'Single author' }, 
             { value: 'in_text_two', text: 'Two authors' }, 
@@ -240,10 +247,20 @@
             { value: 'in_text_four_plus', text: 'More than 3 authors' }
         ];
 
+        /**
+         * Returns a random item from an array.
+         * @param {Array} arr The array to pick from.
+         * @returns {*} A random item from the array.
+         */
         function getRandomItem(arr) {
             return arr[Math.floor(Math.random() * arr.length)];
         }
 
+        /**
+         * Shuffles an array in place.
+         * @param {Array} array The array to shuffle.
+         * @returns {Array} The shuffled array.
+         */
         function shuffleArray(array) {
             for (let i = array.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
@@ -252,6 +269,12 @@
             return array;
         }
         
+        /**
+         * Formats a list of authors for use in scenario descriptions.
+         * E.g., "John Smith", "John Smith and Jane Doe", "John Smith, Jane Doe, and Bob Johnson".
+         * @param {Array<Object>} people An array of author objects {first: 'F', last: 'L'}.
+         * @returns {string} The formatted list of names.
+         */
         function formatScenarioNameList(people) {
             const names = people.map(p => `${p.first} ${p.last}`);
             if (names.length === 1) return names[0];
@@ -259,27 +282,76 @@
             return names.slice(0, -1).join(', ') + ', and ' + names.slice(-1);
         }
 
+        /**
+         * Function to show a message box (replaces alert/confirm).
+         * @param {string} message The message to display.
+         * @param {string} type The type of message ('success' or 'error').
+         */
+        function showMessageBox(message, type = 'success') {
+            const messageBox = document.getElementById('messageBox');
+            messageBox.textContent = message;
+            // Remove previous type classes
+            messageBox.classList.remove('bg-green-500', 'bg-red-500');
+            // Add new type class
+            if (type === 'error') {
+                messageBox.classList.add('bg-red-500');
+            } else {
+                messageBox.classList.add('bg-green-500');
+            }
+            messageBox.classList.remove('hidden');
+            setTimeout(() => {
+                messageBox.classList.add('hidden');
+            }, 3000); // Display for 3 seconds
+        }
+
+        /**
+         * Dynamically updates the available source types based on the selected question category.
+         */
         function updateSourceTypes() {
             const category = document.getElementById('questionCategory').value;
+            const citationStyle = document.getElementById('citationStyle').value;
             const sourceDropdown = document.getElementById('sourceType');
+            
+            // Store current selected values to re-select if available in new list
             const currentSourceValues = Array.from(sourceDropdown.selectedOptions).map(opt => opt.value);
             
-            sourceDropdown.innerHTML = '';
+            sourceDropdown.innerHTML = ''; // Clear existing options
             
-            const sources = category === 'in_text' ? inTextSources : referenceListSources;
+            let sources = [];
+            if (category === 'in_text') {
+                sources = inTextSources;
+            } else { // 'reference_list'
+                sources = referenceListSources.filter(source => {
+                    if (source.value === 'newspaper' || source.value === 'primary_source') {
+                        return citationStyle === 'chicago';
+                    }
+                    if (source.value === 'thesis') {
+                        return citationStyle === 'mhra';
+                    }
+                    return true; // Include all other source types
+                });
+            }
             
             sources.forEach(source => {
                 const option = document.createElement('option');
                 option.value = source.value;
                 option.textContent = source.text;
+                // Re-select previously selected options if they exist in the new list
+                if (currentSourceValues.includes(source.value)) {
+                    option.selected = true;
+                }
                 sourceDropdown.appendChild(option);
             });
 
-            if (sourceDropdown.selectedOptions.length === 0) {
+            // If no options are selected after update, select the first one
+            if (sourceDropdown.selectedOptions.length === 0 && sources.length > 0) {
                  sourceDropdown.selectedIndex = 0;
             }
         }
 
+        /**
+         * Generates a set of citation questions based on user selections.
+         */
         function generateQuestions() {
             const numQuestions = parseInt(document.getElementById('numQuestions').value) || 1;
             const citationStyle = document.getElementById('citationStyle').value;
@@ -288,19 +360,21 @@
             if (document.getElementById('dndCheckbox').checked) selectedQuestionTypes.push('dnd');
             if (document.getElementById('mcqCheckbox').checked) selectedQuestionTypes.push('mcq');
 
+            // Validate selections
             if (selectedSourceTypes.length === 0 || selectedQuestionTypes.length === 0) {
-                alert("Please select at least one Source Type and one Question Type.");
+                showMessageBox("Please select at least one Source Type and one Question Type.", 'error');
                 return;
             }
 
             let allQuestionsOutput = '';
-            lastGeneratedQuestions = [];
+            lastGeneratedQuestions = []; // Reset global array for DOCX export
 
             for (let i = 0; i < numQuestions; i++) {
                 const sourceType = getRandomItem(selectedSourceTypes);
                 const questionType = getRandomItem(selectedQuestionTypes);
                 let questionData = {};
                 
+                // Map to retrieve the correct generation function based on style and source type
                 const generatorMap = {
                     'apa7-book': () => generateApaBook(getRandomItem([1,2,3])), 'apa7-edited_book': () => generateApaEditedBook(getRandomItem([1,2])), 'apa7-journal': () => generateApaJournal(getRandomItem([1,2,3])), 'apa7-website': generateApaWebsite, 'apa7-book_chapter': generateApaBookChapter, 'apa7-youtube': generateApaYouTube, 'apa7-in_text_single': () => generateApaInText(1), 'apa7-in_text_two': () => generateApaInText(2), 'apa7-in_text_three': () => generateApaInText(3), 'apa7-in_text_four_plus': () => generateApaInText(4),
                     'mla9-book': () => generateMlaBook(getRandomItem([1,2,3])), 'mla9-edited_book': () => generateMlaEditedBook(getRandomItem([1,2])), 'mla9-journal': () => generateMlaJournal(getRandomItem([1,2,3])), 'mla9-book_chapter': generateMlaBookChapter, 'mla9-youtube': generateMlaYouTube, 'mla9-website': generateMlaWebsite, 'mla9-in_text_single': () => generateMlaInText(1), 'mla9-in_text_two': () => generateMlaInText(2), 'mla9-in_text_three': () => generateMlaInText(3), 'mla9-in_text_four_plus': () => generateMlaInText(4),
@@ -316,12 +390,20 @@
                     questionData = generatorFunction();
                 } else {
                     console.error("Generator function not found for key:", generatorKey);
-                    continue; 
+                    // Skip this question and try to generate another one if there are more
+                    if (numQuestions > 1 && i < numQuestions -1) {
+                        numQuestions--; // Adjust loop if a question cannot be generated
+                        continue; 
+                    } else {
+                        showMessageBox(`No generator found for ${citationStyle} - ${sourceType}. Please select different options.`, 'error');
+                        return; // Exit if no valid questions can be generated
+                    }
                 }
                 
                 const sourceTypeText = document.querySelector(`#sourceType option[value='${sourceType}']`).textContent;
                 const questionTypeText = questionType === 'dnd' ? 'Drag and Drop' : 'MCQ';
                 const citationStyleText = document.getElementById('citationStyle').selectedOptions[0].text;
+                // Removed question number from baseTitle
                 questionData.baseTitle = `${sourceTypeText} - ${questionTypeText} - ${citationStyleText}`;
 
                 let finalOutput;
@@ -342,10 +424,18 @@
             document.getElementById('downloadBtn').classList.remove('hidden');
         }
 
+        /**
+         * Builds the text output for a Drag and Drop question (Reference List).
+         * @param {Object} questionData The data for the question.
+         * @param {number} questionNumber The current question number.
+         * @returns {Object} An object containing the HTML output and original title.
+         */
         function buildDragAndDrop(questionData, questionNumber) {
             const { baseTitle, scenario, fullReference, components, hint } = questionData;
-            const title = `Question ${questionNumber} - ${baseTitle}`;
+            // Removed question number from title
+            const title = `${baseTitle}`;
             
+            // Determine how many components will be draggable
             const draggableCount = Math.max(2, Math.min(components.content.length - 1, Math.floor(Math.random() * (components.content.length - 1)) + 2));
             
             const allIndices = Array.from(Array(components.content.length).keys());
@@ -354,6 +444,7 @@
 
             const draggableItems = components.content.filter((_, i) => draggableIndices.has(i));
             
+            // Construct the fixed parts string with '||' placeholders for draggable items
             let fixedPartsString = components.structure;
             allIndices.forEach(i => {
                 const placeholder = `{${i}}`;
@@ -364,18 +455,30 @@
                 }
             });
 
-            const text = `Question Title:\n${title}\n\nScenario:\n${scenario}\n\nFull Correct Reference:\n${fullReference}\n\nQuestion Parts (Correct Drag Items):\n${draggableItems.join('\n')}\n\nFixed Parts:\n${fixedPartsString}\n\nConfusing Words (Distractor Drag Items):\n${components.distractors.join('\n')}\n\nHint:\n${hint}`;
-            return { htmlOutput: text, originalTitle: questionData.originalTitle };
+            // Scenario is now part of the main question text
+            const questionText = `${scenario}\n\nComplete the reference by dragging the correct parts into the '||' placeholders:\n\nFixed Parts:\n${fixedPartsString}\n\nQuestion Parts (Correct Drag Items):\n${draggableItems.join('\n')}\n\nConfusing Words (Distractor Drag Items):\n${components.distractors.join('\n')}\n\nHint:\n${hint}`;
+
+            return { htmlOutput: `Question Title:\n${title}\n\nQuestion:\n${questionText}\n\nFull Correct Reference:\n${fullReference}`, originalTitle: questionData.originalTitle };
         }
 
+        /**
+         * Builds the text output for a Drag and Drop question (In-text Citation).
+         * @param {Object} questionData The data for the question.
+         * @param {number} questionNumber The current question number.
+         * @returns {Object} An object containing the HTML output and original title.
+         */
         function buildInTextDragAndDrop(questionData, questionNumber) {
             const { baseTitle, scenario, fullReference, components, hint } = questionData;
-            const title = `Question ${questionNumber} - ${baseTitle}`;
-            const fixedPartsString = scenario.replace('||', ' || ');
-            const draggableItems = components.correct;
+            // Removed question number from title
+            const title = `${baseTitle}`;
+            // The scenario already contains '||' for in-text, which will be replaced by the draggable item in the actual quiz
+            const fixedPartsString = scenario.replace('||', ' || '); 
+            const draggableItems = components.correct; // For in-text, the correct citation itself is the draggable part
             
-            const text = `Question Title:\n${title}\n\nScenario:\n${scenario.replace('||', fullReference)}\n\nFull Correct Reference:\n${fullReference}\n\nQuestion Parts (Correct Drag Items):\n${draggableItems.join('\n')}\n\nFixed Parts:\n${fixedPartsString}\n\nConfusing Words (Distractor Drag Items):\n${components.distractors.join('\n')}\n\nHint:\n${hint}`;
-            return { htmlOutput: text, originalTitle: questionData.originalTitle };
+            // Scenario is now part of the main question text
+            const questionText = `${scenario.replace('||', '||')}\n\nDrag the correct in-text citation into the '||' placeholder:\n\nFixed Parts:\n${fixedPartsString}\n\nQuestion Parts (Correct Drag Items):\n${draggableItems.join('\n')}\n\nConfusing Words (Distractor Drag Items):\n${components.distractors.join('\n')}\n\nHint:\n${hint}`;
+
+            return { htmlOutput: `Question Title:\n${title}\n\nQuestion:\n${questionText}\n\nFull Correct Reference:\n${fullReference}`, originalTitle: questionData.originalTitle };
         }
 
 
@@ -388,16 +491,21 @@
             const title = getRandomItem(data.bookTitles);
             const publisher = getRandomItem(data.publishers);
             const year = new Date().getFullYear() - Math.floor(Math.random() * 5);
-            const scenario = `In ${year}, ${formatScenarioNameList(authors)} released the work, ${title}, through the publisher ${publisher}.`;
+            const scenario = `You are citing "${title}" by ${formatScenarioNameList(authors)}, published by ${publisher} in ${year}.`;
             
             const components = {
                 content: [ authorString, year, title, publisher ],
-                structure: '{0}. ({1}). {2}. {3}.',
+                structure: '{0}. ({1}). <i>{2}</i>. {3}.', // Book title italicized
                 distractors: [ `${authors.map(a => `${a.last}, ${a.first}`).join(' & ')}`, `"${title}"`, `in press`, `${publisher}, ${year}` ]
             };
-            
-            return { scenario, fullReference: components.structure.replace('{0}', components.content[0]).replace('{1}', components.content[1]).replace('{2}', components.content[2]).replace('{3}', components.content[3]), components, hint: 'For a book reference in APA 7, the title of the book is italicized and written in sentence case.', originalTitle: title };
+            const fullReference = components.structure
+                .replace('{0}', components.content[0])
+                .replace('{1}', components.content[1])
+                .replace('{2}', components.content[2])
+                .replace('{3}', components.content[3]);
+            return { scenario, fullReference, components, hint: 'For a book reference in APA 7, the title of the book is italicized and written in sentence case.', originalTitle: title };
         }
+
         function generateApaEditedBook(numEditors = 1) {
             const editors = [];
             while(editors.length < numEditors) { const editor = getRandomItem(data.editors); if (!editors.find(e => e.last === editor.last)) editors.push(editor); }
@@ -406,17 +514,22 @@
             const title = getRandomItem(data.bookTitles);
             const publisher = getRandomItem(data.publishers);
             const year = new Date().getFullYear() - Math.floor(Math.random() * 5);
-            const scenario = `You are citing an entire edited book titled ${title}, edited by ${formatScenarioNameList(editors)}. It was published by ${publisher} in ${year}.`;
+            const scenario = `You are citing the edited book "${title}", edited by ${formatScenarioNameList(editors)}, published by ${publisher} in ${year}.`;
             const edLabel = numEditors > 1 ? '(Eds.).' : '(Ed.).';
             
             const components = {
                 content: [ `${editorString}`, `${year}`, `${title}`, `${publisher}` ],
-                structure: `{0} ${edLabel} ({1}). {2}. {3}.`,
+                structure: `{0} ${edLabel} ({1}). <i>{2}</i>. {3}.`, // Book title italicized
                 distractors: [ `${editorString} (ed.).`, `(Editors).`, `"${title}."`, `Published by ${publisher}` ]
             };
-            
-            return { scenario, fullReference: components.structure.replace('{0}', components.content[0]).replace('{1}', components.content[1]).replace('{2}', components.content[2]).replace('{3}', components.content[3]), components, hint: 'For an edited book, the editor\'s name is followed by (Ed.) for one editor or (Eds.) for multiple editors.', originalTitle: title };
+            const fullReference = components.structure
+                .replace('{0}', components.content[0])
+                .replace('{1}', components.content[1])
+                .replace('{2}', components.content[2])
+                .replace('{3}', components.content[3]);
+            return { scenario, fullReference, components, hint: 'For an edited book, the editor\'s name is followed by (Ed.) for one editor or (Eds.) for multiple editors. The book title is italicized.', originalTitle: title };
         }
+
         function generateApaJournal(numAuthors = 1) {
             const authors = [];
             while(authors.length < numAuthors) { const author = getRandomItem(data.authors); if (!authors.find(a => a.last === author.last)) authors.push(author); }
@@ -429,15 +542,24 @@
             const issue = Math.floor(Math.random() * 4) + 1;
             const pages = `${Math.floor(Math.random() * 50) + 100}–${Math.floor(Math.random() * 10) + 150}`;
             const doi = `https://doi.org/10.1234/jet.${year}.${Math.floor(Math.random()*9000)+1000}`;
-            const scenario = `You are citing a journal article by ${formatScenarioNameList(authors)}, published in ${year}. The article is titled "${articleTitle}" and it appeared in Volume ${volume} of ${journalTitle}.`;
+            const scenario = `You are citing the journal article "${articleTitle}" by ${formatScenarioNameList(authors)}, in ${journalTitle}, Vol. ${volume}, ${year}.`;
 
             const components = {
                 content: [ `${authorString}`, `${year}`, `${articleTitle}`, `${journalTitle}`, `${volume}(${issue})`, `${pages}`, `${doi}` ],
-                structure: '{0} ({1}). {2}. {3}, {4}, {5}. {6}',
+                structure: '{0} ({1}). {2}. <i>{3}</i>, {4}, {5}. {6}', // Journal title and volume italicized
                 distractors: [ `'${articleTitle}'`, `${articleTitle}`, `pp. ${pages}`, `doi:${doi.replace('https://doi.org/','')}` ]
             };
-            return { scenario, fullReference: components.structure.replace('{0}', components.content[0]).replace('{1}', components.content[1]).replace('{2}', components.content[2]).replace('{3}', components.content[3]).replace('{4}', components.content[4]).replace('{5}', components.content[5]).replace('{6}', components.content[6]), components, hint: 'In APA 7, the journal title and volume number are italicized. The article title is not.', originalTitle: journalTitle };
+            const fullReference = components.structure
+                .replace('{0}', components.content[0])
+                .replace('{1}', components.content[1])
+                .replace('{2}', components.content[2])
+                .replace('{3}', components.content[3])
+                .replace('{4}', components.content[4])
+                .replace('{5}', components.content[5])
+                .replace('{6}', components.content[6]);
+            return { scenario, fullReference, components, hint: 'In APA 7, the journal title and volume number are italicized. The article title is not.', originalTitle: journalTitle };
         }
+
         function generateApaWebsite() { 
             const org = getRandomItem(data.organizations);
             const title = getRandomItem(data.webTitles);
@@ -448,11 +570,17 @@
 
             const components = {
                 content: [ `${org}`, `${year}, ${month} ${day}`, `${title}`, `${url}` ],
-                structure: '{0}. ({1}). {2}. {3}',
+                structure: '{0}. ({1}). <i>{2}</i>. {3}', // Webpage title italicized
                 distractors: [ `${year}`, `"${title}"`, `Retrieved from ${url}`, `[accessed ${day} ${month} ${year}]` ]
             };
-            return { scenario: `You are citing a webpage on the ${org}'s website. The page is titled "${title}". The page was published on ${month} ${day}, ${year}.`, fullReference: components.structure.replace('{0}', components.content[0]).replace('{1}', components.content[1]).replace('{2}', components.content[2]).replace('{3}', components.content[3]), components, hint: 'When a webpage has a specific publication date, include it in the reference. In APA 7, the title of a standalone webpage is italicized.', originalTitle: title };
+            const fullReference = components.structure
+                .replace('{0}', components.content[0])
+                .replace('{1}', components.content[1])
+                .replace('{2}', components.content[2])
+                .replace('{3}', components.content[3]);
+            return { scenario, fullReference, components, hint: 'When a webpage has a specific publication date, include it in the reference. In APA 7, the title of a standalone webpage is italicized.', originalTitle: title };
         }
+
         function generateApaBookChapter() {
             const author = getRandomItem(data.authors);
             const editor = getRandomItem(data.editors);
@@ -463,12 +591,21 @@
             const pages = `${Math.floor(Math.random() * 20) + 50}–${Math.floor(Math.random() * 10) + 70}`;
 
             const components = {
-                content: [ `${author.last}, ${author.first.charAt(0)}`, `${year}`, `${chapterTitle}`, `In ${editor.first.charAt(0)}. ${editor.last} (Ed.),`, `${bookTitle}`, `pp. ${pages}`, `${publisher}` ],
-                structure: '{0}. ({1}). {2}. {3} {4} ({5}). {6}.',
+                content: [ `${author.last}, ${author.first.charAt(0)}.`, `${year}`, `${chapterTitle}`, `In ${editor.first.charAt(0)}. ${editor.last} (Ed.),`, `${bookTitle}`, `pp. ${pages}`, `${publisher}` ],
+                structure: '{0}. ({1}). {2}. {3} <i>{4}</i> ({5}). {6}.', // Book title italicized
                 distractors: [ `'${chapterTitle}'`, `ed. by ${editor.first} ${editor.last}`, `(pages ${pages})`, `In ${chapterTitle}` ]
             };
-            return { scenario: `You are citing a chapter titled "${chapterTitle}" by ${author.first} ${author.last}. It appears in an edited book titled ${bookTitle}, edited by ${editor.first} ${editor.last}, and published in ${year} by ${publisher}. The chapter is on pages ${pages}.`, fullReference: components.structure.replace('{0}', components.content[0]).replace('{1}', components.content[1]).replace('{2}', components.content[2]).replace('{3}', components.content[3]).replace('{4}', components.content[4]).replace('{5}', components.content[5]).replace('{6}', components.content[6]), components, hint: 'In APA 7, the book title is italicized, but the chapter title is not. The editor\'s name follows "In".', originalTitle: bookTitle };
+            const fullReference = components.structure
+                .replace('{0}', components.content[0])
+                .replace('{1}', components.content[1])
+                .replace('{2}', components.content[2])
+                .replace('{3}', components.content[3])
+                .replace('{4}', components.content[4])
+                .replace('{5}', components.content[5])
+                .replace('{6}', components.content[6]);
+            return { scenario, fullReference, components, hint: 'In APA 7, the book title is italicized, but the chapter title is not. The editor\'s name follows "In".', originalTitle: bookTitle };
         }
+
         function generateApaYouTube() { 
             const channel = getRandomItem(data.youtubeChannels);
             const title = getRandomItem(data.youtubeVideoTitles);
@@ -479,11 +616,18 @@
             
             const components = {
                 content: [ `${channel}`, `${year}, ${month} ${day}`, `${title}`, `YouTube`, `${url}` ],
-                structure: '{0}. ({1}). {2} [Video]. {3}. {4}',
+                structure: '{0}. ({1}). <i>{2}</i> [Video]. {3}. {4}', // Video title italicized
                 distractors: [ `Uploaded by ${channel}`, `'${title}'`, `YouTube`, `Available at: ${url}` ]
             };
-            return { scenario: `You are citing a YouTube video titled "${title}", which was uploaded to the channel "${channel}" on ${month} ${day}, ${year}.`, fullReference: components.structure.replace('{0}', components.content[0]).replace('{1}', components.content[1]).replace('{2}', components.content[2]).replace('{3}', components.content[3]).replace('{4}', components.content[4]), components, hint: 'In APA 7, the title of the YouTube video is italicized. Include "[Video]" in brackets after the title.', originalTitle: title };
+            const fullReference = components.structure
+                .replace('{0}', components.content[0])
+                .replace('{1}', components.content[1])
+                .replace('{2}', components.content[2])
+                .replace('{3}', components.content[3])
+                .replace('{4}', components.content[4]);
+            return { scenario, fullReference, components, hint: 'In APA 7, the title of the YouTube video is italicized. Include "[Video]" in brackets after the title.', originalTitle: title };
         }
+
         function generateApaInText(numAuthors) {
             const authors = [];
             while(authors.length < numAuthors) { const author = getRandomItem(data.authors); if (!authors.find(a => a.last === author.last)) authors.push(author); }
@@ -499,6 +643,7 @@
                 correct: [`(${authorString}, ${year}, p. ${page})`],
                 distractors: [ `(${authorString}, ${year})`, `(${authorString}, p. ${page})`, `(${authors[0].last}, ${year}, p. ${page})`, `(${authorString.replace('&', 'and')}, ${year}, p. ${page})` ]
             };
+            // For in-text, fullReference is the correct in-text citation string itself
             return { scenario, fullReference: components.correct[0], components, hint: 'APA in-text citations for quotes require Author, Year, and Page Number. Use "&" for two authors and "et al." for three or more.', originalTitle: 'in-text' };
         }
 
@@ -520,11 +665,17 @@
             
             const components = {
                 content: [ `${authorString}`, `${title}`, `${publisher}`, `${year}` ],
-                structure: '{0}. {1}. {2}, {3}.',
+                structure: '{0}. <i>{1}</i>. {2}, {3}.', // Book title italicized
                 distractors: [ `${authors[0].last}, ${authors[0].first.charAt(0)}.`, `(${year})`, `"${title}"`, `Published by ${publisher}` ]
             };
-            return { scenario: `You need to create a reference for the book ${title}, written by ${formatScenarioNameList(authors)}. It was published in ${year} by the publisher ${publisher}.`, fullReference: components.structure.replace('{0}', components.content[0]).replace('{1}', components.content[1]).replace('{2}', components.content[2]).replace('{3}', components.content[3]), components, hint: 'MLA style uses the author\'s full name and places the publication year at the very end. The book title is italicized.', originalTitle: title };
+            const fullReference = components.structure
+                .replace('{0}', components.content[0])
+                .replace('{1}', components.content[1])
+                .replace('{2}', components.content[2])
+                .replace('{3}', components.content[3]);
+            return { scenario, fullReference, components, hint: 'MLA style uses the author\'s full name and places the publication year at the very end. The book title is italicized.', originalTitle: title };
         }
+
         function generateMlaEditedBook(numEditors = 1) {
             const editors = [];
             while(editors.length < numEditors) { const editor = getRandomItem(data.editors); if (!editors.find(e => e.last === editor.last)) editors.push(editor); }
@@ -540,10 +691,17 @@
             
             const components = {
                 content: [ `${editorString}`, `${title}`, `${publisher}`, `${year}` ],
+                structure: '{0}. <i>{1}</i>. {2}, {3}.', // Book title italicized
                 distractors: [ `${editors.map(e => `${e.last}, ${e.first}`).join(' and ')} (Eds.)`, `"${title}"`, `(Editors)`, `${publisher}, ${year}` ]
             };
-            return { scenario: `You are citing an entire edited book, ${title}, with ${formatScenarioNameList(editors)} as the editor(s). It was published in ${year}.`, fullReference: `${components.content[0]}. ${components.content[1]}. ${components.content[2]}, ${components.content[3]}.`, components, hint: 'For an edited book in MLA, list the editor(s) name followed by the label "editor" or "editors".', originalTitle: title };
+            const fullReference = components.structure
+                .replace('{0}', components.content[0])
+                .replace('{1}', components.content[1])
+                .replace('{2}', components.content[2])
+                .replace('{3}', components.content[3]);
+            return { scenario, fullReference, components, hint: 'For an edited book in MLA, list the editor(s) name followed by "editor" or "editors". The book title is italicized.', originalTitle: title };
         }
+
         function generateMlaJournal(numAuthors = 1) {
             const authors = [];
             while(authors.length < numAuthors) { const author = getRandomItem(data.authors); if (!authors.find(a => a.last === author.last)) authors.push(author); }
@@ -564,11 +722,19 @@
 
             const components = {
                 content: [ `${authorString}`, `"${articleTitle}"`, `${journalTitle}`, `vol. ${volume}, no. ${issue}`, `${year}`, `pp. ${pages}` ],
-                structure: '{0}. {1}. {2}, {3}, {4}, {5}.',
+                structure: '{0}. {1}. <i>{2}</i>, {3}, {4}, {5}.', // Journal title italicized
                 distractors: [ `'${articleTitle}'`, `(${year})`, `Volume ${volume}, Issue ${issue}`, `pages ${pages}` ]
             };
-            return { scenario: `You are referencing a journal article titled "${articleTitle}" by ${numAuthors} authors. It was published in ${journalTitle}, volume ${volume}, issue ${issue}, in ${year}.`, fullReference: components.structure.replace('{0}', components.content[0]).replace('{1}', components.content[1]).replace('{2}', components.content[2]).replace('{3}', components.content[3]).replace('{4}', components.content[4]).replace('{5}', components.content[5]), components, hint: 'In MLA 9, the article title is in quotes, and the journal title is italicized. For 3+ authors, use "et al.".', originalTitle: journalTitle };
+            const fullReference = components.structure
+                .replace('{0}', components.content[0])
+                .replace('{1}', components.content[1])
+                .replace('{2}', components.content[2])
+                .replace('{3}', components.content[3])
+                .replace('{4}', components.content[4])
+                .replace('{5}', components.content[5]);
+            return { scenario, fullReference, components, hint: 'In MLA 9, the article title is in quotes, and the journal title is italicized. For 3+ authors, use "et al.".', originalTitle: journalTitle };
         }
+
         function generateMlaWebsite() {
             const org = getRandomItem(data.organizations);
             const title = getRandomItem(data.webTitles);
@@ -579,11 +745,17 @@
             
             const components = {
                 content: [ `"${title}"`, `${org}`, `${day} ${month}. ${year}`, `${url}` ],
-                structure: '{0}. <i>{1}</i>, {2}, {3}.',
+                structure: '{0}. <i>{1}</i>, {2}, {3}.', // Organization name (website) italicized
                 distractors: [ `${title}`, `${org}`, `(${year})`, `Available at: ${url}` ]
             };
-            return { scenario: `You are citing an article titled "${title}" from the website of the ${org}, published on ${day} ${month} ${year}.`, fullReference: components.structure.replace('{0}', components.content[0]).replace('{1}', components.content[1]).replace('{2}', components.content[2]).replace('{3}', components.content[3]), components, hint: 'In MLA 9, the article/page title is in quotes, and the overall website name is italicized.', originalTitle: org };
+            const fullReference = components.structure
+                .replace('{0}', components.content[0])
+                .replace('{1}', components.content[1])
+                .replace('{2}', components.content[2])
+                .replace('{3}', components.content[3]);
+            return { scenario, fullReference, components, hint: 'In MLA 9, the article/page title is in quotes, and the overall website name is italicized.', originalTitle: org };
         }
+
         function generateMlaBookChapter() {
             const author = getRandomItem(data.authors);
             const editor = getRandomItem(data.editors);
@@ -595,11 +767,20 @@
 
             const components = {
                 content: [ `${author.last}, ${author.first}`, `"${chapterTitle}"`, `${bookTitle}`, `edited by ${editor.first} ${editor.last}`, `${publisher}`, `${year}`, `pp. ${pages}` ],
-                structure: '{0}. {1}. {2}, {3}, {4}, {5}, {6}.',
+                structure: '{0}. {1}. <i>{2}</i>, {3}, {4}, {5}, {6}.', // Book title italicized
                 distractors: [ `'${chapterTitle}'`, `In ${bookTitle}`, `Editor, ${editor.first} ${editor.last}`, `pages ${pages}` ]
             };
-            return { scenario: `You are citing a chapter titled "${chapterTitle}" by ${author.first} ${author.last}. It appears in a book titled ${bookTitle}, edited by ${editor.first} ${editor.last}, published in ${year} by ${publisher}.`, fullReference: components.structure.replace('{0}', components.content[0]).replace('{1}', components.content[1]).replace('{2}', components.content[2]).replace('{3}', components.content[3]).replace('{4}', components.content[4]).replace('{5}', components.content[5]).replace('{6}', components.content[6]), components, hint: 'In MLA 9, the chapter title is in quotes and the book title is italicized.', originalTitle: bookTitle };
+            const fullReference = components.structure
+                .replace('{0}', components.content[0])
+                .replace('{1}', components.content[1])
+                .replace('{2}', components.content[2])
+                .replace('{3}', components.content[3])
+                .replace('{4}', components.content[4])
+                .replace('{5}', components.content[5])
+                .replace('{6}', components.content[6]);
+            return { scenario, fullReference, components, hint: 'In MLA 9, the chapter title is in quotes and the book title is italicized.', originalTitle: bookTitle };
         }
+
         function generateMlaYouTube() {
             const channel = getRandomItem(data.youtubeChannels);
             const title = getRandomItem(data.youtubeVideoTitles);
@@ -610,11 +791,18 @@
             
             const components = {
                 content: [ `"${title}"`, `YouTube`, `uploaded by ${channel}`, `${day} ${month}. ${year}`, `${url}` ],
-                structure: '{0}. <i>{1}</i>, {2}, {3}, {4}.',
+                structure: '{0}. <i>{1}</i>, {2}, {3}, {4}.', // Platform (YouTube) italicized
                 distractors: [ `${title}`, `YouTube`, `[Video]`, `(${year})` ]
             };
-            return { scenario: `You are citing a YouTube video titled "${title}", which was uploaded to the channel "${channel}" on ${day} ${month}. ${year}.`, fullReference: components.structure.replace('{0}', components.content[0]).replace('{1}', components.content[1]).replace('{2}', components.content[2]).replace('{3}', components.content[3]).replace('{4}', components.content[4]), components, hint: 'In MLA 9, the video title is placed in quotation marks. The platform name (YouTube) is italicized.', originalTitle: 'YouTube' };
+            const fullReference = components.structure
+                .replace('{0}', components.content[0])
+                .replace('{1}', components.content[1])
+                .replace('{2}', components.content[2])
+                .replace('{3}', components.content[3])
+                .replace('{4}', components.content[4]);
+            return { scenario, fullReference, components, hint: 'In MLA 9, the video title is placed in quotation marks. The platform name (YouTube) is italicized.', originalTitle: 'YouTube' };
         }
+
         function generateMlaInText(numAuthors) {
             const authors = [];
             while(authors.length < numAuthors) { const author = getRandomItem(data.authors); if (!authors.find(a => a.last === author.last)) authors.push(author); }
@@ -624,11 +812,12 @@
             else if (numAuthors === 2) authorString = `${authors[0].last} and ${authors[1].last}`;
             else authorString = `${authors[0].last} et al.`;
             
-            const scenario = `You are paraphrasing a concept from page ${page} of a source by ${formatScenarioNameList(authors)}. Your sentence ends here ||.`;
+            const scenario = `You are paraphrasing a concept from page ${page} of a source by ${formatScenarioNameList(authors)}, published in ${year}. Your sentence ends here ||.`;
             const components = {
                 correct: [`(${authorString} ${page})`],
                 distractors: [ `(${authorString}, ${page})`, `(${authorString}, p. ${page})`, `(${authors[0].last} ${page})`, `(${authorString})` ]
             };
+            // For in-text, fullReference is the correct in-text citation string itself
             return { scenario, fullReference: components.correct[0], components, hint: 'MLA in-text citations require only the Author and Page Number inside the parentheses.', originalTitle: 'in-text' };
         }
 
@@ -645,11 +834,17 @@
 
             const components = {
                 content: [ `${authorString}`, `${year}`, `${title}`, `${location}: ${publisher}` ],
-                structure: '{0}. ({1}) {2}. {3}.',
+                structure: '{0}. ({1}) <i>{2}</i>. {3}.', // Book title italicized
                 distractors: [ `${authors.map(a => `${a.last}, ${a.first}`).join(' and ')}`, `${year}`, `'${title}'`, `${publisher}, ${location}` ]
             };
-            return { scenario: `You are referencing a book from your reading list: ${title} by ${formatScenarioNameList(authors)}, published in ${location} by ${publisher} in ${year}.`, fullReference: components.structure.replace('{0}', components.content[0]).replace('{1}', components.content[1]).replace('{2}', components.content[2]).replace('{3}', components.content[3]), components, hint: 'In Harvard style, the year is in parentheses after the author\'s name. The book title is italicized.', originalTitle: title };
+            const fullReference = components.structure
+                .replace('{0}', components.content[0])
+                .replace('{1}', components.content[1])
+                .replace('{2}', components.content[2])
+                .replace('{3}', components.content[3]);
+            return { scenario, fullReference, components, hint: 'In Harvard style, the year is in parentheses after the author\'s name. The book title is italicized.', originalTitle: title };
         }
+
         function generateHarvardEditedBook(numEditors = 1) {
             const editors = [];
             while(editors.length < numEditors) { const editor = getRandomItem(data.editors); if (!editors.find(e => e.last === editor.last)) editors.push(editor); }
@@ -663,17 +858,23 @@
 
             const components = {
                 content: [ `${editorString}`, `${year}`, `${title}`, `${location}: ${publisher}` ],
-                structure: `{0} ${edLabel} ({1}) {2}. {3}.`,
+                structure: `{0} ${edLabel} ({1}) <i>{2}</i>. {3}.`, // Book title italicized
                 distractors: [ `${editorString} (Editor)`, `${year}`, `"${title}"`, `${publisher}` ]
             };
-            return { scenario: `You are citing an entire edited book, ${title}, edited by ${formatScenarioNameList(editors)}, published in ${year}.`, fullReference: components.structure.replace('{0}', components.content[0]).replace('{1}', components.content[1]).replace('{2}', components.content[2]).replace('{3}', components.content[3]), components, hint: 'For an entire edited book in Harvard style, the editor\'s name is followed by (ed.) or (eds.).', originalTitle: title };
+            const fullReference = components.structure
+                .replace('{0}', components.content[0])
+                .replace('{1}', components.content[1])
+                .replace('{2}', components.content[2])
+                .replace('{3}', components.content[3]);
+            return { scenario, fullReference, components, hint: 'For an entire edited book in Harvard style, the editor\'s name is followed by (ed.) or (eds.). The book title is italicized.', originalTitle: title };
         }
+
         function generateHarvardJournal(numAuthors = 1) {
             const authors = [];
             while(authors.length < numAuthors) { const author = getRandomItem(data.authors); if (!authors.find(a => a.last === author.last)) authors.push(author); }
             const authorList = authors.map(a => `${a.last}, ${a.first.charAt(0)}.`);
             let authorString;
-             if (numAuthors <= 3) {
+            if (numAuthors <= 3) {
                 authorString = authorList.join(' and ');
             } else {
                 authorString = `${authorList[0]} et al.`;
@@ -687,11 +888,19 @@
 
             const components = {
                 content: [ `${authorString}`, `${year}`, `'${articleTitle}'`, `${journalTitle}`, `${volume}(${issue})`, `pp. ${pages}` ],
-                structure: '{0} ({1}) {2}, {3}, {4}, {5}.',
+                structure: '{0} ({1}) {2}, <i>{3}</i>, {4}, {5}.', // Journal title italicized
                 distractors: [ `"${articleTitle}"`, `${journalTitle}`, `vol. ${volume}, no. ${issue}`, `p. ${pages}` ]
             };
-            return { scenario: `A key article for your essay is '${articleTitle}', written by ${numAuthors} authors and published in ${year} in the journal ${journalTitle}.`, fullReference: components.structure.replace('{0}', components.content[0]).replace('{1}', components.content[1]).replace('{2}', components.content[2]).replace('{3}', components.content[3]).replace('{4}', components.content[4]).replace('{5}', components.content[5]), components, hint: 'In Harvard style, the article title is in single quotes, while the journal title is italicized. Use \'et al.\' for more than three authors.', originalTitle: journalTitle };
+            const fullReference = components.structure
+                .replace('{0}', components.content[0])
+                .replace('{1}', components.content[1])
+                .replace('{2}', components.content[2])
+                .replace('{3}', components.content[3])
+                .replace('{4}', components.content[4])
+                .replace('{5}', components.content[5]);
+            return { scenario, fullReference, components, hint: 'In Harvard style, the article title is in single quotes, while the journal title is italicized. Use \'et al.\' for more than three authors.', originalTitle: journalTitle };
         }
+
         function generateHarvardWebsite() {
             const org = getRandomItem(data.organizations);
             const title = getRandomItem(data.webTitles);
@@ -702,11 +911,18 @@
             
             const components = {
                 content: [ `${org}`, `${year}`, `${title}`, `Available at: ${url}`, `(Accessed: ${accessDate})` ],
-                structure: '{0} ({1}) {2}. {3} {4}.',
+                structure: '{0} ({1}) <i>{2}</i>. {3} {4}.', // Webpage title italicized
                 distractors: [ `'${title}'`, `[online]`, `URL: ${url}`, `[accessed ${accessDate}]` ]
             };
-            return { scenario: `You found a useful webpage titled '${title}' on the ${org} website, published this year. You accessed it today.`, fullReference: components.structure.replace('{0}', components.content[0]).replace('{1}', components.content[1]).replace('{2}', components.content[2]).replace('{3}', components.content[3]).replace('{4}', components.content[4]), components, hint: 'Harvard style often requires an access date for online sources. The title of the webpage is italicized.', originalTitle: title };
+            const fullReference = components.structure
+                .replace('{0}', components.content[0])
+                .replace('{1}', components.content[1])
+                .replace('{2}', components.content[2])
+                .replace('{3}', components.content[3])
+                .replace('{4}', components.content[4]);
+            return { scenario, fullReference, components, hint: 'Harvard style often requires an access date for online sources. The title of the webpage is italicized.', originalTitle: title };
         }
+
         function generateHarvardBookChapter() {
             const author = getRandomItem(data.authors);
             const editor = getRandomItem(data.editors);
@@ -719,11 +935,20 @@
 
             const components = {
                 content: [ `${author.last}, ${author.first.charAt(0)}.`, `${year}`, `'${chapterTitle}'`, `in ${editor.last}, ${editor.first.charAt(0)}. (ed.)`, `${bookTitle}`, `${location}: ${publisher}`, `pp. ${pages}` ],
-                structure: '{0} ({1}) {2}, {3} {4}. {5}, {6}.',
+                structure: '{0} ({1}) {2}, {3} <i>{4}</i>. {5}, {6}.', // Book title italicized
                 distractors: [ `"${chapterTitle}"`, `In ${editor.first.charAt(0)}. ${editor.last} (Ed.)`, `${bookTitle}`, `pages ${pages}` ]
             };
-            return { scenario: `You need to cite '${chapterTitle}', a chapter by ${author.first} ${author.last}, from the book ${bookTitle} edited by ${editor.first} ${editor.last}.`, fullReference: components.structure.replace('{0}', components.content[0]).replace('{1}', components.content[1]).replace('{2}', components.content[2]).replace('{3}', components.content[3]).replace('{4}', components.content[4]).replace('{5}', components.content[5]).replace('{6}', components.content[6]), components, hint: 'In Harvard, chapter titles are in single quotes, while book titles are italicized. The editor\'s name is preceded by \'in\'.', originalTitle: bookTitle };
+            const fullReference = components.structure
+                .replace('{0}', components.content[0])
+                .replace('{1}', components.content[1])
+                .replace('{2}', components.content[2])
+                .replace('{3}', components.content[3])
+                .replace('{4}', components.content[4])
+                .replace('{5}', components.content[5])
+                .replace('{6}', components.content[6]);
+            return { scenario, fullReference, components, hint: 'In Harvard, chapter titles are in single quotes, while book titles are italicized. The editor\'s name is preceded by \'in\'.', originalTitle: bookTitle };
         }
+
         function generateHarvardYouTube() {
             const channel = getRandomItem(data.youtubeChannels);
             const title = getRandomItem(data.youtubeVideoTitles);
@@ -734,11 +959,19 @@
             
             const components = {
                 content: [ `${channel}`, `${year}`, `${title}`, `YouTube video, added by ${channel}`, `Available at: ${url}`, `(Accessed: ${accessDate})` ],
-                structure: '{0} ({1}) {2}. {3}. {4} {5}.',
+                structure: '{0} ({1}) <i>{2}</i>. {3}. {4} {5}.', // Video title italicized
                 distractors: [ `'${title}'`, `[Video]`, `YouTube`, `[accessed ${accessDate}]` ]
             };
-            return { scenario: `You watched a video on the '${channel}' YouTube channel called ${title}, which was posted in ${year}.`, fullReference: components.structure.replace('{0}', components.content[0]).replace('{1}', components.content[1]).replace('{2}', components.content[2]).replace('{3}', components.content[3]).replace('{4}', components.content[4]).replace('{5}', components.content[5]), components, hint: 'For YouTube videos in Harvard style, the title is italicized and you should include the platform name and an access date.', originalTitle: title };
+            const fullReference = components.structure
+                .replace('{0}', components.content[0])
+                .replace('{1}', components.content[1])
+                .replace('{2}', components.content[2])
+                .replace('{3}', components.content[3])
+                .replace('{4}', components.content[4])
+                .replace('{5}', components.content[5]);
+            return { scenario, fullReference, components, hint: 'For YouTube videos in Harvard style, the title is italicized and you should include the platform name and an access date.', originalTitle: title };
         }
+
         function generateHarvardInText(numAuthors) {
             const authors = [];
             while(authors.length < numAuthors) { const author = getRandomItem(data.authors); if (!authors.find(a => a.last === author.last)) authors.push(author); }
@@ -754,6 +987,7 @@
                 correct: [`(${authorString}, ${year}, p. ${page})`],
                 distractors: [ `(${authorString} ${year}: ${page})`, `(${authorString}, p. ${page})`, `(${authors[0].last}, ${year}, page ${page})`, `(${authorString.replace('and', '&')}, ${year}, p. ${page})` ]
             };
+            // For in-text, fullReference is the correct in-text citation string itself
             return { scenario, fullReference: components.correct[0], components, hint: 'Harvard in-text citations for quotes require Author, Year, and Page Number. Use "et al." for four or more authors.', originalTitle: 'in-text' };
         }
 
@@ -770,11 +1004,17 @@
 
             const components = {
                 content: [ `${authorString}`, `${title}`, `${location}: ${publisher}`, `${year}` ],
-                structure: '{0}. {1}. {2}, {3}.',
+                structure: '{0}. <i>{1}</i>. {2}, {3}.', // Book title italicized
                 distractors: [ `${authors.map(a => `${a.first} ${a.last}`).join(', ')}`, `(${year})`, `"${title}"`, `${publisher} (${location})` ]
             };
-            return { scenario: `For a history paper, you're using ${title}, a book by ${formatScenarioNameList(authors)} published by ${publisher}.`, fullReference: components.structure.replace('{0}', components.content[0]).replace('{1}', components.content[1]).replace('{2}', components.content[2]).replace('{3}', components.content[3]), components, hint: 'In a Chicago bibliography, the author\'s full name is used. The book title is italicized.', originalTitle: title };
+            const fullReference = components.structure
+                .replace('{0}', components.content[0])
+                .replace('{1}', components.content[1])
+                .replace('{2}', components.content[2])
+                .replace('{3}', components.content[3]);
+            return { scenario, fullReference, components, hint: 'In a Chicago bibliography, the author\'s full name is used. The book title is italicized.', originalTitle: title };
         }
+
         function generateChicagoEditedBook(numEditors = 1) {
             const editors = [];
             while(editors.length < numEditors) { const editor = getRandomItem(data.editors); if (!editors.find(e => e.last === editor.last)) editors.push(editor); }
@@ -788,10 +1028,17 @@
 
             const components = {
                 content: [ `${editorString}, ${edLabel}`, `${title}`, `${location}: ${publisher}`, `${year}` ],
+                structure: '{0}. <i>{1}</i>. {2}, {3}.', // Book title italicized
                 distractors: [ `${editors.map(e => `${e.first} ${e.last}`).join(', ')}, ${edLabel}`, `"${title}"`, `(Editor)`, `${publisher}, ${year}` ]
             };
-            return { scenario: `You are citing an entire edited book, ${title}, edited by ${formatScenarioNameList(editors)}.`, fullReference: `${components.correct[0]}. ${components.correct[1]}. ${components.correct[2]}, ${components.correct[3]}.`, components, hint: 'For an entire edited book in Chicago, list the editor\'s name followed by "ed." or "eds.". The book title is italicized.', originalTitle: title };
+            const fullReference = components.structure
+                .replace('{0}', components.content[0])
+                .replace('{1}', components.content[1])
+                .replace('{2}', components.content[2])
+                .replace('{3}', components.content[3]);
+            return { scenario, fullReference, components, hint: 'For an entire edited book in Chicago, list the editor\'s name followed by "ed." or "eds.". The book title is italicized.', originalTitle: title };
         }
+
         function generateChicagoJournal(numAuthors = 1) {
             const authors = [];
             while(authors.length < numAuthors) { const author = getRandomItem(data.authors); if (!authors.find(a => a.last === author.last)) authors.push(author); }
@@ -807,11 +1054,19 @@
 
             const components = {
                 content: [ `${authorString}`, `"${articleTitle}"`, `${journalTitle} ${volume}, no. ${issue}`, `${year}`, `${pages}`, `${doi}` ],
-                structure: '{0}. {1}. {2} ({3}): {4}. {5}.',
+                structure: '{0}. {1}. <i>{2}</i> ({3}): {4}. {5}.', // Journal title italicized
                 distractors: [ `'${articleTitle}'`, `${journalTitle} vol. ${volume}`, `${year}`, `pp. ${pages}` ]
             };
-            return { scenario: `An article, "${articleTitle}," from the journal ${journalTitle} is essential for your research. It was published in ${year}.`, fullReference: components.structure.replace('{0}', components.content[0]).replace('{1}', components.content[1]).replace('{2}', components.content[2]).replace('{3}', components.content[3]).replace('{4}', components.content[4]).replace('{5}', components.content[5]), components, hint: 'In Chicago style, article titles are in quotes, and journal titles are italicized. The year is in parentheses after the volume/issue number.', originalTitle: journalTitle };
+            const fullReference = components.structure
+                .replace('{0}', components.content[0])
+                .replace('{1}', components.content[1])
+                .replace('{2}', components.content[2])
+                .replace('{3}', components.content[3])
+                .replace('{4}', components.content[4])
+                .replace('{5}', components.content[5]);
+            return { scenario, fullReference, components, hint: 'In Chicago style, article titles are in quotes, and journal titles are italicized. The year is in parentheses after the volume/issue number.', originalTitle: journalTitle };
         }
+
         function generateChicagoWebsite() {
             const org = getRandomItem(data.organizations);
             const title = getRandomItem(data.webTitles);
@@ -822,11 +1077,17 @@
 
             const components = {
                 content: [ `${org}`, `"${title}"`, `Last modified ${month} ${day}, ${year}`, `${url}` ],
-                structure: '{0}. {1}. {2}. {3}.',
+                structure: '{0}. {1}. {2}. {3}.', // No italics for website title in Chicago NB
                 distractors: [ `${title}`, `Published ${year}`, `Accessed ${month} ${day}, ${year}`, `Retrieved from: ${url}` ]
             };
-            return { scenario: `The ${org} published a report titled "${title}" on its website on ${month} ${day}, ${year}.`, fullReference: components.structure.replace('{0}', components.content[0]).replace('{1}', components.content[1]).replace('{2}', components.content[2]).replace('{3}', components.content[3]), components, hint: 'For a Chicago bibliography entry, website article titles are in quotes. Use "Last modified" or a publication date if available.', originalTitle: title };
+            const fullReference = components.structure
+                .replace('{0}', components.content[0])
+                .replace('{1}', components.content[1])
+                .replace('{2}', components.content[2])
+                .replace('{3}', components.content[3]);
+            return { scenario, fullReference, components, hint: 'For a Chicago bibliography entry, website article titles are in quotes. Use "Last modified" or a publication date if available.', originalTitle: title };
         }
+
         function generateChicagoBookChapter() {
             const author = getRandomItem(data.authors);
             const editor = getRandomItem(data.editors);
@@ -838,12 +1099,20 @@
             const pages = `${Math.floor(Math.random() * 20) + 50}-${Math.floor(Math.random() * 10) + 70}`;
 
             const components = {
-                content: [ `${author.last}, ${author.first}`, `"${chapterTitle}"`, `In ${bookTitle}`, `edited by ${editor.first} ${editor.last}`, `${pages}`, `${location}: ${publisher}, ${year}` ],
-                structure: '{0}. {1}. {2}, {3}, {4}. {5}.',
+                content: [ `${author.last}, ${author.first}`, `"${chapterTitle}"`, `${bookTitle}`, `edited by ${editor.first} ${editor.last}`, `${pages}`, `${location}: ${publisher}, ${year}` ],
+                structure: '{0}. {1}. In <i>{2}</i>, {3}, {4}. {5}.', // Book title italicized
                 distractors: [ `${chapterTitle}`, `In ${bookTitle}`, `(Ed. ${editor.first} ${editor.last})`, `pp. ${pages}` ]
             };
-            return { scenario: `You are citing a chapter called "${chapterTitle}" from the book ${bookTitle}, which was edited by ${editor.first} ${editor.last}.`, fullReference: components.structure.replace('{0}', components.content[0]).replace('{1}', components.content[1]).replace('{2}', components.content[2]).replace('{3}', components.content[3]).replace('{4}', components.content[4]).replace('{5}', components.content[5]), components, hint: 'In Chicago, the chapter title is in quotes. The book title is italicized and preceded by "In".', originalTitle: bookTitle };
+            const fullReference = components.structure
+                .replace('{0}', components.content[0])
+                .replace('{1}', components.content[1])
+                .replace('{2}', components.content[2])
+                .replace('{3}', components.content[3])
+                .replace('{4}', components.content[4])
+                .replace('{5}', components.content[5]);
+            return { scenario, fullReference, components, hint: 'In Chicago, the chapter title is in quotes. The book title is italicized and preceded by "In".', originalTitle: bookTitle };
         }
+
         function generateChicagoNewspaper() {
             const author = getRandomItem(data.authors);
             const articleTitle = getRandomItem(data.articleTitles);
@@ -854,11 +1123,17 @@
 
             const components = {
                 content: [ `${author.last}, ${author.first}`, `"${articleTitle}"`, `${newspaper}`, `${month} ${day}, ${year}` ],
-                structure: '{0}. {1}. {2}, {3}.',
+                structure: '{0}. {1}. <i>{2}</i>, {3}.', // Newspaper title italicized
                 distractors: [ `'${articleTitle}'`, `Newspaper: ${newspaper}`, `(${year})`, `${author.first} ${author.last}` ]
             };
-            return { scenario: `You are citing an opinion piece by ${author.first} ${author.last} titled "${articleTitle}," published in ${newspaper} on ${month} ${day}, ${year}.`, fullReference: components.structure.replace('{0}', components.content[0]).replace('{1}', components.content[1]).replace('{2}', components.content[2]).replace('{3}', components.content[3]), components, hint: 'In Chicago style, the newspaper title is italicized, and the article title is in quotation marks.', originalTitle: newspaper };
+            const fullReference = components.structure
+                .replace('{0}', components.content[0])
+                .replace('{1}', components.content[1])
+                .replace('{2}', components.content[2])
+                .replace('{3}', components.content[3]);
+            return { scenario, fullReference, components, hint: 'In Chicago style, the newspaper title is italicized, and the article title is in quotation marks.', originalTitle: newspaper };
         }
+
         function generateChicagoPrimarySource() {
             const author = getRandomItem(data.authors);
             const recipient = getRandomItem(data.authors);
@@ -869,11 +1144,17 @@
             
             const components = {
                 content: [ `${author.last}, ${author.first}`, `Letter to ${recipient.first} ${recipient.last}`, `${month} ${day}, ${year}`, `${archive}` ],
-                structure: '{0}. {1}. {2}. {3}.',
+                structure: '{0}. {1}. {2}. {3}.', // No italics for primary source description
                 distractors: [ `${recipient.last}, ${recipient.first}`, `Personal correspondence`, `Dated ${year}`, `From the ${archive} collection` ]
             };
-            return { scenario: `You are citing a letter from ${author.first} ${author.last} to ${recipient.first} ${recipient.last}, dated ${month} ${day}, ${year}. The letter is held in the ${archive}.`, fullReference: components.structure.replace('{0}', components.content[0]).replace('{1}', components.content[1]).replace('{2}', components.content[2]).replace('{3}', components.content[3]), components, hint: 'For unpublished letters in Chicago style, describe the item (e.g., "Letter to...") and list its date and location in an archive.', originalTitle: 'Letter' };
+            const fullReference = components.structure
+                .replace('{0}', components.content[0])
+                .replace('{1}', components.content[1])
+                .replace('{2}', components.content[2])
+                .replace('{3}', components.content[3]);
+            return { scenario, fullReference, components, hint: 'For unpublished letters in Chicago style, describe the item (e.g., "Letter to...") and list its date and location in an archive.', originalTitle: 'Letter' };
         }
+
         function generateChicagoYouTube() {
             const channel = getRandomItem(data.youtubeChannels);
             const title = getRandomItem(data.youtubeVideoTitles);
@@ -884,11 +1165,19 @@
             
             const components = {
                 content: [ `${channel}`, `"${title}"`, `YouTube video`, `${Math.floor(Math.random() * 10)}:${Math.floor(Math.random() * 50 + 10)}`, `${month} ${day}, ${year}`, `${url}` ],
-                structure: '{0}. {1}. {2}, {3}. {4}. {5}.',
+                structure: '{0}. {1}. {2}, {3}. {4}. {5}.', // Video title in quotes, no italics for YouTube video
                 distractors: [ `${title}`, `Uploaded by ${channel}`, `[Video]`, `YouTube, ${year}` ]
             };
-            return { scenario: `A video from the ${channel} YouTube channel, titled "${title}," is part of your research. It was posted on ${month} ${day}, ${year}.`, fullReference: components.structure.replace('{0}', components.content[0]).replace('{1}', components.content[1]).replace('{2}', components.content[2]).replace('{3}', components.content[3]).replace('{4}', components.content[4]).replace('{5}', components.content[5]), components, hint: 'In Chicago style, the video title is in quotes. Include the platform, date, and URL.', originalTitle: title };
+            const fullReference = components.structure
+                .replace('{0}', components.content[0])
+                .replace('{1}', components.content[1])
+                .replace('{2}', components.content[2])
+                .replace('{3}', components.content[3])
+                .replace('{4}', components.content[4])
+                .replace('{5}', components.content[5]);
+            return { scenario, fullReference, components, hint: 'In Chicago style, the video title is in quotes. Include the platform, date, and URL.', originalTitle: title };
         }
+
         function generateChicagoInText(numAuthors) {
             const authors = [];
             while(authors.length < numAuthors) { const author = getRandomItem(data.authors); if (!authors.find(a => a.last === author.last)) authors.push(author); }
@@ -904,6 +1193,7 @@
                 correct: [`(${authorString} ${year}, ${page})`],
                 distractors: [ `(${authorString}, ${year}, p. ${page})`, `(${authorString} ${page})`, `(${authors[0].last}, ${year})`, `[${authorString} ${year}, ${page}]` ]
             };
+            // For in-text, fullReference is the correct in-text citation string itself
             return { scenario, fullReference: components.correct[0], components, hint: 'A Chicago (Author-Date) in-text citation includes the Author, Year, and Page Number inside parentheses.', originalTitle: 'in-text' };
         }
 
@@ -919,11 +1209,16 @@
             
             const components = {
                 content: [ `${authorString}`, `${title}`, `(${location}: ${publisher}, ${year})` ],
-                structure: '{0}, {1} {2}',
+                structure: '{0}, <i>{1}</i> {2}', // Book title italicized
                 distractors: [ `${authors.map(a => `${a.first} ${a.last}`).join(' and ')}`, `"${title}"`, `${location}: ${publisher}, ${year}` ]
             };
-            return { scenario: `For your humanities dissertation, you are referencing the book ${title} by ${formatScenarioNameList(authors)}.`, fullReference: components.structure.replace('{0}', components.content[0]).replace('{1}', components.content[1]).replace('{2}', components.content[2]), components, hint: 'In MHRA, the publication details (place, publisher, year) are enclosed in parentheses. The book title is italicized.', originalTitle: title };
+            const fullReference = components.structure
+                .replace('{0}', components.content[0])
+                .replace('{1}', components.content[1])
+                .replace('{2}', components.content[2]);
+            return { scenario, fullReference, components, hint: 'In MHRA, the publication details (place, publisher, year) are enclosed in parentheses. The book title is italicized.', originalTitle: title };
         }
+
         function generateMhraEditedBook(numEditors = 1) {
             const editors = [];
             while(editors.length < numEditors) { const editor = getRandomItem(data.editors); if (!editors.find(e => e.last === editor.last)) editors.push(editor); }
@@ -936,11 +1231,16 @@
             
             const components = {
                 content: [ `${editorString}, ${edLabel}`, `${title}`, `(${location}: ${publisher}, ${year})` ],
-                structure: '{0} {1} {2}',
+                structure: '{0} <i>{1}</i> {2}', // Book title italicized
                 distractors: [ `${editorString}, (ed.)`, `"${title}"`, `${location}: ${publisher}, ${year}` ]
             };
-            return { scenario: `You are citing an entire edited book, ${title}, edited by ${formatScenarioNameList(editors)}.`, fullReference: components.structure.replace('{0}', components.content[0]).replace('{1}', components.content[1]).replace('{2}', components.content[2]), components, hint: 'For an entire edited book in MHRA, list the editor\'s name followed by "ed." or "eds.". The book title is italicized.', originalTitle: title };
+            const fullReference = components.structure
+                .replace('{0}', components.content[0])
+                .replace('{1}', components.content[1])
+                .replace('{2}', components.content[2]);
+            return { scenario, fullReference, components, hint: 'For an entire edited book in MHRA, list the editor\'s name followed by "ed." or "eds.". The book title is italicized.', originalTitle: title };
         }
+
         function generateMhraJournal(numAuthors = 1) {
             const authors = [];
             while(authors.length < numAuthors) { const author = getRandomItem(data.authors); if (!authors.find(a => a.last === author.last)) authors.push(author); }
@@ -954,11 +1254,18 @@
 
             const components = {
                 content: [ `${authorString}`, `'${articleTitle}'`, `${journalTitle}`, `${volume}.${issue} (${year})`, `${pages}` ],
-                structure: '{0}, {1}, {2}, {3}, {4}',
+                structure: '{0}, {1}, <i>{2}</i>, {3}, {4}', // Journal title italicized
                 distractors: [ `"${articleTitle}"`, `Journal: ${journalTitle}`, `pp. ${pages}`, `(${year})` ]
             };
-            return { scenario: `You're citing an article called '${articleTitle}' from the journal ${journalTitle}, published in ${year}.`, fullReference: components.structure.replace('{0}', components.content[0]).replace('{1}', components.content[1]).replace('{2}', components.content[2]).replace('{3}', components.content[3]).replace('{4}', components.content[4]), components, hint: 'In MHRA, article titles are in single quotes, journal titles are italicized, and page ranges are not preceded by \'pp.\'.', originalTitle: journalTitle };
+            const fullReference = components.structure
+                .replace('{0}', components.content[0])
+                .replace('{1}', components.content[1])
+                .replace('{2}', components.content[2])
+                .replace('{3}', components.content[3])
+                .replace('{4}', components.content[4]);
+            return { scenario, fullReference, components, hint: 'In MHRA, article titles are in single quotes, journal titles are italicized, and page ranges are not preceded by \'pp.\'.', originalTitle: journalTitle };
         }
+
         function generateMhraWebsite() {
             const org = getRandomItem(data.organizations);
             const title = getRandomItem(data.webTitles);
@@ -969,11 +1276,18 @@
             
             const components = {
                 content: [ `${org}`, `'${title}'`, `${year}`, `<${url}> [accessed ${accessDate}]` ],
-                structure: '{0}, {1}, {2} {3}',
+                structure: '{0}, {1}, {2} <span style="text-decoration: underline;">{3}</span>', // URL often underlined in MHRA
                 distractors: [ `${title}`, `(${year})`, `URL: ${url}`, `(Accessed: ${accessDate})` ]
             };
-            return { scenario: `You are using an online article, '${title}', published by the ${org} in ${year}.`, fullReference: components.structure.replace('{0}', components.content[0]).replace('{1}', components.content[1]).replace('{2}', components.content[2]).replace('{3}', components.content[3]), components, hint: 'In MHRA, online article titles are in single quotes. The URL is enclosed in angle brackets, followed by the access date in square brackets.', originalTitle: title };
+            // Note: MHRA usually doesn't italicize the website title/article itself, but the overall site name might be in some contexts. Sticking to single quotes for article title.
+            const fullReference = components.structure
+                .replace('{0}', components.content[0])
+                .replace('{1}', components.content[1])
+                .replace('{2}', components.content[2])
+                .replace('{3}', components.content[3]);
+            return { scenario, fullReference, components, hint: 'In MHRA, online article titles are in single quotes. The URL is enclosed in angle brackets, followed by the access date in square brackets.', originalTitle: title };
         }
+
         function generateMhraBookChapter() {
             const author = getRandomItem(data.authors);
             const editor = getRandomItem(data.editors);
@@ -985,25 +1299,38 @@
             const pages = `${Math.floor(Math.random() * 20) + 50}-${Math.floor(Math.random() * 10) + 70}`;
 
             const components = {
-                content: [ `${author.last}, ${author.first}`, `'${chapterTitle}'`, `in ${bookTitle}`, `ed. by ${editor.first} ${editor.last}`, `(${location}: ${publisher}, ${year})`, `pp. ${pages}` ],
-                structure: '{0}, {1}, {2}, {3} {4}, {5}',
+                content: [ `${author.last}, ${author.first}`, `'${chapterTitle}'`, `${bookTitle}`, `ed. by ${editor.first} ${editor.last}`, `(${location}: ${publisher}, ${year})`, `pp. ${pages}` ],
+                structure: '{0}, {1}, in <i>{2}</i>, {3} {4}, {5}', // Book title italicized
                 distractors: [ `"${chapterTitle}"`, `in ${chapterTitle}`, `(ed. ${editor.first} ${editor.last})`, `pages ${pages}` ]
             };
-            return { scenario: `You are citing a chapter, '${chapterTitle}', from a collection titled ${bookTitle}, edited by ${editor.first} ${editor.last}.`, fullReference: components.structure.replace('{0}', components.content[0]).replace('{1}', components.content[1]).replace('{2}', components.content[2]).replace('{3}', components.content[3]).replace('{4}', components.content[4]).replace('{5}', components.content[5]), components, hint: 'In MHRA, chapter titles are in single quotes, and book titles are italicized. The editor is introduced with \'ed. by\'.', originalTitle: bookTitle };
+            const fullReference = components.structure
+                .replace('{0}', components.content[0])
+                .replace('{1}', components.content[1])
+                .replace('{2}', components.content[2])
+                .replace('{3}', components.content[3])
+                .replace('{4}', components.content[4])
+                .replace('{5}', components.content[5]);
+            return { scenario, fullReference, components, hint: 'In MHRA, chapter titles are in single quotes, and book titles are italicized. The editor is introduced with \'ed. by\'.', originalTitle: bookTitle };
         }
+
         function generateMhraThesis() {
             const author = getRandomItem(data.authors);
-            const title = getRandomItem(data.articleTitles);
+            const title = getRandomItem(data.articleTitles); // Using articleTitles for generic thesis titles
             const university = getRandomItem(data.universities);
             const year = new Date().getFullYear() - Math.floor(Math.random() * 3);
             
             const components = {
                 content: [ `${author.last}, ${author.first}`, `'${title}'`, `(unpublished PhD thesis, ${university}, ${year})` ],
-                structure: '{0}, {1} {2}',
+                structure: '{0}, {1} {2}', // Thesis title in single quotes
                 distractors: [ `"${title}"`, `PhD dissertation`, `${university}`, `(${year})` ]
             };
-            return { scenario: `You are citing an unpublished PhD thesis by ${author.first} ${author.last} from ${year}, titled '${title}', which you accessed at ${university}.`, fullReference: components.structure.replace('{0}', components.content[0]).replace('{1}', components.content[1]).replace('{2}', components.content[2]), components, hint: 'In MHRA, thesis titles are in single quotes. The degree type, university, and year are enclosed in parentheses.', originalTitle: title };
+            const fullReference = components.structure
+                .replace('{0}', components.content[0])
+                .replace('{1}', components.content[1])
+                .replace('{2}', components.content[2]);
+            return { scenario, fullReference, components, hint: 'In MHRA, thesis titles are in single quotes. The degree type, university, and year are enclosed in parentheses.', originalTitle: title };
         }
+
         function generateMhraYouTube() {
             const channel = getRandomItem(data.youtubeChannels);
             const title = getRandomItem(data.youtubeVideoTitles);
@@ -1014,62 +1341,158 @@
             
             const components = {
                 content: [ `${channel}`, `'${title}'`, `YouTube`, `${year}`, `<${url}> [accessed ${accessDate}]` ],
-                structure: '{0}, {1}, <i>{2}</i>, {3} {4}',
+                structure: '{0}, {1}, <i>{2}</i>, {3} <span style="text-decoration: underline;">{4}</span>', // Platform (YouTube) italicized
                 distractors: [ `"${title}"`, `YouTube Video`, `Uploaded by ${channel}`, `Accessed on ${accessDate}` ]
             };
-            return { scenario: `You need to cite a video from YouTube called '${title}' from the ${channel} channel.`, fullReference: components.structure.replace('{0}', components.content[0]).replace('{1}', components.content[1]).replace('{2}', components.content[2]).replace('{3}', components.content[3]).replace('{4}', components.content[4]), components, hint: 'In MHRA, the video title is in single quotes and the platform name (YouTube) is italicized. Include the URL and access date.', originalTitle: title };
+            const fullReference = components.structure
+                .replace('{0}', components.content[0])
+                .replace('{1}', components.content[1])
+                .replace('{2}', components.content[2])
+                .replace('{3}', components.content[3])
+                .replace('{4}', components.content[4]);
+            return { scenario, fullReference, components, hint: 'In MHRA, the video title is in single quotes and the platform name (YouTube) is italicized. Include the URL and access date.', originalTitle: title };
         }
+
         function generateMhraInText(numAuthors) {
-            // MHRA uses footnotes, not in-text citations. This is a simplified representation.
+            // MHRA uses footnotes, not in-text citations in the same way as APA/Harvard. 
+            // This is a simplified representation for quiz purposes.
             const authors = [];
             while(authors.length < numAuthors) { const author = getRandomItem(data.authors); if (!authors.find(a => a.last === author.last)) authors.push(author); }
             const page = Math.floor(Math.random() * 200) + 20;
             let authorString = authors.map(a => `${a.first} ${a.last}`).join(' and ');
             if (numAuthors > 3) authorString = `${authors[0].first} ${authors[0].last} and others`;
             
-            const scenario = `You are adding a footnote for a source by ${formatScenarioNameList(authors)}, referring to page ${page}. Your sentence ends here ||.`;
+            const scenario = `Footnote for source by ${formatScenarioNameList(authors)}, page ${page}. Your sentence ends here ||.`;
             const components = {
                 correct: [`${authorString}, p. ${page}`],
                 distractors: [ `(${authorString}, p. ${page})`, `${authorString}, page ${page}`, `${authors[0].last}, p. ${page}` ]
             };
-             return { scenario, fullReference: components.correct[0], components, hint: 'MHRA uses footnotes. A simplified footnote includes the author(s) name(s) and the page number preceded by "p.". No parentheses are used.', originalTitle: 'in-text' };
+            // For in-text, fullReference is the correct in-text citation string itself
+            return { scenario, fullReference: components.correct[0], components, hint: 'MHRA uses footnotes. A simplified footnote includes the author(s) name(s) and the page number preceded by "p.". No parentheses are used.', originalTitle: 'in-text' };
         }
         
+        /**
+         * Converts a generated question into a Multiple Choice Question format.
+         * @param {Object} questionData The data for the question.
+         * @param {number} questionNumber The current question number.
+         * @returns {Object} An object containing the HTML output and original title.
+         */
         function convertToMcq(questionData, questionNumber) {
             const { baseTitle, scenario, fullReference, hint, originalTitle, components } = questionData;
-            const title = `Question ${questionNumber} - ${baseTitle}`;
-            const correctRef = fullReference.replace(/<i>/g, '').replace(/<\/i>/g, '');
+            // Removed question number from title
+            const title = `${baseTitle}`;
+            // Ensure correctRef is plain text, removing any HTML italics or underlines
+            const correctRef = fullReference.replace(/<i>/g, '').replace(/<\/i>/g, '').replace(/<span style="text-decoration: underline;">/g, '').replace(/<\/span>/g, '');
 
-            let options = new Set([correctRef]);
-            
-            // Add pre-defined distractors
-            components.distractors.forEach(d => options.add(d.replace(/<i>/g, '').replace(/<\/i>/g, '')));
+            let options = new Set();
+            options.add(correctRef); // Always include the correct answer
 
-            // Generate more distractors if needed
-            while (options.size < 4) {
+            // Add pre-defined distractors, ensuring they are plain text and not identical to correctRef
+            components.distractors.forEach(d => {
+                const cleanedDistractor = d.replace(/<i>/g, '').replace(/<\/i>/g, '').replace(/<span style="text-decoration: underline;">/g, '').replace(/<\/span>/g, '');
+                if (cleanedDistractor !== correctRef && cleanedDistractor.trim() !== '') {
+                    options.add(cleanedDistractor);
+                }
+            });
+
+            // Generate more unique and plausible distractors until we have at least 4
+            let attemptCount = 0;
+            const maxAttempts = 20; // Prevent infinite loops
+            const baseTransformations = [
+                (s) => s.replace(/\./g, '___TEMP_DOT___').replace(/,/g, '.').replace(/___TEMP_DOT___/g, ','), // Swap comma/period
+                (s) => s.replace(/\((.*?)\)/g, '[$1]').replace(/\[(.*?)\]/g, '($1)'), // Swap parentheses/brackets
+                (s) => s.replace(/pp\. /g, '').replace(/p\. /g, ''), // Remove page indicators
+                (s) => { // Change capitalization of a significant part (e.g., a title if available)
+                    if (originalTitle && s.includes(originalTitle)) {
+                        return s.replace(originalTitle, originalTitle.split(' ').map(word => {
+                            if (word.length > 2) return word.charAt(0).toUpperCase() + word.slice(1);
+                            return word;
+                        }).join(' ')); // Title case attempt
+                    }
+                    return s;
+                },
+                (s) => { // Reorder authors if multiple present
+                    const authorMatch = s.match(/^([^,]+), ([^,]+)/);
+                    if (authorMatch) {
+                        return `${authorMatch[2]}, ${authorMatch[1]}${s.substring(authorMatch[0].length)}`;
+                    }
+                    return s;
+                },
+                (s) => { // Remove year if present in parentheses
+                    return s.replace(/(\(\d{4}\))/g, '').replace(/(\(\d{4}\.\))/g, '').trim();
+                },
+                (s) => { // Add or remove 'pp.' or 'p.' before page numbers (if not already handled)
+                    if (s.match(/\d+–\d+/) && !s.includes('pp.') && !s.includes('p.')) return s.replace(/(\d+–\d+)/, 'pp. $1');
+                    if (s.match(/\d+/) && !s.includes('pp.') && !s.includes('p.')) return s.replace(/(\d+)$/, 'p. $1');
+                    return s;
+                }
+            ];
+
+            while (options.size < 4 && attemptCount < maxAttempts) {
                 let newDistractor = correctRef;
-                const transformations = [
-                    (s) => s.replace(/\./g, ','),
-                    (s) => s.replace(/\((.*?)\)/g, '[$1]'),
-                    (s) => s.replace(originalTitle, getRandomItem(data.bookTitles))
-                ];
-                newDistractor = getRandomItem(transformations)(newDistractor);
-                if (newDistractor !== correctRef) {
+                const transformation = getRandomItem(baseTransformations);
+                newDistractor = transformation(newDistractor);
+
+                // Add a random word from data.bookTitles if it's not too long and different
+                if (Math.random() < 0.3 && newDistractor.length < 150) {
+                    const randomWord = getRandomItem(data.bookTitles).split(' ')[0];
+                    if (!newDistractor.includes(randomWord)) {
+                        const insertionPoint = Math.floor(Math.random() * newDistractor.length);
+                        newDistractor = newDistractor.slice(0, insertionPoint) + ' ' + randomWord + ' ' + newDistractor.slice(insertionPoint);
+                    }
+                }
+
+                if (newDistractor !== correctRef && newDistractor.trim() !== '') {
                     options.add(newDistractor);
                 }
+                attemptCount++;
             }
 
             let optionsArray = Array.from(options);
-            if (optionsArray.length > 4) {
-                optionsArray = shuffleArray(optionsArray).slice(0, 4);
-            }
-             if (!optionsArray.includes(correctRef)) {
-                optionsArray[Math.floor(Math.random() * 4)] = correctRef;
+
+            // If still less than 4 unique options, fill with variations of existing ones (less ideal but ensures 4 options)
+            while (optionsArray.length < 4) {
+                let fillerDistractor = getRandomItem(optionsArray); 
+                // Simple variations to ensure distinct options
+                if (fillerDistractor.includes('.')) {
+                    fillerDistractor = fillerDistractor.replace('.', ';');
+                } else if (fillerDistractor.includes(',')) {
+                    fillerDistractor = fillerDistractor.replace(',', '.');
+                } else {
+                    fillerDistractor += ' (misc)'; 
+                }
+                // Only add if truly new or if we're desperate for 4 options
+                if (!optionsArray.includes(fillerDistractor) || optionsArray.length < 3) { 
+                    optionsArray.push(fillerDistractor);
+                }
             }
 
-            optionsArray = shuffleArray(optionsArray);
+            // Ensure optionsArray is exactly 4 elements
+            if (optionsArray.length > 4) {
+                optionsArray = shuffleArray(optionsArray).slice(0, 4);
+                // If correctRef was removed, add it back and remove a random other one
+                if (!optionsArray.includes(correctRef)) {
+                    optionsArray[Math.floor(Math.random() * 4)] = correctRef;
+                }
+            } else if (optionsArray.length < 4) {
+                // If somehow still less than 4, fill by duplicating existing with minor changes
+                while(optionsArray.length < 4) {
+                    optionsArray.push(optionsArray[0] + ' (alt)');
+                }
+            }
+
+            optionsArray = shuffleArray(optionsArray); // Final shuffle to randomize order of options
             
-            const mcqHtml = `Question Title:\n${title} (MCQ)\n\nScenario:\n${scenario.replace('||', '')}\n\nQuestion:\nBased on the scenario, which of the following is the correct reference?\n\nOptions:\nA) ${optionsArray[0]}\nB) ${optionsArray[1]}\nC) ${optionsArray[2]}\nD) ${optionsArray[3]}\n\nCorrect Answer:\n${String.fromCharCode(65 + optionsArray.indexOf(correctRef))}\n\nHint/Explanation:\n${hint}`;
+            // Build the options string without letter prefixes
+            let optionsString = '';
+            for (let i = 0; i < optionsArray.length; i++) {
+                optionsString += `${optionsArray[i]}\n`;
+            }
+
+            // Combine scenario and question
+            const fullQuestionText = `${scenario.replace('||', '')}\n\nWhich of the following is the correct reference?`;
+
+            const mcqHtml = `Question Title:\n${title} (MCQ)\n\nQuestion:\n${fullQuestionText}\n\nOptions:\n${optionsString}\nCorrect Answer:\n${correctRef}\n\nHint/Explanation:\n${hint}`;
             
             return { htmlOutput: mcqHtml, originalTitle: originalTitle };
         }
@@ -1082,11 +1505,13 @@
             const getStartedBtn = document.getElementById('getStartedBtn');
             const homeTitle = document.getElementById('homeTitle');
 
+            // Check if user previously navigated to the generator page
             if (localStorage.getItem('currentPage') === 'generator') {
                 landingPage.style.display = 'none';
                 generatorPage.style.display = 'block';
             }
 
+            // Event listener for "Get Started" button to transition to generator page
             getStartedBtn.addEventListener('click', () => {
                 localStorage.setItem('currentPage', 'generator');
                 landingPage.style.transition = 'opacity 0.5s';
@@ -1102,12 +1527,13 @@
                 }, 500);
             });
             
+            // Event listener for clicking the title to return to the landing page
             homeTitle.addEventListener('click', () => {
-                localStorage.removeItem('currentPage');
-                window.location.reload();
+                localStorage.removeItem('currentPage'); // Clear navigation state
+                window.location.reload(); // Reload to show landing page
             });
 
-            // Dark mode toggle
+            // Dark mode toggle functionality
             const toggle = document.getElementById('checkbox');
             const html = document.documentElement;
 
@@ -1118,6 +1544,7 @@
                 toggle.checked = true;
             }
 
+            // Event listener for theme toggle switch
             toggle.addEventListener('change', () => {
                 if (toggle.checked) {
                     html.classList.add('dark');
@@ -1128,22 +1555,30 @@
                 }
             });
 
-            // Generator controls
+            // Generator controls event listeners
             document.getElementById('generateBtn').addEventListener('click', generateQuestions);
             document.getElementById('downloadBtn').addEventListener('click', generateDocx);
+            
+            // Re-generate questions on change of these settings to provide immediate feedback
             document.getElementById('questionCategory').addEventListener('change', () => {
-                updateSourceTypes();
+                updateSourceTypes(); // Update source types dropdown first
                 generateQuestions();
             });
             document.getElementById('citationStyle').addEventListener('change', () => {
-                updateSourceTypes();
+                updateSourceTypes(); // Update source types dropdown first
                 generateQuestions();
             });
             document.getElementById('sourceType').addEventListener('change', generateQuestions);
-            
-            // Initial setup
+            // Also generate questions when number of questions changes
+            document.getElementById('numQuestions').addEventListener('change', generateQuestions);
+            // Also generate questions when question type checkboxes change
+            document.getElementById('dndCheckbox').addEventListener('change', generateQuestions);
+            document.getElementById('mcqCheckbox').addEventListener('change', generateQuestions);
+
+
+            // Initial setup when the page loads
             updateSourceTypes();
-            generateQuestions();
+            generateQuestions(); // Generate initial set of questions on load
 
             // Landing Page Canvas Animation
             const canvas = document.getElementById('landingCanvas');
@@ -1153,17 +1588,20 @@
 
             let particlesArray;
 
+            // Mouse object to track its position and interaction radius
             const mouse = {
                 x: null,
                 y: null,
-                radius: (canvas.height/120) * (canvas.width/120)
+                radius: (canvas.height/120) * (canvas.width/120) // Responsive radius
             };
 
+            // Update mouse position on mouse move
             window.addEventListener('mousemove', (event) => {
                 mouse.x = event.x;
                 mouse.y = event.y;
             });
 
+            // Particle class for the canvas animation
             class Particle {
                 constructor(x, y, directionX, directionY, size, color) {
                     this.x = x;
@@ -1173,13 +1611,16 @@
                     this.size = size;
                     this.color = color;
                 }
+                // Draw individual particle
                 draw() {
                     ctx.beginPath();
                     ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2, false);
                     ctx.fillStyle = 'rgba(200, 215, 255, 0.6)';
                     ctx.fill();
                 }
+                // Update particle position and draw
                 update() {
+                    // Reverse direction if hitting canvas edges
                     if (this.x > canvas.width || this.x < 0) {
                         this.directionX = -this.directionX;
                     }
@@ -1192,6 +1633,7 @@
                 }
             }
 
+            // Initialize the particles array
             function initCanvas() {
                 particlesArray = [];
                 let numberOfParticles = (canvas.height * canvas.width) / 9000;
@@ -1201,23 +1643,25 @@
                     let y = (Math.random() * ((innerHeight - size * 2) - (size * 2)) + size * 2);
                     let directionX = (Math.random() * 0.4) - 0.2;
                     let directionY = (Math.random() * 0.4) - 0.2;
-                    let color = '#8C9EFF';
+                    let color = '#8C9EFF'; // Not currently used, but could be for varied particle colors
                     particlesArray.push(new Particle(x, y, directionX, directionY, size, color));
                 }
             }
 
+            // Connect particles with lines if they are close enough
             function connect() {
                 let opacityValue = 1;
                 for (let a = 0; a < particlesArray.length; a++) {
                     for (let b = a; b < particlesArray.length; b++) {
                         let distance = ((particlesArray[a].x - particlesArray[b].x) * (particlesArray[a].x - particlesArray[b].x))
-                                     + ((particlesArray[a].y - particlesArray[b].y) * (particlesArray[a].y - particlesArray[b].y));
+                                        + ((particlesArray[a].y - particlesArray[b].y) * (particlesArray[a].y - particlesArray[b].y));
+                        // Only connect if distance is within a threshold
                         if (distance < (canvas.width/7) * (canvas.height/7)) {
-                            opacityValue = 1 - (distance/20000);
+                            opacityValue = 1 - (distance/20000); // Fade lines based on distance
                             let dx = mouse.x - particlesArray[a].x;
                             let dy = mouse.y - particlesArray[a].y;
                             let mouseDistance = Math.sqrt(dx*dx + dy*dy);
-                            if (mouseDistance < mouse.radius) {
+                            if (mouseDistance < mouse.radius) { // Stronger connection near mouse
                                 ctx.strokeStyle = `rgba(220, 230, 255, ${opacityValue})`;
                             } else {
                                 ctx.strokeStyle = `rgba(200, 215, 255, ${opacityValue * 0.3})`;
@@ -1232,61 +1676,69 @@
                 }
             }
 
+            // Animation loop for the canvas
             function animate() {
                 requestAnimationFrame(animate);
-                ctx.clearRect(0, 0, innerWidth, innerHeight);
-                ctx.fillStyle = '#111827';
+                ctx.clearRect(0, 0, innerWidth, innerHeight); // Clear previous frame
+                ctx.fillStyle = '#111827'; // Dark background for canvas
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
 
                 for (let i = 0; i < particlesArray.length; i++) {
-                    particlesArray[i].update();
+                    particlesArray[i].update(); // Update and redraw each particle
                 }
-                connect();
+                connect(); // Draw connections between particles
             }
             
+            // Handle window resizing to keep canvas responsive
             window.addEventListener('resize', () => {
                 canvas.width = innerWidth;
                 canvas.height = innerHeight;
                 mouse.radius = ((canvas.height/120) * (canvas.width/120));
-                initCanvas();
+                initCanvas(); // Reinitialize particles for new canvas size
             });
 
+            // Reset mouse position when mouse leaves the window
             window.addEventListener('mouseout', () => {
                 mouse.x = undefined;
                 mouse.y = undefined;
             });
 
-            initCanvas();
-            animate();
+            initCanvas(); // Initialize particles on load
+            animate(); // Start the animation loop
         });
 
         // --- Utility ---
+        /**
+         * Copies the text content of a specified HTML element to the clipboard.
+         * @param {string} elementId The ID of the element whose text content should be copied.
+         */
         function copyToClipboard(elementId) {
             const element = document.getElementById(elementId);
             const textToCopy = element.innerText || element.textContent;
             const textArea = document.createElement('textarea');
             textArea.value = textToCopy;
             textArea.style.position = 'absolute';
-            textArea.style.left = '-9999px';
+            textArea.style.left = '-9999px'; // Off-screen positioning
             textArea.setAttribute('readonly', '');
             document.body.appendChild(textArea);
             textArea.select();
             try {
-                document.execCommand('copy');
-                const messageBox = document.getElementById('messageBox');
-                messageBox.classList.remove('hidden');
-                setTimeout(() => {
-                    messageBox.classList.add('hidden');
-                }, 2000);
+                document.execCommand('copy'); // Deprecated but widely supported in iframes
+                showMessageBox('Copied to clipboard!', 'success'); // Custom success message
             } catch (err) {
                 console.error('Failed to copy text: ', err);
+                showMessageBox('Failed to copy text. Please try manually.', 'error'); // Custom error message
             }
             document.body.removeChild(textArea);
         }
 
+        /**
+         * Generates and downloads a Word document (.docx) of the generated questions.
+         * Uses the 'docx' and 'FileSaver.js' libraries.
+         */
         function generateDocx() {
             if (lastGeneratedQuestions.length === 0) {
-                alert("Please generate some questions first!");
+                showMessageBox("Please generate some questions first!", 'error');
                 return;
             }
 
@@ -1305,6 +1757,7 @@
                         }));
                         
                         // Add the rest of the question content as normal text
+                        // Skip the first two lines ("Question X" and "---")
                         lines.slice(2).forEach(line => {
                             if (line.trim() !== '') {
                                 children.push(new docx.Paragraph({ text: line }));
@@ -1321,6 +1774,7 @@
                 }],
             });
 
+            // Pack the document and trigger download
             docx.Packer.toBlob(doc).then(blob => {
                 saveAs(blob, "citex-questions.docx");
             });
