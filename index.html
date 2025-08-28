@@ -310,7 +310,9 @@
          * @returns {string} The text with HTML tags removed.
          */
         function cleanHtmlTags(text) {
-            return text.replace(/<i>/g, '').replace(/<\/i>/g, '').replace(/<span style="text-decoration: underline;">/g, '').replace(/<\/span>/g, '');
+            // Ensure text is a string before calling replace
+            const stringText = String(text);
+            return stringText.replace(/<i>/g, '').replace(/<\/i>/g, '').replace(/<span style="text-decoration: underline;">/g, '').replace(/<\/span>/g, '');
         }
 
         /**
@@ -396,7 +398,19 @@
                 const generatorFunction = generatorMap[generatorKey];
 
                 if (generatorFunction) {
-                    questionData = generatorFunction();
+                    try {
+                        questionData = generatorFunction();
+                    } catch (error) {
+                        console.error(`Error generating question for ${citationStyle} - ${sourceType}:`, error);
+                        showMessageBox(`Error generating question for ${citationStyle} - ${sourceType}. Please check the console for details.`, 'error');
+                        // If an error occurs, skip this question and try to generate another one if there are more
+                        if (numQuestions > 1 && i < numQuestions - 1) {
+                            numQuestions--; // Adjust loop if a question cannot be generated
+                            continue;
+                        } else {
+                            return; // Exit if no valid questions can be generated
+                        }
+                    }
                 } else {
                     console.error("Generator function not found for key:", generatorKey);
                     // Skip this question and try to generate another one if there are more
@@ -425,8 +439,10 @@
                 const questionHeader = `Question ${i + 1}\n-----------------\n`;
                 // Clean HTML tags from the final output before displaying and storing
                 const cleanedQuestionText = cleanHtmlTags(questionHeader + finalOutput.htmlOutput);
-                allQuestionsOutput += cleanedQuestionText.replace(/\|\|/g, '') + '\n\n'; // Remove || from output
-                lastGeneratedQuestions.push(cleanedQuestionText.replace(/\|\|/g, '')); // Remove || from DOCX export
+                // Removed the .replace(/\|\|/g, '') from here
+                allQuestionsOutput += cleanedQuestionText + '\n\n'; 
+                // Removed the .replace(/\|\|/g, '') from here
+                lastGeneratedQuestions.push(cleanedQuestionText); 
             }
 
             document.getElementById('htmlOutput').innerText = allQuestionsOutput;
@@ -680,6 +696,7 @@
             const title = getRandomItem(data.bookTitles);
             const publisher = getRandomItem(data.publishers);
             const year = new Date().getFullYear() - Math.floor(Math.random() * 5);
+            const scenario = `You are citing "${title}" by ${formatScenarioNameList(authors)}, published by ${publisher} in ${year}.`; // Define scenario here
             
             const components = {
                 content: [ `${authorString}`, `${title}`, `${publisher}`, `${year}` ],
@@ -706,6 +723,7 @@
             const title = getRandomItem(data.bookTitles);
             const publisher = getRandomItem(data.publishers);
             const year = new Date().getFullYear() - Math.floor(Math.random() * 5);
+            const scenario = `You are citing the edited book "${title}", edited by ${formatScenarioNameList(editors)}, published by ${publisher} in ${year}.`; // Define scenario here
             
             const components = {
                 content: [ `${editorString}`, `${title}`, `${publisher}`, `${year}` ],
@@ -737,6 +755,7 @@
             const volume = Math.floor(Math.random() * 20) + 30;
             const issue = Math.floor(Math.random() * 4) + 1;
             const pages = `${Math.floor(Math.random() * 50) + 100}-${Math.floor(Math.random() * 10) + 150}`;
+            const scenario = `You are citing the journal article "${articleTitle}" by ${formatScenarioNameList(authors)}, in ${journalTitle}, Vol. ${volume}, ${year}.`; // Define scenario here
 
             const components = {
                 content: [ `${authorString}`, `"${articleTitle}"`, `${journalTitle}`, `vol. ${volume}, no. ${issue}`, `${year}`, `pp. ${pages}` ],
@@ -760,6 +779,7 @@
             const month = new Date().toLocaleString('default', { month: 'short' });
             const day = new Date().getDate();
             const url = `www.${org.toLowerCase().replace(/\s/g, '')}.org/data/report.html`;
+            const scenario = `You are citing the webpage "${title}" from ${org}, published on ${day} ${month}. ${year}.`; // Define scenario here
             
             const components = {
                 content: [ `"${title}"`, `${org}`, `${day} ${month}. ${year}`, `${url}` ],
@@ -782,6 +802,7 @@
             const publisher = getRandomItem(data.publishers);
             const year = new Date().getFullYear() - Math.floor(Math.random() * 5);
             const pages = `${Math.floor(Math.random() * 20) + 50}-${Math.floor(Math.random() * 10) + 70}`;
+            const scenario = `You are citing the chapter "${chapterTitle}" by ${formatScenarioNameList([author])} from the book "${bookTitle}", edited by ${formatScenarioNameList([editor])}, published by ${publisher} in ${year}.`; // Define scenario here
 
             const components = {
                 content: [ `${author.last}, ${author.first}`, `"${chapterTitle}"`, `${bookTitle}`, `edited by ${editor.first} ${editor.last}`, `${publisher}`, `${year}`, `pp. ${pages}` ],
@@ -806,6 +827,7 @@
             const month = new Date().toLocaleString('default', { month: 'short' });
             const day = new Date().getDate();
             const url = `www.youtube.com/watch?v=${Math.random().toString(36).substring(2, 13)}`;
+            const scenario = `You are citing the YouTube video "${title}" from the channel ${channel}, uploaded on ${day} ${month}. ${year}.`; // Define scenario here
             
             const components = {
                 content: [ `"${title}"`, `YouTube`, `uploaded by ${channel}`, `${day} ${month}. ${year}`, `${url}` ],
@@ -824,6 +846,7 @@
         function generateMlaInText(numAuthors) {
             const authors = [];
             while(authors.length < numAuthors) { const author = getRandomItem(data.authors); if (!authors.find(a => a.last === author.last)) authors.push(author); }
+            const year = new Date().getFullYear() - Math.floor(Math.random() * 5); // Define year here
             const page = Math.floor(Math.random() * 200) + 20;
             let authorString;
             if (numAuthors === 1) authorString = authors[0].last;
@@ -849,6 +872,7 @@
             const publisher = getRandomItem(data.publishers);
             const location = getRandomItem(data.locations);
             const year = new Date().getFullYear() - Math.floor(Math.random() * 5);
+            const scenario = `You are citing "${title}" by ${formatScenarioNameList(authors)}, published by ${publisher} in ${year} in ${location}.`; // Define scenario here
 
             const components = {
                 content: [ `${authorString}`, `${year}`, `${title}`, `${location}: ${publisher}` ],
@@ -873,6 +897,7 @@
             const location = getRandomItem(data.locations);
             const year = new Date().getFullYear() - Math.floor(Math.random() * 5);
             const edLabel = numEditors > 1 ? '(eds.)' : '(ed.)';
+            const scenario = `You are citing the edited book "${title}", edited by ${formatScenarioNameList(editors)}, published by ${publisher} in ${year} in ${location}.`; // Define scenario here
 
             const components = {
                 content: [ `${editorString}`, `${year}`, `${title}`, `${location}: ${publisher}` ],
@@ -903,6 +928,7 @@
             const volume = Math.floor(Math.random() * 20) + 30;
             const issue = Math.floor(Math.random() * 4) + 1;
             const pages = `${Math.floor(Math.random() * 50) + 100}-${Math.floor(Math.random() * 10) + 150}`;
+            const scenario = `You are citing the journal article "${articleTitle}" by ${formatScenarioNameList(authors)}, in ${journalTitle}, Vol. ${volume}, ${year}.`; // Define scenario here
 
             const components = {
                 content: [ `${authorString}`, `${year}`, `'${articleTitle}'`, `${journalTitle}`, `${volume}(${issue})`, `pp. ${pages}` ],
@@ -926,6 +952,7 @@
             const url = `https://www.${org.toLowerCase().replace(/\s/g, '')}.org/data/report`;
             const date = new Date();
             const accessDate = `${date.getDate()} ${date.toLocaleString('default', { month: 'long' })} ${date.getFullYear()}`;
+            const scenario = `You are citing the webpage "${title}" from ${org}, published in ${year}, accessed on ${accessDate}.`; // Define scenario here
             
             const components = {
                 content: [ `${org}`, `${year}`, `${title}`, `Available at: ${url}`, `(Accessed: ${accessDate})` ],
@@ -950,6 +977,7 @@
             const location = getRandomItem(data.locations);
             const year = new Date().getFullYear() - Math.floor(Math.random() * 5);
             const pages = `${Math.floor(Math.random() * 20) + 50}-${Math.floor(Math.random() * 10) + 70}`;
+            const scenario = `You are citing the chapter "${chapterTitle}" by ${formatScenarioNameList([author])} from the book "${bookTitle}", edited by ${formatScenarioNameList([editor])}, published by ${publisher} in ${year} in ${location}.`; // Define scenario here
 
             const components = {
                 content: [ `${author.last}, ${author.first.charAt(0)}.`, `${year}`, `'${chapterTitle}'`, `in ${editor.last}, ${editor.first.charAt(0)}. (ed.)`, `${bookTitle}`, `${location}: ${publisher}`, `pp. ${pages}` ],
@@ -974,6 +1002,7 @@
             const url = `https://www.youtube.com/watch?v=${Math.random().toString(36).substring(2, 13)}`;
             const date = new Date();
             const accessDate = `${date.getDate()} ${date.toLocaleString('default', { month: 'long' })} ${date.getFullYear()}`;
+            const scenario = `You are citing the YouTube video "${title}" from the channel ${channel}, uploaded in ${year}, accessed on ${accessDate}.`; // Define scenario here
             
             const components = {
                 content: [ `${channel}`, `${year}`, `${title}`, `YouTube video, added by ${channel}`, `Available at: ${url}`, `(Accessed: ${accessDate})` ],
@@ -993,7 +1022,7 @@
         function generateHarvardInText(numAuthors) {
             const authors = [];
             while(authors.length < numAuthors) { const author = getRandomItem(data.authors); if (!authors.find(a => a.last === author.last)) authors.push(author); }
-            const year = new Date().getFullYear() - Math.floor(Math.random() * 5);
+            const year = new Date().getFullYear() - Math.floor(Math.random() * 5); // Define year here
             const page = Math.floor(Math.random() * 200) + 20;
             let authorString;
             if (numAuthors === 1) authorString = authors[0].last;
@@ -1019,6 +1048,7 @@
             const publisher = getRandomItem(data.publishers);
             const location = getRandomItem(data.locations);
             const year = new Date().getFullYear() - Math.floor(Math.random() * 5);
+            const scenario = `You are citing "${title}" by ${formatScenarioNameList(authors)}, published by ${publisher} in ${year} in ${location}.`; // Define scenario here
 
             const components = {
                 content: [ `${authorString}`, `${title}`, `${location}: ${publisher}`, `${year}` ],
@@ -1043,6 +1073,7 @@
             const location = getRandomItem(data.locations);
             const year = new Date().getFullYear() - Math.floor(Math.random() * 5);
             const edLabel = numEditors > 1 ? 'eds.' : 'ed.';
+            const scenario = `You are citing the edited book "${title}", edited by ${formatScenarioNameList(editors)}, published by ${publisher} in ${year} in ${location}.`; // Define scenario here
 
             const components = {
                 content: [ `${editorString}, ${edLabel}`, `${title}`, `${location}: ${publisher}`, `${year}` ],
@@ -1069,6 +1100,7 @@
             const issue = Math.floor(Math.random() * 4) + 1;
             const pages = `${Math.floor(Math.random() * 50) + 100}–${Math.floor(Math.random() * 10) + 150}`;
             const doi = `https://doi.org/10.1234/jet.${year}.${Math.floor(Math.random()*9000)+1000}`;
+            const scenario = `You are citing the journal article "${articleTitle}" by ${formatScenarioNameList(authors)}, in ${journalTitle}, Vol. ${volume}, ${year}.`; // Define scenario here
 
             const components = {
                 content: [ `${authorString}`, `"${articleTitle}"`, `${journalTitle} ${volume}, no. ${issue}`, `${year}`, `${pages}`, `${doi}` ],
@@ -1092,6 +1124,7 @@
             const month = new Date().toLocaleString('default', { month: 'long' });
             const day = new Date().getDate();
             const url = `https://www.${org.toLowerCase().replace(/\s/g, '')}.org/data/report`;
+            const scenario = `You are citing the webpage "${title}" from ${org}, last modified ${month} ${day}, ${year}.`; // Define scenario here
 
             const components = {
                 content: [ `${org}`, `"${title}"`, `Last modified ${month} ${day}, ${year}`, `${url}` ],
@@ -1115,6 +1148,7 @@
             const location = getRandomItem(data.locations);
             const year = new Date().getFullYear() - Math.floor(Math.random() * 5);
             const pages = `${Math.floor(Math.random() * 20) + 50}-${Math.floor(Math.random() * 10) + 70}`;
+            const scenario = `You are citing the chapter "${chapterTitle}" by ${formatScenarioNameList([author])} from the book "${bookTitle}", edited by ${formatScenarioNameList([editor])}, published by ${publisher} in ${year} in ${location}.`; // Define scenario here
 
             const components = {
                 content: [ `${author.last}, ${author.first}`, `"${chapterTitle}"`, `${bookTitle}`, `edited by ${editor.first} ${editor.last}`, `${pages}`, `${location}: ${publisher}, ${year}` ],
@@ -1138,6 +1172,7 @@
             const year = new Date().getFullYear() - Math.floor(Math.random() * 2);
             const month = new Date().toLocaleString('default', { month: 'long' });
             const day = new Date().getDate();
+            const scenario = `You are citing the newspaper article "${articleTitle}" by ${formatScenarioNameList([author])} in ${newspaper}, published on ${month} ${day}, ${year}.`; // Define scenario here
 
             const components = {
                 content: [ `${author.last}, ${author.first}`, `"${articleTitle}"`, `${newspaper}`, `${month} ${day}, ${year}` ],
@@ -1159,6 +1194,7 @@
             const month = new Date(year, Math.floor(Math.random() * 12)).toLocaleString('default', { month: 'long' });
             const day = Math.floor(Math.random() * 28) + 1;
             const archive = getRandomItem(data.archives);
+            const scenario = `You are citing an unpublished letter from ${formatScenarioNameList([author])} to ${formatScenarioNameList([recipient])}, dated ${month} ${day}, ${year}, held at ${archive}.`; // Define scenario here
             
             const components = {
                 content: [ `${author.last}, ${author.first}`, `Letter to ${recipient.first} ${recipient.last}`, `${month} ${day}, ${year}`, `${archive}` ],
@@ -1180,6 +1216,7 @@
             const month = new Date().toLocaleString('default', { month: 'long' });
             const day = new Date().getDate();
             const url = `https://www.youtube.com/watch?v=${Math.random().toString(36).substring(2, 13)}`;
+            const scenario = `You are citing the YouTube video "${title}" from the channel ${channel}, uploaded on ${month} ${day}, ${year}.`; // Define scenario here
             
             const components = {
                 content: [ `${channel}`, `"${title}"`, `YouTube video`, `${Math.floor(Math.random() * 10)}:${Math.floor(Math.random() * 50 + 10)}`, `${month} ${day}, ${year}`, `${url}` ],
@@ -1224,6 +1261,7 @@
             const publisher = getRandomItem(data.publishers);
             const location = getRandomItem(data.locations);
             const year = new Date().getFullYear() - Math.floor(Math.random() * 5);
+            const scenario = `You are citing "${title}" by ${formatScenarioNameList(authors)}, published by ${publisher} in ${year} in ${location}.`; // Define scenario here
             
             const components = {
                 content: [ `${authorString}`, `${title}`, `(${location}: ${publisher}, ${year})` ],
@@ -1246,6 +1284,7 @@
             const location = getRandomItem(data.locations);
             const year = new Date().getFullYear() - Math.floor(Math.random() * 5);
             const edLabel = numEditors > 1 ? 'eds,' : 'ed.,';
+            const scenario = `You are citing the edited book "${title}", edited by ${formatScenarioNameList(editors)}, published by ${publisher} in ${year} in ${location}.`; // Define scenario here
             
             const components = {
                 content: [ `${editorString}, ${edLabel}`, `${title}`, `(${location}: ${publisher}, ${year})` ],
@@ -1269,6 +1308,7 @@
             const volume = Math.floor(Math.random() * 20) + 30;
             const issue = Math.floor(Math.random() * 4) + 1;
             const pages = `${Math.floor(Math.random() * 50) + 100}–${Math.floor(Math.random() * 10) + 150}`;
+            const scenario = `You are citing the journal article "${articleTitle}" by ${formatScenarioNameList(authors)}, in ${journalTitle}, Vol. ${volume}, ${year}.`; // Define scenario here
 
             const components = {
                 content: [ `${authorString}`, `'${articleTitle}'`, `${journalTitle}`, `${volume}.${issue} (${year})`, `${pages}` ],
@@ -1291,6 +1331,7 @@
             const url = `https://www.${org.toLowerCase().replace(/\s/g, '')}.org/data/report`;
             const date = new Date();
             const accessDate = `${date.getDate()} ${date.toLocaleString('default', { month: 'long' })} ${date.getFullYear()}`;
+            const scenario = `You are citing the webpage "${title}" from ${org}, published in ${year}, accessed on ${accessDate}.`; // Define scenario here
             
             const components = {
                 content: [ `${org}`, `'${title}'`, `${year}`, `<${url}> [accessed ${accessDate}]` ],
@@ -1315,6 +1356,7 @@
             const location = getRandomItem(data.locations);
             const year = new Date().getFullYear() - Math.floor(Math.random() * 5);
             const pages = `${Math.floor(Math.random() * 20) + 50}-${Math.floor(Math.random() * 10) + 70}`;
+            const scenario = `You are citing the chapter "${chapterTitle}" by ${formatScenarioNameList([author])} from the book "${bookTitle}", edited by ${formatScenarioNameList([editor])}, published by ${publisher} in ${year} in ${location}.`; // Define scenario here
 
             const components = {
                 content: [ `${author.last}, ${author.first}`, `'${chapterTitle}'`, `${bookTitle}`, `ed. by ${editor.first} ${editor.last}`, `(${location}: ${publisher}, ${year})`, `pp. ${pages}` ],
@@ -1336,6 +1378,7 @@
             const title = getRandomItem(data.articleTitles); // Using articleTitles for generic thesis titles
             const university = getRandomItem(data.universities);
             const year = new Date().getFullYear() - Math.floor(Math.random() * 3);
+            const scenario = `You are citing the unpublished PhD thesis "${title}" by ${formatScenarioNameList([author])}, from ${university}, ${year}.`; // Define scenario here
             
             const components = {
                 content: [ `${author.last}, ${author.first}`, `'${title}'`, `(unpublished PhD thesis, ${university}, ${year})` ],
@@ -1356,6 +1399,7 @@
             const url = `https://www.youtube.com/watch?v=${Math.random().toString(36).substring(2, 13)}`;
             const date = new Date();
             const accessDate = `${date.getDate()} ${date.toLocaleString('default', { month: 'long' })} ${date.getFullYear()}`;
+            const scenario = `You are citing the YouTube video "${title}" from the channel ${channel}, uploaded in ${year}, accessed on ${accessDate}.`; // Define scenario here
             
             const components = {
                 content: [ `${channel}`, `'${title}'`, `YouTube`, `${year}`, `<${url}> [accessed ${accessDate}]` ],
@@ -1376,6 +1420,7 @@
             // This is a simplified representation for quiz purposes.
             const authors = [];
             while(authors.length < numAuthors) { const author = getRandomItem(data.authors); if (!authors.find(a => a.last === author.last)) authors.push(author); }
+            const year = new Date().getFullYear() - Math.floor(Math.random() * 5); // Define year here
             const page = Math.floor(Math.random() * 200) + 20;
             let authorString = authors.map(a => `${a.first} ${a.last}`).join(' and ');
             if (numAuthors > 3) authorString = `${authors[0].first} ${authors[0].last} and others`;
