@@ -305,6 +305,15 @@
         }
 
         /**
+         * Removes HTML tags (<i>, <span> with underline) from a given text.
+         * @param {string} text The text containing HTML tags.
+         * @returns {string} The text with HTML tags removed.
+         */
+        function cleanHtmlTags(text) {
+            return text.replace(/<i>/g, '').replace(/<\/i>/g, '').replace(/<span style="text-decoration: underline;">/g, '').replace(/<\/span>/g, '');
+        }
+
+        /**
          * Dynamically updates the available source types based on the selected question category.
          */
         function updateSourceTypes() {
@@ -414,9 +423,10 @@
                 }
                 
                 const questionHeader = `Question ${i + 1}\n-----------------\n`;
-                const questionText = questionHeader + finalOutput.htmlOutput;
-                allQuestionsOutput += questionText + '\n\n';
-                lastGeneratedQuestions.push(questionText);
+                // Clean HTML tags from the final output before displaying and storing
+                const cleanedQuestionText = cleanHtmlTags(questionHeader + finalOutput.htmlOutput);
+                allQuestionsOutput += cleanedQuestionText.replace(/\|\|/g, '') + '\n\n'; // Remove || from output
+                lastGeneratedQuestions.push(cleanedQuestionText.replace(/\|\|/g, '')); // Remove || from DOCX export
             }
 
             document.getElementById('htmlOutput').innerText = allQuestionsOutput;
@@ -455,10 +465,14 @@
                 }
             });
 
-            // Scenario is now part of the main question text
-            const questionText = `${scenario}\n\nComplete the reference by dragging the correct parts into the '||' placeholders:\n\nFixed Parts:\n${fixedPartsString}\n\nQuestion Parts (Correct Drag Items):\n${draggableItems.join('\n')}\n\nConfusing Words (Distractor Drag Items):\n${components.distractors.join('\n')}\n\nHint:\n${hint}`;
+            // Clean HTML tags from fixedPartsString and fullReference before using them in the output
+            const cleanedFixedPartsString = cleanHtmlTags(fixedPartsString);
+            const cleanedFullReference = cleanHtmlTags(fullReference);
 
-            return { htmlOutput: `Question Title:\n${title}\n\nQuestion:\n${questionText}\n\nFull Correct Reference:\n${fullReference}`, originalTitle: questionData.originalTitle };
+            // Scenario is now part of the main question text
+            const questionText = `${scenario}\n\nComplete the reference by dragging the correct parts into the '||' placeholders:\n\nFixed Parts:\n${cleanedFixedPartsString}\n\nQuestion Parts (Correct Drag Items):\n${draggableItems.map(item => cleanHtmlTags(item)).join('\n')}\n\nConfusing Words (Distractor Drag Items):\n${components.distractors.map(item => cleanHtmlTags(item)).join('\n')}\n\nHint:\n${hint}`;
+
+            return { htmlOutput: `Question Title:\n${title}\n\nQuestion:\n${questionText}\n\nFull Correct Reference:\n${cleanedFullReference}`, originalTitle: questionData.originalTitle };
         }
 
         /**
@@ -475,10 +489,14 @@
             const fixedPartsString = scenario.replace('||', ' || '); 
             const draggableItems = components.correct; // For in-text, the correct citation itself is the draggable part
             
-            // Scenario is now part of the main question text
-            const questionText = `${scenario.replace('||', '||')}\n\nDrag the correct in-text citation into the '||' placeholder:\n\nFixed Parts:\n${fixedPartsString}\n\nQuestion Parts (Correct Drag Items):\n${draggableItems.join('\n')}\n\nConfusing Words (Distractor Drag Items):\n${components.distractors.join('\n')}\n\nHint:\n${hint}`;
+            // Clean HTML tags from fixedPartsString and fullReference before using them in the output
+            const cleanedFixedPartsString = cleanHtmlTags(fixedPartsString);
+            const cleanedFullReference = cleanHtmlTags(fullReference);
 
-            return { htmlOutput: `Question Title:\n${title}\n\nQuestion:\n${questionText}\n\nFull Correct Reference:\n${fullReference}`, originalTitle: questionData.originalTitle };
+            // Scenario is now part of the main question text
+            const questionText = `${scenario}\n\nDrag the correct in-text citation into the '||' placeholder:\n\nFixed Parts:\n${cleanedFixedPartsString}\n\nQuestion Parts (Correct Drag Items):\n${draggableItems.map(item => cleanHtmlTags(item)).join('\n')}\n\nConfusing Words (Distractor Drag Items):\n${components.distractors.map(item => cleanHtmlTags(item)).join('\n')}\n\nHint:\n${hint}`;
+
+            return { htmlOutput: `Question Title:\n${title}\n\nQuestion:\n${questionText}\n\nFull Correct Reference:\n${cleanedFullReference}`, originalTitle: questionData.originalTitle };
         }
 
 
@@ -1382,14 +1400,14 @@
             // Removed question number from title
             const title = `${baseTitle}`;
             // Ensure correctRef is plain text, removing any HTML italics or underlines
-            const correctRef = fullReference.replace(/<i>/g, '').replace(/<\/i>/g, '').replace(/<span style="text-decoration: underline;">/g, '').replace(/<\/span>/g, '');
+            const correctRef = cleanHtmlTags(fullReference);
 
             let options = new Set();
             options.add(correctRef); // Always include the correct answer
 
             // Add pre-defined distractors, ensuring they are plain text and not identical to correctRef
             components.distractors.forEach(d => {
-                const cleanedDistractor = d.replace(/<i>/g, '').replace(/<\/i>/g, '').replace(/<span style="text-decoration: underline;">/g, '').replace(/<\/span>/g, '');
+                const cleanedDistractor = cleanHtmlTags(d);
                 if (cleanedDistractor !== correctRef && cleanedDistractor.trim() !== '') {
                     options.add(cleanedDistractor);
                 }
@@ -1490,7 +1508,7 @@
             }
 
             // Combine scenario and question
-            const fullQuestionText = `${scenario.replace('||', '')}\n\nWhich of the following is the correct reference?`;
+            const fullQuestionText = `${scenario}\n\nWhich of the following is the correct reference?`;
 
             const mcqHtml = `Question Title:\n${title} (MCQ)\n\nQuestion:\n${fullQuestionText}\n\nOptions:\n${optionsString}\nCorrect Answer:\n${correctRef}\n\nHint/Explanation:\n${hint}`;
             
