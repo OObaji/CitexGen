@@ -1442,23 +1442,20 @@
          */
         function convertToMcq(questionData, questionNumber) {
             const { baseTitle, scenario, fullReference, hint, originalTitle, components } = questionData;
-            // Removed question number from title
             const title = `${baseTitle}`;
-            // Ensure correctRef is plain text, removing any HTML italics or underlines
             const correctRef = cleanHtmlTags(fullReference);
 
-            let options = new Set();
-            options.add(correctRef); // Always include the correct answer
+            let distractors = new Set();
 
             // Add pre-defined distractors, ensuring they are plain text and not identical to correctRef
             components.distractors.forEach(d => {
                 const cleanedDistractor = cleanHtmlTags(d);
                 if (cleanedDistractor !== correctRef && cleanedDistractor.trim() !== '') {
-                    options.add(cleanedDistractor);
+                    distractors.add(cleanedDistractor);
                 }
             });
 
-            // Generate more unique and plausible distractors until we have at least 4
+            // Generate more unique and plausible distractors until we have at least 3
             let attemptCount = 0;
             const maxAttempts = 20; // Prevent infinite loops
             const baseTransformations = [
@@ -1491,8 +1488,8 @@
                 }
             ];
 
-            while (options.size < 4 && attemptCount < maxAttempts) {
-                let newDistractor = correctRef;
+            while (distractors.size < 3 && attemptCount < maxAttempts) {
+                let newDistractor = correctRef; // Start with the correct answer to generate variations
                 const transformation = getRandomItem(baseTransformations);
                 newDistractor = transformation(newDistractor);
 
@@ -1505,48 +1502,48 @@
                     }
                 }
 
-                if (newDistractor !== correctRef && newDistractor.trim() !== '') {
-                    options.add(newDistractor);
+                const cleanedNewDistractor = cleanHtmlTags(newDistractor);
+                if (cleanedNewDistractor !== correctRef && cleanedNewDistractor.trim() !== '' && !distractors.has(cleanedNewDistractor)) {
+                    distractors.add(cleanedNewDistractor);
                 }
                 attemptCount++;
             }
 
-            let optionsArray = Array.from(options);
+            let optionsArray = Array.from(distractors);
 
-            // If still less than 4 unique options, fill with variations of existing ones (less ideal but ensures 4 options)
-            while (optionsArray.length < 4) {
-                let fillerDistractor = getRandomItem(optionsArray); 
+            // If still less than 3 unique options, fill by duplicating existing with minor changes
+            while (optionsArray.length < 3) {
+                let fillerDistractor = getRandomItem(optionsArray);
                 // Simple variations to ensure distinct options
                 if (fillerDistractor.includes('.')) {
                     fillerDistractor = fillerDistractor.replace('.', ';');
                 } else if (fillerDistractor.includes(',')) {
                     fillerDistractor = fillerDistractor.replace(',', '.');
                 } else {
-                    fillerDistractor += ' (misc)'; 
+                    fillerDistractor += ' (alt)'; // Add a generic alteration
                 }
-                // Only add if truly new or if we're desperate for 4 options
-                if (!optionsArray.includes(fillerDistractor) || optionsArray.length < 3) { 
-                    optionsArray.push(fillerDistractor);
+                const cleanedFillerDistractor = cleanHtmlTags(fillerDistractor);
+                if (cleanedFillerDistractor !== correctRef && cleanedFillerDistractor.trim() !== '' && !optionsArray.includes(cleanedFillerDistractor)) {
+                    optionsArray.push(cleanedFillerDistractor);
+                } else if (optionsArray.length < 2) { // Ensure at least 2 distinct ones if possible
+                     optionsArray.push(cleanedFillerDistractor);
                 }
             }
 
-            // Ensure optionsArray is exactly 4 elements
-            if (optionsArray.length > 4) {
-                optionsArray = shuffleArray(optionsArray).slice(0, 4);
-                // If correctRef was removed, add it back and remove a random other one
-                if (!optionsArray.includes(correctRef)) {
-                    optionsArray[Math.floor(Math.random() * 4)] = correctRef;
-                }
-            } else if (optionsArray.length < 4) {
-                // If somehow still less than 4, fill by duplicating existing with minor changes
-                while(optionsArray.length < 4) {
-                    optionsArray.push(optionsArray[0] + ' (alt)');
-                }
+            // Ensure we have exactly 3 distractors
+            if (optionsArray.length > 3) {
+                optionsArray = shuffleArray(optionsArray).slice(0, 3);
+            } else if (optionsArray.length < 3) {
+                 // Fallback if somehow still not 3, duplicate existing to reach 3
+                 while(optionsArray.length < 3) {
+                     optionsArray.push(optionsArray[0] + ' (var)');
+                 }
             }
+
 
             optionsArray = shuffleArray(optionsArray); // Final shuffle to randomize order of options
             
-            // Build the options string without letter prefixes
+            // Build the options string WITHOUT letter prefixes
             let optionsString = '';
             for (let i = 0; i < optionsArray.length; i++) {
                 optionsString += `${optionsArray[i]}\n`;
