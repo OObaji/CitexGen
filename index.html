@@ -208,9 +208,9 @@
         // --- Data for Generation ---
         const data = {
             authors: [
-                { first: 'Anya', last: 'Sharma' }, { first: 'Li', last: 'Chen' }, { first: 'Fatima', last: 'Rodriguez' }, { first: 'Eleanor', last: 'Vance' }, { first: 'Ben', last: 'Carter' }, { first: 'Olivia', last: 'Martinez' }, { first: 'Kenji', last: 'Tanaka' }, { first: 'Chloe', last: 'Dubois' }, { first: 'Isaac', last: 'Goldberg' }, { first: 'Sofia', last: 'Petrova' }, { first: 'Liam', last: 'O\'Connell' }, { first: 'Mei', last: 'Lin' }
+                { first: 'John', last: 'Smith' }, { first: 'Jane', last: 'Doe' }, { first: 'Mark', last: 'Johnson' }, { first: 'Emily', last: 'Davis' }, { first: 'David', last: 'Wilson' }, { first: 'Sarah', last: 'Taylor' }, { first: 'Chris', last: 'Evans' }, { first: 'Laura', last: 'White' }, { first: 'James', last: 'Brown' }, { first: 'Lisa', last: 'Hall' }
             ],
-            editors: [ { first: 'John', last: 'Smith' }, { first: 'Maria', last: 'Garcia' }, { first: 'David', last: 'Jones'}, { first: 'Susan', last: 'Miller' }, { first: 'Wei', last: 'Zhang' } ],
+            editors: [ { first: 'Peter', last: 'Jones' }, { first: 'Linda', last: 'Harris' }, { first: 'Michael', last: 'Clark'}, { first: 'Susan', last: 'Miller' } ],
             bookTitles: [ 'The Social Fabric', 'Echoes of the Past', 'Digital Communities', 'Future Imperfect', 'Rethinking Society', 'Urban Labyrinths', 'The Quantum Moment', 'Coastal Ecology' ],
             chapterTitles: [ 'The role of media in modern politics', 'Case studies in digital ethics', 'The future of work', 'Migration patterns in the 21st century', 'AI and human creativity' ],
             journalTitles: [ 'Journal of Educational Technology', 'Cognitive Science Quarterly', 'Media Psychology Review', 'International Journal of Sociology', 'Environmental Science & Policy' ],
@@ -391,7 +391,7 @@
                     'mla9-book': () => generateMlaBook(getRandomItem([1,2,3])), 'mla9-edited_book': () => generateMlaEditedBook(getRandomItem([1,2])), 'mla9-journal': () => generateMlaJournal(getRandomItem([1,2,3])), 'mla9-book_chapter': generateMlaBookChapter, 'mla9-youtube': generateMlaYouTube, 'mla9-website': generateMlaWebsite, 'mla9-in_text_single': () => generateMlaInText(1), 'mla9-in_text_two': () => generateMlaInText(2), 'mla9-in_text_three': () => generateMlaInText(3), 'mla9-in_text_four_plus': () => generateMlaInText(4),
                     'harvard-book': () => generateHarvardBook(getRandomItem([1,2,3])), 'harvard-edited_book': () => generateHarvardEditedBook(getRandomItem([1,2])), 'harvard-journal': () => generateHarvardJournal(getRandomItem([1,2,3])), 'harvard-website': generateHarvardWebsite, 'harvard-book_chapter': generateHarvardBookChapter, 'harvard-youtube': generateHarvardYouTube, 'harvard-in_text_single': () => generateHarvardInText(1), 'harvard-in_text_two': () => generateHarvardInText(2), 'harvard-in_text_three': () => generateHarvardInText(3), 'harvard-in_text_four_plus': () => generateHarvardInText(4),
                     'chicago-book': () => generateChicagoBook(getRandomItem([1,2,3])), 'chicago-edited_book': () => generateChicagoEditedBook(getRandomItem([1,2])), 'chicago-journal': () => generateChicagoJournal(getRandomItem([1,2,3])), 'chicago-website': generateChicagoWebsite, 'chicago-book_chapter': generateChicagoBookChapter, 'chicago-newspaper': generateChicagoNewspaper, 'chicago-primary_source': generateChicagoPrimarySource, 'chicago-youtube': generateChicagoYouTube, 'chicago-in_text_single': () => generateChicagoInText(1), 'chicago-in_text_two': () => generateChicagoInText(2), 'chicago-in_text_three': () => generateChicagoInText(3), 'chicago-in_text_four_plus': () => generateChicagoInText(4),
-                    'mhra-book': () => generateMhraBook(getRandomItem([1,2,3])), 'mhra-edited_book': () => generateMhraEditedBook(getRandomItem([1,2])), 'mhra-journal': () => generateMhraJournal(getRandomItem([1,2,3])), 'mhra-website': generateMhraWebsite, 'mhra-book_chapter': generateMhraBookChapter, 'mhra-thesis': generateMhraThesis, 'mhra-youtube': generateMhraYouTube, 'mhra-in_text_single': () => generateMhraInText(1), 'mhra-in_text_two': () => generateMhraInText(2), 'mhra-in_text_three': () => generateMhraInText(3), 'mhra-in_text_four_plus': () => generateMhraInText(4),
+                    'mhra-book': () => generateMhraBook(getRandomItem([1,2,3])), 'mhra-edited_book': () => generateMhraEditedBook(getRandomItem([1,2])), 'mhra-journal': () => generateMhraJournal(getRandomItem([1,2,3])), 'mhra-website': generateMhraWebsite, 'mhra-book_chapter': generateMhraBookChapter, 'mhra-thesis': () => generateMhraThesis, 'mhra-youtube': generateMhraYouTube, 'mhra-in_text_single': () => generateMhraInText(1), 'mhra-in_text_two': () => generateMhraInText(2), 'mhra-in_text_three': () => generateMhraInText(3), 'mhra-in_text_four_plus': () => generateMhraInText(4),
                 };
 
                 const generatorKey = `${citationStyle}-${sourceType}`;
@@ -485,10 +485,10 @@
             const cleanedFixedPartsString = cleanHtmlTags(fixedPartsString);
             const cleanedFullReference = cleanHtmlTags(fullReference);
 
-            // Scenario is now part of the main question text
-            const questionText = `${scenario}\n\nComplete the reference by dragging the correct parts into the '||' placeholders:\n\nFixed Parts:\n${cleanedFixedPartsString}\n\nQuestion Parts (Correct Drag Items):\n${draggableItems.map(item => cleanHtmlTags(item)).join('\n')}\n\nConfusing Words (Distractor Drag Items):\n${components.distractors.map(item => cleanHtmlTags(item)).join('\n')}\n\nHint:\n${hint}`;
+            // Reordered output for Drag and Drop
+            const htmlOutput = `Question Title:\n${title}\n\nQuestion:\n${scenario}\n\nQuestion Parts (Correct Drag Items):\n${draggableItems.map(item => cleanHtmlTags(item)).join('\n')}\n\nFixed Parts:\n${cleanedFixedPartsString}\n\nConfusing Words (Distractor Drag Items):\n${components.distractors.map(item => cleanHtmlTags(item)).join('\n')}\n\nHint:\n${hint}`;
 
-            return { htmlOutput: `Question Title:\n${title}\n\nQuestion:\n${questionText}\n\nFull Correct Reference:\n${cleanedFullReference}`, originalTitle: questionData.originalTitle };
+            return { htmlOutput: htmlOutput, originalTitle: questionData.originalTitle };
         }
 
         /**
@@ -509,10 +509,10 @@
             const cleanedFixedPartsString = cleanHtmlTags(fixedPartsString);
             const cleanedFullReference = cleanHtmlTags(fullReference);
 
-            // Scenario is now part of the main question text
-            const questionText = `${scenario}\n\nDrag the correct in-text citation into the '||' placeholder:\n\nFixed Parts:\n${cleanedFixedPartsString}\n\nQuestion Parts (Correct Drag Items):\n${draggableItems.map(item => cleanHtmlTags(item)).join('\n')}\n\nConfusing Words (Distractor Drag Items):\n${components.distractors.map(item => cleanHtmlTags(item)).join('\n')}\n\nHint:\n${hint}`;
+            // Reordered output for In-text Drag and Drop
+            const htmlOutput = `Question Title:\n${title}\n\nQuestion:\n${scenario}\n\nQuestion Parts (Correct Drag Items):\n${draggableItems.map(item => cleanHtmlTags(item)).join('\n')}\n\nFixed Parts:\n${cleanedFixedPartsString}\n\nConfusing Words (Distractor Drag Items):\n${components.distractors.map(item => cleanHtmlTags(item)).join('\n')}\n\nHint:\n${hint}`;
 
-            return { htmlOutput: `Question Title:\n${title}\n\nQuestion:\n${questionText}\n\nFull Correct Reference:\n${cleanedFullReference}`, originalTitle: questionData.originalTitle };
+            return { htmlOutput: htmlOutput, originalTitle: questionData.originalTitle };
         }
 
 
@@ -525,7 +525,7 @@
             const title = getRandomItem(data.bookTitles);
             const publisher = getRandomItem(data.publishers);
             const year = new Date().getFullYear() - Math.floor(Math.random() * 5);
-            const scenario = `You are citing "${title}" by ${formatScenarioNameList(authors)}, published by ${publisher} in ${year}.`;
+            const scenario = `Provide the APA 7 reference for a book titled "${title}" by author ${formatScenarioNameList(authors)}, published by ${publisher} in ${year}.`;
             
             const components = {
                 content: [ authorString, year, title, publisher ],
@@ -548,7 +548,7 @@
             const title = getRandomItem(data.bookTitles);
             const publisher = getRandomItem(data.publishers);
             const year = new Date().getFullYear() - Math.floor(Math.random() * 5);
-            const scenario = `You are citing the edited book "${title}", edited by ${formatScenarioNameList(editors)}, published by ${publisher} in ${year}.`;
+            const scenario = `Provide the APA 7 reference for the edited book "${title}", edited by ${formatScenarioNameList(editors)}, published by ${publisher} in ${year}.`;
             const edLabel = numEditors > 1 ? '(Eds.).' : '(Ed.).';
             
             const components = {
@@ -576,7 +576,7 @@
             const issue = Math.floor(Math.random() * 4) + 1;
             const pages = `${Math.floor(Math.random() * 50) + 100}–${Math.floor(Math.random() * 10) + 150}`;
             const doi = `https://doi.org/10.1234/jet.${year}.${Math.floor(Math.random()*9000)+1000}`;
-            const scenario = `You are citing the journal article "${articleTitle}" by ${formatScenarioNameList(authors)}, in ${journalTitle}, Vol. ${volume}, ${year}.`;
+            const scenario = `Provide the APA 7 reference for the journal article titled "${articleTitle}" by ${formatScenarioNameList(authors)}, from ${journalTitle} (Vol. ${volume}), published in ${year}.`;
 
             const components = {
                 content: [ `${authorString}`, `${year}`, `${articleTitle}`, `${journalTitle}`, `${volume}(${issue})`, `${pages}`, `${doi}` ],
@@ -623,6 +623,7 @@
             const publisher = getRandomItem(data.publishers);
             const year = new Date().getFullYear() - Math.floor(Math.random() * 5);
             const pages = `${Math.floor(Math.random() * 20) + 50}–${Math.floor(Math.random() * 10) + 70}`;
+            const scenario = `Provide the APA 7 reference for the chapter "${chapterTitle}" by ${formatScenarioNameList([author])} from the book "${bookTitle}", edited by ${formatScenarioNameList([editor])}, published in ${year} by ${publisher}.`;
 
             const components = {
                 content: [ `${author.last}, ${author.first.charAt(0)}.`, `${year}`, `${chapterTitle}`, `In ${editor.first.charAt(0)}. ${editor.last} (Ed.),`, `${bookTitle}`, `pp. ${pages}`, `${publisher}` ],
@@ -672,7 +673,7 @@
             else if (numAuthors === 2) authorString = `${authors[0].last} & ${authors[1].last}`;
             else authorString = `${authors[0].last} et al.`;
             
-            const scenario = `You are quoting a line from page ${page} of a source by ${formatScenarioNameList(authors)}, published in ${year}. Your sentence ends here ||.`;
+            const scenario = `Provide the APA 7 in-text citation for a quote from page ${page} of a work by ${formatScenarioNameList(authors)}, published in ${year}. The citation goes here ||.`;
             const components = {
                 correct: [`(${authorString}, ${year}, p. ${page})`],
                 distractors: [ `(${authorString}, ${year})`, `(${authorString}, p. ${page})`, `(${authors[0].last}, ${year}, p. ${page})`, `(${authorString.replace('&', 'and')}, ${year}, p. ${page})` ]
@@ -696,7 +697,7 @@
             const title = getRandomItem(data.bookTitles);
             const publisher = getRandomItem(data.publishers);
             const year = new Date().getFullYear() - Math.floor(Math.random() * 5);
-            const scenario = `You are citing "${title}" by ${formatScenarioNameList(authors)}, published by ${publisher} in ${year}.`; // Define scenario here
+            const scenario = `Provide the MLA 9 reference for a book titled "${title}" by author ${formatScenarioNameList(authors)}, published by ${publisher} in ${year}.`;
             
             const components = {
                 content: [ `${authorString}`, `${title}`, `${publisher}`, `${year}` ],
@@ -723,7 +724,7 @@
             const title = getRandomItem(data.bookTitles);
             const publisher = getRandomItem(data.publishers);
             const year = new Date().getFullYear() - Math.floor(Math.random() * 5);
-            const scenario = `You are citing the edited book "${title}", edited by ${formatScenarioNameList(editors)}, published by ${publisher} in ${year}.`; // Define scenario here
+            const scenario = `Provide the MLA 9 reference for the edited book "${title}", edited by ${formatScenarioNameList(editors)}, published by ${publisher} in ${year}.`;
             
             const components = {
                 content: [ `${editorString}`, `${title}`, `${publisher}`, `${year}` ],
@@ -755,7 +756,7 @@
             const volume = Math.floor(Math.random() * 20) + 30;
             const issue = Math.floor(Math.random() * 4) + 1;
             const pages = `${Math.floor(Math.random() * 50) + 100}-${Math.floor(Math.random() * 10) + 150}`;
-            const scenario = `You are citing the journal article "${articleTitle}" by ${formatScenarioNameList(authors)}, in ${journalTitle}, Vol. ${volume}, ${year}.`; // Define scenario here
+            const scenario = `Provide the MLA 9 reference for the article "${articleTitle}" by ${formatScenarioNameList(authors)} from ${journalTitle} (Vol. ${volume}), published in ${year}.`;
 
             const components = {
                 content: [ `${authorString}`, `"${articleTitle}"`, `${journalTitle}`, `vol. ${volume}, no. ${issue}`, `${year}`, `pp. ${pages}` ],
@@ -779,7 +780,7 @@
             const month = new Date().toLocaleString('default', { month: 'short' });
             const day = new Date().getDate();
             const url = `www.${org.toLowerCase().replace(/\s/g, '')}.org/data/report.html`;
-            const scenario = `You are citing the webpage "${title}" from ${org}, published on ${day} ${month}. ${year}.`; // Define scenario here
+            const scenario = `Provide the MLA 9 reference for the webpage "${title}" from ${org}, published on ${day} ${month}. ${year}.`;
             
             const components = {
                 content: [ `"${title}"`, `${org}`, `${day} ${month}. ${year}`, `${url}` ],
@@ -802,7 +803,7 @@
             const publisher = getRandomItem(data.publishers);
             const year = new Date().getFullYear() - Math.floor(Math.random() * 5);
             const pages = `${Math.floor(Math.random() * 20) + 50}-${Math.floor(Math.random() * 10) + 70}`;
-            const scenario = `You are citing the chapter "${chapterTitle}" by ${formatScenarioNameList([author])} from the book "${bookTitle}", edited by ${formatScenarioNameList([editor])}, published by ${publisher} in ${year}.`; // Define scenario here
+            const scenario = `Provide the MLA 9 reference for the chapter "${chapterTitle}" by ${formatScenarioNameList([author])} from the edited book "${bookTitle}", edited by ${formatScenarioNameList([editor])}, published by ${publisher} in ${year}.`;
 
             const components = {
                 content: [ `${author.last}, ${author.first}`, `"${chapterTitle}"`, `${bookTitle}`, `edited by ${editor.first} ${editor.last}`, `${publisher}`, `${year}`, `pp. ${pages}` ],
@@ -827,7 +828,7 @@
             const month = new Date().toLocaleString('default', { month: 'short' });
             const day = new Date().getDate();
             const url = `www.youtube.com/watch?v=${Math.random().toString(36).substring(2, 13)}`;
-            const scenario = `You are citing the YouTube video "${title}" from the channel ${channel}, uploaded on ${day} ${month}. ${year}.`; // Define scenario here
+            const scenario = `Provide the MLA 9 reference for the YouTube video "${title}" from the channel ${channel}, uploaded on ${day} ${month}. ${year}.`;
             
             const components = {
                 content: [ `"${title}"`, `YouTube`, `uploaded by ${channel}`, `${day} ${month}. ${year}`, `${url}` ],
@@ -853,7 +854,7 @@
             else if (numAuthors === 2) authorString = `${authors[0].last} and ${authors[1].last}`;
             else authorString = `${authors[0].last} et al.`;
             
-            const scenario = `You are paraphrasing a concept from page ${page} of a source by ${formatScenarioNameList(authors)}, published in ${year}. Your sentence ends here ||.`;
+            const scenario = `Provide the MLA 9 in-text citation for a concept from page ${page} of a work by ${formatScenarioNameList(authors)}, published in ${year}. Your paraphrase ends here ||.`;
             const components = {
                 correct: [`(${authorString} ${page})`],
                 distractors: [ `(${authorString}, ${page})`, `(${authorString}, p. ${page})`, `(${authors[0].last} ${page})`, `(${authorString})` ]
@@ -872,7 +873,7 @@
             const publisher = getRandomItem(data.publishers);
             const location = getRandomItem(data.locations);
             const year = new Date().getFullYear() - Math.floor(Math.random() * 5);
-            const scenario = `You are citing "${title}" by ${formatScenarioNameList(authors)}, published by ${publisher} in ${year} in ${location}.`; // Define scenario here
+            const scenario = `Provide the Harvard reference for a book titled "${title}", by ${formatScenarioNameList(authors)}, published by ${publisher} in ${year}.`;
 
             const components = {
                 content: [ `${authorString}`, `${year}`, `${title}`, `${location}: ${publisher}` ],
@@ -897,7 +898,7 @@
             const location = getRandomItem(data.locations);
             const year = new Date().getFullYear() - Math.floor(Math.random() * 5);
             const edLabel = numEditors > 1 ? '(eds.)' : '(ed.)';
-            const scenario = `You are citing the edited book "${title}", edited by ${formatScenarioNameList(editors)}, published by ${publisher} in ${year} in ${location}.`; // Define scenario here
+            const scenario = `Provide the Harvard reference for the edited book "${title}", edited by ${formatScenarioNameList(editors)}, published by ${publisher} in ${year}.`;
 
             const components = {
                 content: [ `${editorString}`, `${year}`, `${title}`, `${location}: ${publisher}` ],
@@ -928,7 +929,7 @@
             const volume = Math.floor(Math.random() * 20) + 30;
             const issue = Math.floor(Math.random() * 4) + 1;
             const pages = `${Math.floor(Math.random() * 50) + 100}-${Math.floor(Math.random() * 10) + 150}`;
-            const scenario = `You are citing the journal article "${articleTitle}" by ${formatScenarioNameList(authors)}, in ${journalTitle}, Vol. ${volume}, ${year}.`; // Define scenario here
+            const scenario = `Provide the Harvard reference for the article "${articleTitle}" by ${formatScenarioNameList(authors)} from ${journalTitle} (Vol. ${volume}), published in ${year}.`;
 
             const components = {
                 content: [ `${authorString}`, `${year}`, `'${articleTitle}'`, `${journalTitle}`, `${volume}(${issue})`, `pp. ${pages}` ],
@@ -952,7 +953,7 @@
             const url = `https://www.${org.toLowerCase().replace(/\s/g, '')}.org/data/report`;
             const date = new Date();
             const accessDate = `${date.getDate()} ${date.toLocaleString('default', { month: 'long' })} ${date.getFullYear()}`;
-            const scenario = `You are citing the webpage "${title}" from ${org}, published in ${year}, accessed on ${accessDate}.`; // Define scenario here
+            const scenario = `Provide the Harvard reference for the webpage "${title}" from ${org}, published in ${year}, accessed on ${accessDate}.`;
             
             const components = {
                 content: [ `${org}`, `${year}`, `${title}`, `Available at: ${url}`, `(Accessed: ${accessDate})` ],
@@ -977,7 +978,7 @@
             const location = getRandomItem(data.locations);
             const year = new Date().getFullYear() - Math.floor(Math.random() * 5);
             const pages = `${Math.floor(Math.random() * 20) + 50}-${Math.floor(Math.random() * 10) + 70}`;
-            const scenario = `You are citing the chapter "${chapterTitle}" by ${formatScenarioNameList([author])} from the book "${bookTitle}", edited by ${formatScenarioNameList([editor])}, published by ${publisher} in ${year} in ${location}.`; // Define scenario here
+            const scenario = `Provide the Harvard reference for the chapter "${chapterTitle}" by ${formatScenarioNameList([author])} from the edited book "${bookTitle}", edited by ${formatScenarioNameList([editor])}, published by ${publisher} in ${year}.`;
 
             const components = {
                 content: [ `${author.last}, ${author.first.charAt(0)}.`, `${year}`, `'${chapterTitle}'`, `in ${editor.last}, ${editor.first.charAt(0)}. (ed.)`, `${bookTitle}`, `${location}: ${publisher}`, `pp. ${pages}` ],
@@ -1002,7 +1003,7 @@
             const url = `https://www.youtube.com/watch?v=${Math.random().toString(36).substring(2, 13)}`;
             const date = new Date();
             const accessDate = `${date.getDate()} ${date.toLocaleString('default', { month: 'long' })} ${date.getFullYear()}`;
-            const scenario = `You are citing the YouTube video "${title}" from the channel ${channel}, uploaded in ${year}, accessed on ${accessDate}.`; // Define scenario here
+            const scenario = `Provide the Harvard reference for the YouTube video "${title}", uploaded by ${channel} in ${year}.`;
             
             const components = {
                 content: [ `${channel}`, `${year}`, `${title}`, `YouTube video, added by ${channel}`, `Available at: ${url}`, `(Accessed: ${accessDate})` ],
@@ -1029,7 +1030,7 @@
             else if (numAuthors <= 3) authorString = authors.map(a => a.last).join(' and ');
             else authorString = `${authors[0].last} et al.`;
             
-            const scenario = `You are quoting a line from page ${page} of a source by ${formatScenarioNameList(authors)}, published in ${year}. Your sentence ends here ||.`;
+            const scenario = `Provide the Harvard in-text citation for a quote from page ${page} of a work by ${formatScenarioNameList(authors)}, published in ${year}. The citation goes here ||.`;
             const components = {
                 correct: [`(${authorString}, ${year}, p. ${page})`],
                 distractors: [ `(${authorString} ${year}: ${page})`, `(${authorString}, p. ${page})`, `(${authors[0].last}, ${year}, page ${page})`, `(${authorString.replace('and', '&')}, ${year}, p. ${page})` ]
@@ -1048,7 +1049,7 @@
             const publisher = getRandomItem(data.publishers);
             const location = getRandomItem(data.locations);
             const year = new Date().getFullYear() - Math.floor(Math.random() * 5);
-            const scenario = `You are citing "${title}" by ${formatScenarioNameList(authors)}, published by ${publisher} in ${year} in ${location}.`; // Define scenario here
+            const scenario = `Provide the Chicago (NB) reference for a book titled "${title}" by ${formatScenarioNameList(authors)}, published by ${publisher} in ${year}.`;
 
             const components = {
                 content: [ `${authorString}`, `${title}`, `${location}: ${publisher}`, `${year}` ],
@@ -1073,7 +1074,7 @@
             const location = getRandomItem(data.locations);
             const year = new Date().getFullYear() - Math.floor(Math.random() * 5);
             const edLabel = numEditors > 1 ? 'eds.' : 'ed.';
-            const scenario = `You are citing the edited book "${title}", edited by ${formatScenarioNameList(editors)}, published by ${publisher} in ${year} in ${location}.`; // Define scenario here
+            const scenario = `Provide the Chicago (NB) reference for the edited book "${title}", edited by ${formatScenarioNameList(editors)}, published by ${publisher} in ${year}.`;
 
             const components = {
                 content: [ `${editorString}, ${edLabel}`, `${title}`, `${location}: ${publisher}`, `${year}` ],
@@ -1100,7 +1101,7 @@
             const issue = Math.floor(Math.random() * 4) + 1;
             const pages = `${Math.floor(Math.random() * 50) + 100}–${Math.floor(Math.random() * 10) + 150}`;
             const doi = `https://doi.org/10.1234/jet.${year}.${Math.floor(Math.random()*9000)+1000}`;
-            const scenario = `You are citing the journal article "${articleTitle}" by ${formatScenarioNameList(authors)}, in ${journalTitle}, Vol. ${volume}, ${year}.`; // Define scenario here
+            const scenario = `Provide the Chicago (NB) reference for the article "${articleTitle}" by ${formatScenarioNameList(authors)} from ${journalTitle} (Vol. ${volume}), published in ${year}.`;
 
             const components = {
                 content: [ `${authorString}`, `"${articleTitle}"`, `${journalTitle} ${volume}, no. ${issue}`, `${year}`, `${pages}`, `${doi}` ],
@@ -1124,7 +1125,7 @@
             const month = new Date().toLocaleString('default', { month: 'long' });
             const day = new Date().getDate();
             const url = `https://www.${org.toLowerCase().replace(/\s/g, '')}.org/data/report`;
-            const scenario = `You are citing the webpage "${title}" from ${org}, last modified ${month} ${day}, ${year}.`; // Define scenario here
+            const scenario = `Provide the Chicago (NB) reference for the webpage "${title}" from ${org}, last modified on ${month} ${day}, ${year}.`;
 
             const components = {
                 content: [ `${org}`, `"${title}"`, `Last modified ${month} ${day}, ${year}`, `${url}` ],
@@ -1148,7 +1149,7 @@
             const location = getRandomItem(data.locations);
             const year = new Date().getFullYear() - Math.floor(Math.random() * 5);
             const pages = `${Math.floor(Math.random() * 20) + 50}-${Math.floor(Math.random() * 10) + 70}`;
-            const scenario = `You are citing the chapter "${chapterTitle}" by ${formatScenarioNameList([author])} from the book "${bookTitle}", edited by ${formatScenarioNameList([editor])}, published by ${publisher} in ${year} in ${location}.`; // Define scenario here
+            const scenario = `Provide the Chicago (NB) reference for the chapter "${chapterTitle}" by ${formatScenarioNameList([author])} from the edited book "${bookTitle}", edited by ${formatScenarioNameList([editor])}, published by ${publisher} in ${year}.`;
 
             const components = {
                 content: [ `${author.last}, ${author.first}`, `"${chapterTitle}"`, `${bookTitle}`, `edited by ${editor.first} ${editor.last}`, `${pages}`, `${location}: ${publisher}, ${year}` ],
@@ -1172,7 +1173,7 @@
             const year = new Date().getFullYear() - Math.floor(Math.random() * 2);
             const month = new Date().toLocaleString('default', { month: 'long' });
             const day = new Date().getDate();
-            const scenario = `You are citing the newspaper article "${articleTitle}" by ${formatScenarioNameList([author])} in ${newspaper}, published on ${month} ${day}, ${year}.`; // Define scenario here
+            const scenario = `Provide the Chicago (NB) reference for the newspaper article "${articleTitle}" by ${formatScenarioNameList([author])} from ${newspaper}, published on ${month} ${day}, ${year}.`;
 
             const components = {
                 content: [ `${author.last}, ${author.first}`, `"${articleTitle}"`, `${newspaper}`, `${month} ${day}, ${year}` ],
@@ -1194,7 +1195,7 @@
             const month = new Date(year, Math.floor(Math.random() * 12)).toLocaleString('default', { month: 'long' });
             const day = Math.floor(Math.random() * 28) + 1;
             const archive = getRandomItem(data.archives);
-            const scenario = `You are citing an unpublished letter from ${formatScenarioNameList([author])} to ${formatScenarioNameList([recipient])}, dated ${month} ${day}, ${year}, held at ${archive}.`; // Define scenario here
+            const scenario = `Provide the Chicago (NB) reference for the unpublished letter from ${formatScenarioNameList([author])} to ${formatScenarioNameList([recipient])}, dated ${month} ${day}, ${year}, and held at ${archive}.`;
             
             const components = {
                 content: [ `${author.last}, ${author.first}`, `Letter to ${recipient.first} ${recipient.last}`, `${month} ${day}, ${year}`, `${archive}` ],
@@ -1216,7 +1217,7 @@
             const month = new Date().toLocaleString('default', { month: 'long' });
             const day = new Date().getDate();
             const url = `https://www.youtube.com/watch?v=${Math.random().toString(36).substring(2, 13)}`;
-            const scenario = `You are citing the YouTube video "${title}" from the channel ${channel}, uploaded on ${month} ${day}, ${year}.`; // Define scenario here
+            const scenario = `Provide the Chicago (NB) reference for the YouTube video "${title}", uploaded by ${channel} on ${month} ${day}, ${year}.`;
             
             const components = {
                 content: [ `${channel}`, `"${title}"`, `YouTube video`, `${Math.floor(Math.random() * 10)}:${Math.floor(Math.random() * 50 + 10)}`, `${month} ${day}, ${year}`, `${url}` ],
@@ -1243,7 +1244,7 @@
             else if (numAuthors <= 3) authorString = authors.map(a => a.last).join(' and ');
             else authorString = `${authors[0].last} et al.`;
             
-            const scenario = `You are paraphrasing a concept from page ${page} of a source by ${formatScenarioNameList(authors)}, published in ${year}. Your sentence ends here ||.`;
+            const scenario = `Provide the Chicago (NB) in-text citation for a quote from page ${page} of a work by ${formatScenarioNameList(authors)}, published in ${year}. The citation goes here ||.`;
             const components = {
                 correct: [`(${authorString} ${year}, ${page})`],
                 distractors: [ `(${authorString}, ${year}, p. ${page})`, `(${authorString} ${page})`, `(${authors[0].last}, ${year})`, `[${authorString} ${year}, ${page}]` ]
@@ -1261,7 +1262,7 @@
             const publisher = getRandomItem(data.publishers);
             const location = getRandomItem(data.locations);
             const year = new Date().getFullYear() - Math.floor(Math.random() * 5);
-            const scenario = `You are citing "${title}" by ${formatScenarioNameList(authors)}, published by ${publisher} in ${year} in ${location}.`; // Define scenario here
+            const scenario = `Provide the MHRA reference for a book titled "${title}" by ${formatScenarioNameList(authors)}, published by ${publisher} in ${year}.`;
             
             const components = {
                 content: [ `${authorString}`, `${title}`, `(${location}: ${publisher}, ${year})` ],
@@ -1284,7 +1285,7 @@
             const location = getRandomItem(data.locations);
             const year = new Date().getFullYear() - Math.floor(Math.random() * 5);
             const edLabel = numEditors > 1 ? 'eds,' : 'ed.,';
-            const scenario = `You are citing the edited book "${title}", edited by ${formatScenarioNameList(editors)}, published by ${publisher} in ${year} in ${location}.`; // Define scenario here
+            const scenario = `Provide the MHRA reference for the edited book "${title}", edited by ${formatScenarioNameList(editors)}, published by ${publisher} in ${year}.`;
             
             const components = {
                 content: [ `${editorString}, ${edLabel}`, `${title}`, `(${location}: ${publisher}, ${year})` ],
@@ -1308,7 +1309,7 @@
             const volume = Math.floor(Math.random() * 20) + 30;
             const issue = Math.floor(Math.random() * 4) + 1;
             const pages = `${Math.floor(Math.random() * 50) + 100}–${Math.floor(Math.random() * 10) + 150}`;
-            const scenario = `You are citing the journal article "${articleTitle}" by ${formatScenarioNameList(authors)}, in ${journalTitle}, Vol. ${volume}, ${year}.`; // Define scenario here
+            const scenario = `Provide the MHRA reference for the article "${articleTitle}" by ${formatScenarioNameList(authors)} from ${journalTitle} (Vol. ${volume}), published in ${year}.`;
 
             const components = {
                 content: [ `${authorString}`, `'${articleTitle}'`, `${journalTitle}`, `${volume}.${issue} (${year})`, `${pages}` ],
@@ -1331,7 +1332,7 @@
             const url = `https://www.${org.toLowerCase().replace(/\s/g, '')}.org/data/report`;
             const date = new Date();
             const accessDate = `${date.getDate()} ${date.toLocaleString('default', { month: 'long' })} ${date.getFullYear()}`;
-            const scenario = `You are citing the webpage "${title}" from ${org}, published in ${year}, accessed on ${accessDate}.`; // Define scenario here
+            const scenario = `Provide the MHRA reference for the webpage "${title}" from ${org}, published in ${year}, accessed on ${accessDate}.`;
             
             const components = {
                 content: [ `${org}`, `'${title}'`, `${year}`, `<${url}> [accessed ${accessDate}]` ],
@@ -1356,7 +1357,7 @@
             const location = getRandomItem(data.locations);
             const year = new Date().getFullYear() - Math.floor(Math.random() * 5);
             const pages = `${Math.floor(Math.random() * 20) + 50}-${Math.floor(Math.random() * 10) + 70}`;
-            const scenario = `You are citing the chapter "${chapterTitle}" by ${formatScenarioNameList([author])} from the book "${bookTitle}", edited by ${formatScenarioNameList([editor])}, published by ${publisher} in ${year} in ${location}.`; // Define scenario here
+            const scenario = `Provide the MHRA reference for the chapter "${chapterTitle}" by ${formatScenarioNameList([author])} from the edited book "${bookTitle}", edited by ${formatScenarioNameList([editor])}, published by ${publisher} in ${year}.`;
 
             const components = {
                 content: [ `${author.last}, ${author.first}`, `'${chapterTitle}'`, `${bookTitle}`, `ed. by ${editor.first} ${editor.last}`, `(${location}: ${publisher}, ${year})`, `pp. ${pages}` ],
@@ -1378,7 +1379,7 @@
             const title = getRandomItem(data.articleTitles); // Using articleTitles for generic thesis titles
             const university = getRandomItem(data.universities);
             const year = new Date().getFullYear() - Math.floor(Math.random() * 3);
-            const scenario = `You are citing the unpublished PhD thesis "${title}" by ${formatScenarioNameList([author])}, from ${university}, ${year}.`; // Define scenario here
+            const scenario = `Provide the MHRA reference for an unpublished PhD thesis titled "${title}" by ${formatScenarioNameList([author])}, from ${university} in ${year}.`;
             
             const components = {
                 content: [ `${author.last}, ${author.first}`, `'${title}'`, `(unpublished PhD thesis, ${university}, ${year})` ],
@@ -1399,7 +1400,7 @@
             const url = `https://www.youtube.com/watch?v=${Math.random().toString(36).substring(2, 13)}`;
             const date = new Date();
             const accessDate = `${date.getDate()} ${date.toLocaleString('default', { month: 'long' })} ${date.getFullYear()}`;
-            const scenario = `You are citing the YouTube video "${title}" from the channel ${channel}, uploaded in ${year}, accessed on ${accessDate}.`; // Define scenario here
+            const scenario = `Provide the MHRA reference for the YouTube video "${title}", uploaded by ${channel} in ${year}.`;
             
             const components = {
                 content: [ `${channel}`, `'${title}'`, `YouTube`, `${year}`, `<${url}> [accessed ${accessDate}]` ],
@@ -1425,7 +1426,7 @@
             let authorString = authors.map(a => `${a.first} ${a.last}`).join(' and ');
             if (numAuthors > 3) authorString = `${authors[0].first} ${authors[0].last} and others`;
             
-            const scenario = `Footnote for source by ${formatScenarioNameList(authors)}, page ${page}. Your sentence ends here ||.`;
+            const scenario = `Provide the MHRA footnote citation for a work by ${formatScenarioNameList(authors)} (page ${page}), published in ${year}. The citation goes here ||.`;
             const components = {
                 correct: [`${authorString}, p. ${page}`],
                 distractors: [ `(${authorString}, p. ${page})`, `${authorString}, page ${page}`, `${authors[0].last}, p. ${page}` ]
@@ -1552,7 +1553,8 @@
             // Combine scenario and question
             const fullQuestionText = `${scenario}\n\nWhich of the following is the correct reference?`;
 
-            const mcqHtml = `Question Title:\n${title} (MCQ)\n\nQuestion:\n${fullQuestionText}\n\nOptions:\n${optionsString}\nCorrect Answer:\n${correctRef}\n\nHint/Explanation:\n${hint}`;
+            // Reordered output for MCQs
+            const mcqHtml = `Question Title:\n${title} (MCQ)\n\nQuestion:\n${fullQuestionText}\n\nCorrect Answer:\n${correctRef}\n\nOptions:\n${optionsString}\nHint/Explanation:\n${hint}`;
             
             return { htmlOutput: mcqHtml, originalTitle: originalTitle };
         }
