@@ -215,8 +215,16 @@
             chapterTitles: [ 'The role of media in modern politics', 'Case studies in digital ethics', 'The future of work', 'Migration patterns in the 21st century', 'AI and human creativity' ],
             journalTitles: [ 'Journal of Educational Technology', 'Cognitive Science Quarterly', 'Media Psychology Review', 'International Journal of Sociology', 'Environmental Science & Policy' ],
             articleTitles: [ 'Cognitive load in virtual reality learning', 'The persistence of online memory', 'User engagement in mobile apps', 'Cross-cultural communication barriers', 'The impact of microplastics on marine life' ],
-            publishers: [ 'Routledge', 'Penguin Press', 'Sage Publications', 'MIT Press', 'Oxford University Press', 'Cambridge University Press' ],
-            locations: ['London', 'New York', 'Cambridge, MA', 'Oxford', 'Thousand Oaks, CA'],
+            publisherLocations: [
+                { publisher: 'Routledge', location: 'London' },
+                { publisher: 'Penguin Press', location: 'New York' },
+                { publisher: 'Sage Publications', location: 'Thousand Oaks, CA' },
+                { publisher: 'MIT Press', location: 'Cambridge, MA' },
+                { publisher: 'Oxford University Press', location: 'Oxford' },
+                { publisher: 'Cambridge University Press', location: 'Cambridge' },
+                { publisher: 'John Wiley & Sons', location: 'Hoboken, NJ' },
+                { publisher: 'Palgrave Macmillan', location: 'London' }
+            ],
             organizations: [ 'World Health Organization', 'Pew Research Center', 'United Nations', 'Doctors Without Borders', 'Amnesty International', 'The World Bank' ],
             webTitles: [ 'Global health observatory', 'The state of digital news', 'Sustainable development goals report', 'Annual human rights review', 'Global economic prospects' ],
             youtubeChannels: [ 'SciShow', 'Veritasium', 'CrashCourse', 'TED', 'National Geographic', 'SmarterEveryDay' ],
@@ -478,29 +486,14 @@
                 }
             });
 
-            // Randomly select only two distracting words
-            const distractingWords = shuffleArray(components.distractors).slice(0, 2);
+            // FIX: Remove periods that immediately follow a draggable placeholder to prevent outputs like '||. (2022)...'
+            fixedPartsString = fixedPartsString.replace(/\|\|\s*\./g, '||');
 
-            const cleanedFixedPartsString = cleanHtmlTags(fixedPartsString);
-            const cleanedFullReference = cleanHtmlTags(fullReference);
+            // NEW FIX: If the string starts with '||', replace it with a single '|'.
+            if (fixedPartsString.trim().startsWith('||')) {
+                fixedPartsString = fixedPartsString.replace(/^(\s*)\|\|/, '$1|');
+            }
 
-            const htmlOutput = `Question Title:\n${title}\n\nQuestion:\n${scenario}\n\nQuestion Parts (Correct Drag Items):\n${draggableItems.map(item => cleanHtmlTags(item)).join('\n')}\n\nFixed Parts:\n${cleanedFixedPartsString}\n\nConfusing Words (Distractor Drag Items):\n${distractingWords.map(item => cleanHtmlTags(item)).join('\n')}\n\nHint:\n${hint}`;
-
-            return { htmlOutput: htmlOutput, originalTitle: questionData.originalTitle };
-        }
-
-        /**
-         * Builds the text output for a Drag and Drop question (In-text Citation).
-         * @param {Object} questionData The data for the question.
-         * @param {number} questionNumber The current question number.
-         * @returns {Object} An object containing the HTML output and original title.
-         */
-        function buildInTextDragAndDrop(questionData, questionNumber) {
-            const { baseTitle, scenario, fullReference, components, hint } = questionData;
-            const title = `${baseTitle}`;
-            const fixedPartsString = scenario.replace('||', ' || '); 
-            const draggableItems = components.correct;
-            
             // Randomly select only two distracting words
             const distractingWords = shuffleArray(components.distractors).slice(0, 2);
 
@@ -520,7 +513,8 @@
             const authorList = authors.map(a => `${a.last}, ${a.first.charAt(0)}.`);
             const authorString = authorList.length > 1 ? authorList.slice(0, -1).join(', ') + ', & ' + authorList.slice(-1) : authorList[0];
             const title = getRandomItem(data.bookTitles);
-            const publisher = getRandomItem(data.publishers);
+            const pubInfo = getRandomItem(data.publisherLocations);
+            const publisher = pubInfo.publisher;
             const year = new Date().getFullYear() - Math.floor(Math.random() * 5);
             const scenario = `Reference for a book by ${formatScenarioNameList(authors)}, titled "${title}", published in ${year}.`;
             
@@ -543,7 +537,8 @@
             const editorList = editors.map(e => `${e.last}, ${e.first.charAt(0)}.`);
             const editorString = editorList.length > 1 ? editorList.slice(0, -1).join(', ') + ', & ' + editorList.slice(-1) : editorList[0];
             const title = getRandomItem(data.bookTitles);
-            const publisher = getRandomItem(data.publishers);
+            const pubInfo = getRandomItem(data.publisherLocations);
+            const publisher = pubInfo.publisher;
             const year = new Date().getFullYear() - Math.floor(Math.random() * 5);
             const scenario = `Reference for an edited book titled "${title}", edited by ${formatScenarioNameList(editors)}, published in ${year}.`;
             const edLabel = numEditors > 1 ? '(Eds.).' : '(Ed.).';
@@ -617,7 +612,8 @@
             const editor = getRandomItem(data.editors);
             const chapterTitle = getRandomItem(data.chapterTitles);
             const bookTitle = getRandomItem(data.bookTitles);
-            const publisher = getRandomItem(data.publishers);
+            const pubInfo = getRandomItem(data.publisherLocations);
+            const publisher = pubInfo.publisher;
             const year = new Date().getFullYear() - Math.floor(Math.random() * 5);
             const pages = `${Math.floor(Math.random() * 20) + 50}–${Math.floor(Math.random() * 10) + 70}`;
             const scenario = `Reference for the chapter "${chapterTitle}" by ${formatScenarioNameList([author])} from the book "${bookTitle}", edited by ${formatScenarioNameList([editor])}, published in ${year} by ${publisher}.`;
@@ -691,7 +687,8 @@
                  authorString = `${authors[0].last}, ${authors[0].first}, et al`;
             }
             const title = getRandomItem(data.bookTitles);
-            const publisher = getRandomItem(data.publishers);
+            const pubInfo = getRandomItem(data.publisherLocations);
+            const publisher = pubInfo.publisher;
             const year = new Date().getFullYear() - Math.floor(Math.random() * 5);
             const scenario = `Reference for a book by ${formatScenarioNameList(authors)}, titled "${title}", published by ${publisher} in ${year}.`;
             
@@ -718,7 +715,8 @@
                 editorString = `${editors[0].last}, ${editors[0].first}, and ${editors[1].first} ${editors[1].last}, editors`;
             }
             const title = getRandomItem(data.bookTitles);
-            const publisher = getRandomItem(data.publishers);
+            const pubInfo = getRandomItem(data.publisherLocations);
+            const publisher = pubInfo.publisher;
             const year = new Date().getFullYear() - Math.floor(Math.random() * 5);
             const scenario = `Reference for an edited book by ${formatScenarioNameList(editors)}, titled "${title}", published by ${publisher} in ${year}.`;
             
@@ -796,7 +794,8 @@
             const editor = getRandomItem(data.editors);
             const chapterTitle = getRandomItem(data.chapterTitles);
             const bookTitle = getRandomItem(data.bookTitles);
-            const publisher = getRandomItem(data.publishers);
+            const pubInfo = getRandomItem(data.publisherLocations);
+            const publisher = pubInfo.publisher;
             const year = new Date().getFullYear() - Math.floor(Math.random() * 5);
             const pages = `${Math.floor(Math.random() * 20) + 50}-${Math.floor(Math.random() * 10) + 70}`;
             const scenario = `Reference for the chapter "${chapterTitle}" by ${formatScenarioNameList([author])} from the edited book "${bookTitle}", edited by ${formatScenarioNameList([editor])}, published by ${publisher} in ${year}.`;
@@ -865,14 +864,15 @@
             const authorList = authors.map(a => `${a.last}, ${a.first.charAt(0)}.`);
             const authorString = authorList.join(' and ');
             const title = getRandomItem(data.bookTitles);
-            const publisher = getRandomItem(data.publishers);
-            const location = getRandomItem(data.locations);
+            const pubInfo = getRandomItem(data.publisherLocations);
+            const publisher = pubInfo.publisher;
+            const location = pubInfo.location;
             const year = new Date().getFullYear() - Math.floor(Math.random() * 5);
             const scenario = `Reference for a book by ${formatScenarioNameList(authors)}, titled "${title}", published by ${publisher} in ${year}.`;
 
             const components = {
                 content: [ `${authorString}`, `${year}`, `${title}`, `${location}: ${publisher}` ],
-                structure: '{0}. ({1}) <i>{2}</i>. {3}.',
+                structure: '{0} ({1}) <i>{2}</i>. {3}.',
                 distractors: [ `${authors.map(a => `${a.last}, ${a.first}`).join(' and ')}`, `${year}`, `'${title}'`, `${publisher}, ${location}` ]
             };
             const fullReference = components.structure
@@ -889,8 +889,9 @@
             const editorList = editors.map(e => `${e.last}, ${e.first.charAt(0)}.`);
             const editorString = editorList.join(' and ');
             const title = getRandomItem(data.bookTitles);
-            const publisher = getRandomItem(data.publishers);
-            const location = getRandomItem(data.locations);
+            const pubInfo = getRandomItem(data.publisherLocations);
+            const publisher = pubInfo.publisher;
+            const location = pubInfo.location;
             const year = new Date().getFullYear() - Math.floor(Math.random() * 5);
             const edLabel = numEditors > 1 ? '(eds.)' : '(ed.)';
             const scenario = `Reference for an edited book by ${formatScenarioNameList(editors)}, titled "${title}", published by ${publisher} in ${year}.`;
@@ -969,8 +970,9 @@
             const editor = getRandomItem(data.editors);
             const chapterTitle = getRandomItem(data.chapterTitles);
             const bookTitle = getRandomItem(data.bookTitles);
-            const publisher = getRandomItem(data.publishers);
-            const location = getRandomItem(data.locations);
+            const pubInfo = getRandomItem(data.publisherLocations);
+            const publisher = pubInfo.publisher;
+            const location = pubInfo.location;
             const year = new Date().getFullYear() - Math.floor(Math.random() * 5);
             const pages = `${Math.floor(Math.random() * 20) + 50}-${Math.floor(Math.random() * 10) + 70}`;
             const scenario = `Reference for the chapter "${chapterTitle}" by ${formatScenarioNameList([author])} from the edited book "${bookTitle}", edited by ${formatScenarioNameList([editor])}, published by ${publisher} in ${year}.`;
@@ -1040,8 +1042,9 @@
             const authorList = authors.map((a, i) => i === 0 ? `${a.last}, ${a.first}` : `${a.first} ${a.last}`);
             const authorString = authorList.join(', and ');
             const title = getRandomItem(data.bookTitles);
-            const publisher = getRandomItem(data.publishers);
-            const location = getRandomItem(data.locations);
+            const pubInfo = getRandomItem(data.publisherLocations);
+            const publisher = pubInfo.publisher;
+            const location = pubInfo.location;
             const year = new Date().getFullYear() - Math.floor(Math.random() * 5);
             const scenario = `Reference for a book by ${formatScenarioNameList(authors)}, titled "${title}", published by ${publisher} in ${year}.`;
 
@@ -1064,8 +1067,9 @@
             const editorList = editors.map((e, i) => i === 0 ? `${e.last}, ${e.first}` : `${e.first} ${e.last}`);
             const editorString = editorList.join(' and ');
             const title = getRandomItem(data.bookTitles);
-            const publisher = getRandomItem(data.publishers);
-            const location = getRandomItem(data.locations);
+            const pubInfo = getRandomItem(data.publisherLocations);
+            const publisher = pubInfo.publisher;
+            const location = pubInfo.location;
             const year = new Date().getFullYear() - Math.floor(Math.random() * 5);
             const edLabel = numEditors > 1 ? 'eds.' : 'ed.';
             const scenario = `Reference for an edited book by ${formatScenarioNameList(editors)}, titled "${title}", published by ${publisher} in ${year}.`;
@@ -1139,8 +1143,9 @@
             const editor = getRandomItem(data.editors);
             const chapterTitle = getRandomItem(data.chapterTitles);
             const bookTitle = getRandomItem(data.bookTitles);
-            const publisher = getRandomItem(data.publishers);
-            const location = getRandomItem(data.locations);
+            const pubInfo = getRandomItem(data.publisherLocations);
+            const publisher = pubInfo.publisher;
+            const location = pubInfo.location;
             const year = new Date().getFullYear() - Math.floor(Math.random() * 5);
             const pages = `${Math.floor(Math.random() * 20) + 50}-${Math.floor(Math.random() * 10) + 70}`;
             const scenario = `Reference for the chapter "${chapterTitle}" by ${formatScenarioNameList([author])} from the edited book "${bookTitle}", edited by ${formatScenarioNameList([editor])}, published by ${publisher} in ${year}.`;
@@ -1252,8 +1257,9 @@
             while(authors.length < numAuthors) { const author = getRandomItem(data.authors); if (!authors.find(a => a.last === author.last)) authors.push(author); }
             const authorString = authors.map(a => `${a.last}, ${a.first}`).join(' and ');
             const title = getRandomItem(data.bookTitles);
-            const publisher = getRandomItem(data.publishers);
-            const location = getRandomItem(data.locations);
+            const pubInfo = getRandomItem(data.publisherLocations);
+            const publisher = pubInfo.publisher;
+            const location = pubInfo.location;
             const year = new Date().getFullYear() - Math.floor(Math.random() * 5);
             const scenario = `Reference for a book by ${formatScenarioNameList(authors)}, titled "${title}", published by ${publisher} in ${year}.`;
             
@@ -1274,8 +1280,9 @@
             while(editors.length < numEditors) { const editor = getRandomItem(data.editors); if (!editors.find(e => e.last === editor.last)) editors.push(editor); }
             const editorString = editors.map(e => `${e.last}, ${e.first}`).join(' and ');
             const title = getRandomItem(data.bookTitles);
-            const publisher = getRandomItem(data.publishers);
-            const location = getRandomItem(data.locations);
+            const pubInfo = getRandomItem(data.publisherLocations);
+            const publisher = pubInfo.publisher;
+            const location = pubInfo.location;
             const year = new Date().getFullYear() - Math.floor(Math.random() * 5);
             const edLabel = numEditors > 1 ? 'eds,' : 'ed.,';
             const scenario = `Reference for an edited book by ${formatScenarioNameList(editors)}, titled "${title}", published by ${publisher} in ${year}.`;
@@ -1345,8 +1352,9 @@
             const editor = getRandomItem(data.editors);
             const chapterTitle = getRandomItem(data.chapterTitles);
             const bookTitle = getRandomItem(data.bookTitles);
-            const publisher = getRandomItem(data.publishers);
-            const location = getRandomItem(data.locations);
+            const pubInfo = getRandomItem(data.publisherLocations);
+            const publisher = pubInfo.publisher;
+            const location = pubInfo.location;
             const year = new Date().getFullYear() - Math.floor(Math.random() * 5);
             const pages = `${Math.floor(Math.random() * 20) + 50}-${Math.floor(Math.random() * 10) + 70}`;
             const scenario = `Reference for the chapter "${chapterTitle}" by ${formatScenarioNameList([author])} from the edited book "${bookTitle}", edited by ${formatScenarioNameList([editor])}, published by ${publisher} in ${year}.`;
@@ -1787,3 +1795,4 @@
     </script>
 </body>
 </html>
+
