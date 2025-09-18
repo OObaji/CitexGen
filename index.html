@@ -458,10 +458,8 @@
          */
         function buildDragAndDrop(questionData, questionNumber) {
             const { baseTitle, scenario, fullReference, components, hint } = questionData;
-            // Removed question number from title
             const title = `${baseTitle}`;
             
-            // Determine how many components will be draggable
             const draggableCount = Math.max(2, Math.min(components.content.length - 1, Math.floor(Math.random() * (components.content.length - 1)) + 2));
             
             const allIndices = Array.from(Array(components.content.length).keys());
@@ -470,7 +468,6 @@
 
             const draggableItems = components.content.filter((_, i) => draggableIndices.has(i));
             
-            // Construct the fixed parts string with '||' placeholders for draggable items
             let fixedPartsString = components.structure;
             allIndices.forEach(i => {
                 const placeholder = `{${i}}`;
@@ -481,11 +478,9 @@
                 }
             });
 
-            // Clean HTML tags from fixedPartsString and fullReference before using them in the output
             const cleanedFixedPartsString = cleanHtmlTags(fixedPartsString);
             const cleanedFullReference = cleanHtmlTags(fullReference);
 
-            // Reordered output for Drag and Drop
             const htmlOutput = `Question Title:\n${title}\n\nQuestion:\n${scenario}\n\nQuestion Parts (Correct Drag Items):\n${draggableItems.map(item => cleanHtmlTags(item)).join('\n')}\n\nFixed Parts:\n${cleanedFixedPartsString}\n\nConfusing Words (Distractor Drag Items):\n${components.distractors.map(item => cleanHtmlTags(item)).join('\n')}\n\nHint:\n${hint}`;
 
             return { htmlOutput: htmlOutput, originalTitle: questionData.originalTitle };
@@ -499,17 +494,13 @@
          */
         function buildInTextDragAndDrop(questionData, questionNumber) {
             const { baseTitle, scenario, fullReference, components, hint } = questionData;
-            // Removed question number from title
             const title = `${baseTitle}`;
-            // The scenario already contains '||' for in-text, which will be replaced by the draggable item in the actual quiz
             const fixedPartsString = scenario.replace('||', ' || '); 
-            const draggableItems = components.correct; // For in-text, the correct citation itself is the draggable part
+            const draggableItems = components.correct;
             
-            // Clean HTML tags from fixedPartsString and fullReference before using them in the output
             const cleanedFixedPartsString = cleanHtmlTags(fixedPartsString);
             const cleanedFullReference = cleanHtmlTags(fullReference);
 
-            // Reordered output for In-text Drag and Drop
             const htmlOutput = `Question Title:\n${title}\n\nQuestion:\n${scenario}\n\nQuestion Parts (Correct Drag Items):\n${draggableItems.map(item => cleanHtmlTags(item)).join('\n')}\n\nFixed Parts:\n${cleanedFixedPartsString}\n\nConfusing Words (Distractor Drag Items):\n${components.distractors.map(item => cleanHtmlTags(item)).join('\n')}\n\nHint:\n${hint}`;
 
             return { htmlOutput: htmlOutput, originalTitle: questionData.originalTitle };
@@ -525,11 +516,11 @@
             const title = getRandomItem(data.bookTitles);
             const publisher = getRandomItem(data.publishers);
             const year = new Date().getFullYear() - Math.floor(Math.random() * 5);
-            const scenario = `Provide the APA 7 reference for a book titled "${title}" by author ${formatScenarioNameList(authors)}, published by ${publisher} in ${year}.`;
+            const scenario = `Reference for a book titled "${title}" by ${formatScenarioNameList(authors)}, published by ${publisher} in ${year}.`;
             
             const components = {
                 content: [ authorString, year, title, publisher ],
-                structure: '{0}. ({1}). <i>{2}</i>. {3}.', // Book title italicized
+                structure: '{0}. ({1}). <i>{2}</i>. {3}.',
                 distractors: [ `${authors.map(a => `${a.last}, ${a.first}`).join(' & ')}`, `"${title}"`, `in press`, `${publisher}, ${year}` ]
             };
             const fullReference = components.structure
@@ -548,12 +539,12 @@
             const title = getRandomItem(data.bookTitles);
             const publisher = getRandomItem(data.publishers);
             const year = new Date().getFullYear() - Math.floor(Math.random() * 5);
-            const scenario = `Provide the APA 7 reference for the edited book "${title}", edited by ${formatScenarioNameList(editors)}, published by ${publisher} in ${year}.`;
+            const scenario = `Reference for an edited book titled "${title}", edited by ${formatScenarioNameList(editors)}, published by ${publisher} in ${year}.`;
             const edLabel = numEditors > 1 ? '(Eds.).' : '(Ed.).';
             
             const components = {
                 content: [ `${editorString}`, `${year}`, `${title}`, `${publisher}` ],
-                structure: `{0} ${edLabel} ({1}). <i>{2}</i>. {3}.`, // Book title italicized
+                structure: `{0} ${edLabel} ({1}). <i>{2}</i>. {3}.`,
                 distractors: [ `${editorString} (ed.).`, `(Editors).`, `"${title}."`, `Published by ${publisher}` ]
             };
             const fullReference = components.structure
@@ -576,11 +567,11 @@
             const issue = Math.floor(Math.random() * 4) + 1;
             const pages = `${Math.floor(Math.random() * 50) + 100}–${Math.floor(Math.random() * 10) + 150}`;
             const doi = `https://doi.org/10.1234/jet.${year}.${Math.floor(Math.random()*9000)+1000}`;
-            const scenario = `Provide the APA 7 reference for the journal article titled "${articleTitle}" by ${formatScenarioNameList(authors)}, from ${journalTitle} (Vol. ${volume}), published in ${year}.`;
+            const scenario = `Reference for the article "${articleTitle}" by ${formatScenarioNameList(authors)}, from ${journalTitle} (Vol. ${volume}), published in ${year}.`;
 
             const components = {
                 content: [ `${authorString}`, `${year}`, `${articleTitle}`, `${journalTitle}`, `${volume}(${issue})`, `${pages}`, `${doi}` ],
-                structure: '{0} ({1}). {2}. <i>{3}</i>, {4}, {5}. {6}', // Journal title and volume italicized
+                structure: '{0} ({1}). {2}. <i>{3}</i>, {4}, {5}. {6}',
                 distractors: [ `'${articleTitle}'`, `${articleTitle}`, `pp. ${pages}`, `doi:${doi.replace('https://doi.org/','')}` ]
             };
             const fullReference = components.structure
@@ -604,7 +595,7 @@
 
             const components = {
                 content: [ `${org}`, `${year}, ${month} ${day}`, `${title}`, `${url}` ],
-                structure: '{0}. ({1}). <i>{2}</i>. {3}', // Webpage title italicized
+                structure: '{0}. ({1}). <i>{2}</i>. {3}',
                 distractors: [ `${year}`, `"${title}"`, `Retrieved from ${url}`, `[accessed ${day} ${month} ${year}]` ]
             };
             const fullReference = components.structure
@@ -623,11 +614,11 @@
             const publisher = getRandomItem(data.publishers);
             const year = new Date().getFullYear() - Math.floor(Math.random() * 5);
             const pages = `${Math.floor(Math.random() * 20) + 50}–${Math.floor(Math.random() * 10) + 70}`;
-            const scenario = `Provide the APA 7 reference for the chapter "${chapterTitle}" by ${formatScenarioNameList([author])} from the book "${bookTitle}", edited by ${formatScenarioNameList([editor])}, published in ${year} by ${publisher}.`;
+            const scenario = `Reference for the chapter "${chapterTitle}" by ${formatScenarioNameList([author])} from the book "${bookTitle}", edited by ${formatScenarioNameList([editor])}, published in ${year} by ${publisher}.`;
 
             const components = {
                 content: [ `${author.last}, ${author.first.charAt(0)}.`, `${year}`, `${chapterTitle}`, `In ${editor.first.charAt(0)}. ${editor.last} (Ed.),`, `${bookTitle}`, `pp. ${pages}`, `${publisher}` ],
-                structure: '{0}. ({1}). {2}. {3} <i>{4}</i> ({5}). {6}.', // Book title italicized
+                structure: '{0}. ({1}). {2}. {3} <i>{4}</i> ({5}). {6}.',
                 distractors: [ `'${chapterTitle}'`, `ed. by ${editor.first} ${editor.last}`, `(pages ${pages})`, `In ${chapterTitle}` ]
             };
             const fullReference = components.structure
@@ -651,7 +642,7 @@
             
             const components = {
                 content: [ `${channel}`, `${year}, ${month} ${day}`, `${title}`, `YouTube`, `${url}` ],
-                structure: '{0}. ({1}). <i>{2}</i> [Video]. {3}. {4}', // Video title italicized
+                structure: '{0}. ({1}). <i>{2}</i> [Video]. {3}. {4}',
                 distractors: [ `Uploaded by ${channel}`, `'${title}'`, `YouTube`, `Available at: ${url}` ]
             };
             const fullReference = components.structure
@@ -673,12 +664,11 @@
             else if (numAuthors === 2) authorString = `${authors[0].last} & ${authors[1].last}`;
             else authorString = `${authors[0].last} et al.`;
             
-            const scenario = `Provide the APA 7 in-text citation for a quote from page ${page} of a work by ${formatScenarioNameList(authors)}, published in ${year}. The citation goes here ||.`;
+            const scenario = `A quote from page ${page} of a work by ${formatScenarioNameList(authors)}, published in ${year}. The citation goes here ||.`;
             const components = {
                 correct: [`(${authorString}, ${year}, p. ${page})`],
                 distractors: [ `(${authorString}, ${year})`, `(${authorString}, p. ${page})`, `(${authors[0].last}, ${year}, p. ${page})`, `(${authorString.replace('&', 'and')}, ${year}, p. ${page})` ]
             };
-            // For in-text, fullReference is the correct in-text citation string itself
             return { scenario, fullReference: components.correct[0], components, hint: 'APA in-text citations for quotes require Author, Year, and Page Number. Use "&" for two authors and "et al." for three or more.', originalTitle: 'in-text' };
         }
 
@@ -697,11 +687,11 @@
             const title = getRandomItem(data.bookTitles);
             const publisher = getRandomItem(data.publishers);
             const year = new Date().getFullYear() - Math.floor(Math.random() * 5);
-            const scenario = `Provide the MLA 9 reference for a book titled "${title}" by author ${formatScenarioNameList(authors)}, published by ${publisher} in ${year}.`;
+            const scenario = `Reference for a book titled "${title}" by ${formatScenarioNameList(authors)}, published by ${publisher} in ${year}.`;
             
             const components = {
                 content: [ `${authorString}`, `${title}`, `${publisher}`, `${year}` ],
-                structure: '{0}. <i>{1}</i>. {2}, {3}.', // Book title italicized
+                structure: '{0}. <i>{1}</i>. {2}, {3}.',
                 distractors: [ `${authors[0].last}, ${authors[0].first.charAt(0)}.`, `(${year})`, `"${title}"`, `Published by ${publisher}` ]
             };
             const fullReference = components.structure
@@ -724,11 +714,11 @@
             const title = getRandomItem(data.bookTitles);
             const publisher = getRandomItem(data.publishers);
             const year = new Date().getFullYear() - Math.floor(Math.random() * 5);
-            const scenario = `Provide the MLA 9 reference for the edited book "${title}", edited by ${formatScenarioNameList(editors)}, published by ${publisher} in ${year}.`;
+            const scenario = `Reference for an edited book titled "${title}", edited by ${formatScenarioNameList(editors)}, published by ${publisher} in ${year}.`;
             
             const components = {
                 content: [ `${editorString}`, `${title}`, `${publisher}`, `${year}` ],
-                structure: '{0}. <i>{1}</i>. {2}, {3}.', // Book title italicized
+                structure: '{0}. <i>{1}</i>. {2}, {3}.',
                 distractors: [ `${editors.map(e => `${e.last}, ${e.first}`).join(' and ')} (Eds.)`, `"${title}"`, `(Editors)`, `${publisher}, ${year}` ]
             };
             const fullReference = components.structure
@@ -756,11 +746,11 @@
             const volume = Math.floor(Math.random() * 20) + 30;
             const issue = Math.floor(Math.random() * 4) + 1;
             const pages = `${Math.floor(Math.random() * 50) + 100}-${Math.floor(Math.random() * 10) + 150}`;
-            const scenario = `Provide the MLA 9 reference for the article "${articleTitle}" by ${formatScenarioNameList(authors)} from ${journalTitle} (Vol. ${volume}), published in ${year}.`;
+            const scenario = `Reference for the article "${articleTitle}" by ${formatScenarioNameList(authors)} from ${journalTitle} (Vol. ${volume}), published in ${year}.`;
 
             const components = {
                 content: [ `${authorString}`, `"${articleTitle}"`, `${journalTitle}`, `vol. ${volume}, no. ${issue}`, `${year}`, `pp. ${pages}` ],
-                structure: '{0}. {1}. <i>{2}</i>, {3}, {4}, {5}.', // Journal title italicized
+                structure: '{0}. {1}. <i>{2}</i>, {3}, {4}, {5}.',
                 distractors: [ `'${articleTitle}'`, `(${year})`, `Volume ${volume}, Issue ${issue}`, `pages ${pages}` ]
             };
             const fullReference = components.structure
@@ -780,11 +770,11 @@
             const month = new Date().toLocaleString('default', { month: 'short' });
             const day = new Date().getDate();
             const url = `www.${org.toLowerCase().replace(/\s/g, '')}.org/data/report.html`;
-            const scenario = `Provide the MLA 9 reference for the webpage "${title}" from ${org}, published on ${day} ${month}. ${year}.`;
+            const scenario = `Reference for the webpage "${title}" from ${org}, published on ${day} ${month}. ${year}.`;
             
             const components = {
                 content: [ `"${title}"`, `${org}`, `${day} ${month}. ${year}`, `${url}` ],
-                structure: '{0}. <i>{1}</i>, {2}, {3}.', // Organization name (website) italicized
+                structure: '{0}. <i>{1}</i>, {2}, {3}.',
                 distractors: [ `${title}`, `${org}`, `(${year})`, `Available at: ${url}` ]
             };
             const fullReference = components.structure
@@ -803,11 +793,11 @@
             const publisher = getRandomItem(data.publishers);
             const year = new Date().getFullYear() - Math.floor(Math.random() * 5);
             const pages = `${Math.floor(Math.random() * 20) + 50}-${Math.floor(Math.random() * 10) + 70}`;
-            const scenario = `Provide the MLA 9 reference for the chapter "${chapterTitle}" by ${formatScenarioNameList([author])} from the edited book "${bookTitle}", edited by ${formatScenarioNameList([editor])}, published by ${publisher} in ${year}.`;
+            const scenario = `Reference for the chapter "${chapterTitle}" by ${formatScenarioNameList([author])} from the edited book "${bookTitle}", edited by ${formatScenarioNameList([editor])}, published by ${publisher} in ${year}.`;
 
             const components = {
                 content: [ `${author.last}, ${author.first}`, `"${chapterTitle}"`, `${bookTitle}`, `edited by ${editor.first} ${editor.last}`, `${publisher}`, `${year}`, `pp. ${pages}` ],
-                structure: '{0}. {1}. <i>{2}</i>, {3}, {4}, {5}, {6}.', // Book title italicized
+                structure: '{0}. {1}. <i>{2}</i>, {3}, {4}, {5}, {6}.',
                 distractors: [ `'${chapterTitle}'`, `In ${bookTitle}`, `Editor, ${editor.first} ${editor.last}`, `pages ${pages}` ]
             };
             const fullReference = components.structure
@@ -828,11 +818,11 @@
             const month = new Date().toLocaleString('default', { month: 'short' });
             const day = new Date().getDate();
             const url = `www.youtube.com/watch?v=${Math.random().toString(36).substring(2, 13)}`;
-            const scenario = `Provide the MLA 9 reference for the YouTube video "${title}" from the channel ${channel}, uploaded on ${day} ${month}. ${year}.`;
+            const scenario = `Reference for the YouTube video "${title}" from the channel ${channel}, uploaded on ${day} ${month}. ${year}.`;
             
             const components = {
                 content: [ `"${title}"`, `YouTube`, `uploaded by ${channel}`, `${day} ${month}. ${year}`, `${url}` ],
-                structure: '{0}. <i>{1}</i>, {2}, {3}, {4}.', // Platform (YouTube) italicized
+                structure: '{0}. <i>{1}</i>, {2}, {3}, {4}.',
                 distractors: [ `${title}`, `YouTube`, `[Video]`, `(${year})` ]
             };
             const fullReference = components.structure
@@ -854,12 +844,11 @@
             else if (numAuthors === 2) authorString = `${authors[0].last} and ${authors[1].last}`;
             else authorString = `${authors[0].last} et al.`;
             
-            const scenario = `Provide the MLA 9 in-text citation for a concept from page ${page} of a work by ${formatScenarioNameList(authors)}, published in ${year}. Your paraphrase ends here ||.`;
+            const scenario = `In-text citation for a concept from page ${page} of a work by ${formatScenarioNameList(authors)}, published in ${year}. The paraphrase ends here ||.`;
             const components = {
                 correct: [`(${authorString} ${page})`],
                 distractors: [ `(${authorString}, ${page})`, `(${authorString}, p. ${page})`, `(${authors[0].last} ${page})`, `(${authorString})` ]
             };
-            // For in-text, fullReference is the correct in-text citation string itself
             return { scenario, fullReference: components.correct[0], components, hint: 'MLA in-text citations require only the Author and Page Number inside the parentheses.', originalTitle: 'in-text' };
         }
 
@@ -873,11 +862,11 @@
             const publisher = getRandomItem(data.publishers);
             const location = getRandomItem(data.locations);
             const year = new Date().getFullYear() - Math.floor(Math.random() * 5);
-            const scenario = `Provide the Harvard reference for a book titled "${title}", by ${formatScenarioNameList(authors)}, published by ${publisher} in ${year}.`;
+            const scenario = `Reference for a book titled "${title}", by ${formatScenarioNameList(authors)}, published by ${publisher} in ${year}.`;
 
             const components = {
                 content: [ `${authorString}`, `${year}`, `${title}`, `${location}: ${publisher}` ],
-                structure: '{0}. ({1}) <i>{2}</i>. {3}.', // Book title italicized
+                structure: '{0}. ({1}) <i>{2}</i>. {3}.',
                 distractors: [ `${authors.map(a => `${a.last}, ${a.first}`).join(' and ')}`, `${year}`, `'${title}'`, `${publisher}, ${location}` ]
             };
             const fullReference = components.structure
@@ -898,11 +887,11 @@
             const location = getRandomItem(data.locations);
             const year = new Date().getFullYear() - Math.floor(Math.random() * 5);
             const edLabel = numEditors > 1 ? '(eds.)' : '(ed.)';
-            const scenario = `Provide the Harvard reference for the edited book "${title}", edited by ${formatScenarioNameList(editors)}, published by ${publisher} in ${year}.`;
+            const scenario = `Reference for an edited book titled "${title}", edited by ${formatScenarioNameList(editors)}, published by ${publisher} in ${year}.`;
 
             const components = {
                 content: [ `${editorString}`, `${year}`, `${title}`, `${location}: ${publisher}` ],
-                structure: `{0} ${edLabel} ({1}) <i>{2}</i>. {3}.`, // Book title italicized
+                structure: `{0} ${edLabel} ({1}) <i>{2}</i>. {3}.`,
                 distractors: [ `${editorString} (Editor)`, `${year}`, `"${title}"`, `${publisher}` ]
             };
             const fullReference = components.structure
@@ -929,11 +918,11 @@
             const volume = Math.floor(Math.random() * 20) + 30;
             const issue = Math.floor(Math.random() * 4) + 1;
             const pages = `${Math.floor(Math.random() * 50) + 100}-${Math.floor(Math.random() * 10) + 150}`;
-            const scenario = `Provide the Harvard reference for the article "${articleTitle}" by ${formatScenarioNameList(authors)} from ${journalTitle} (Vol. ${volume}), published in ${year}.`;
+            const scenario = `Reference for the article "${articleTitle}" by ${formatScenarioNameList(authors)} from ${journalTitle} (Vol. ${volume}), published in ${year}.`;
 
             const components = {
                 content: [ `${authorString}`, `${year}`, `'${articleTitle}'`, `${journalTitle}`, `${volume}(${issue})`, `pp. ${pages}` ],
-                structure: '{0} ({1}) {2}, <i>{3}</i>, {4}, {5}.', // Journal title italicized
+                structure: '{0} ({1}) {2}, <i>{3}</i>, {4}, {5}.',
                 distractors: [ `"${articleTitle}"`, `${journalTitle}`, `vol. ${volume}, no. ${issue}`, `p. ${pages}` ]
             };
             const fullReference = components.structure
@@ -953,11 +942,11 @@
             const url = `https://www.${org.toLowerCase().replace(/\s/g, '')}.org/data/report`;
             const date = new Date();
             const accessDate = `${date.getDate()} ${date.toLocaleString('default', { month: 'long' })} ${date.getFullYear()}`;
-            const scenario = `Provide the Harvard reference for the webpage "${title}" from ${org}, published in ${year}, accessed on ${accessDate}.`;
+            const scenario = `Reference for the webpage "${title}" from ${org}, published in ${year}, accessed on ${accessDate}.`;
             
             const components = {
                 content: [ `${org}`, `${year}`, `${title}`, `Available at: ${url}`, `(Accessed: ${accessDate})` ],
-                structure: '{0} ({1}) <i>{2}</i>. {3} {4}.', // Webpage title italicized
+                structure: '{0} ({1}) <i>{2}</i>. {3} {4}.',
                 distractors: [ `'${title}'`, `[online]`, `URL: ${url}`, `[accessed ${accessDate}]` ]
             };
             const fullReference = components.structure
@@ -978,11 +967,11 @@
             const location = getRandomItem(data.locations);
             const year = new Date().getFullYear() - Math.floor(Math.random() * 5);
             const pages = `${Math.floor(Math.random() * 20) + 50}-${Math.floor(Math.random() * 10) + 70}`;
-            const scenario = `Provide the Harvard reference for the chapter "${chapterTitle}" by ${formatScenarioNameList([author])} from the edited book "${bookTitle}", edited by ${formatScenarioNameList([editor])}, published by ${publisher} in ${year}.`;
+            const scenario = `Reference for the chapter "${chapterTitle}" by ${formatScenarioNameList([author])} from the edited book "${bookTitle}", edited by ${formatScenarioNameList([editor])}, published by ${publisher} in ${year}.`;
 
             const components = {
                 content: [ `${author.last}, ${author.first.charAt(0)}.`, `${year}`, `'${chapterTitle}'`, `in ${editor.last}, ${editor.first.charAt(0)}. (ed.)`, `${bookTitle}`, `${location}: ${publisher}`, `pp. ${pages}` ],
-                structure: '{0} ({1}) {2}, {3} <i>{4}</i>. {5}, {6}.', // Book title italicized
+                structure: '{0} ({1}) {2}, {3} <i>{4}</i>. {5}, {6}.',
                 distractors: [ `"${chapterTitle}"`, `In ${editor.first.charAt(0)}. ${editor.last} (Ed.)`, `${bookTitle}`, `pages ${pages}` ]
             };
             const fullReference = components.structure
@@ -1003,11 +992,11 @@
             const url = `https://www.youtube.com/watch?v=${Math.random().toString(36).substring(2, 13)}`;
             const date = new Date();
             const accessDate = `${date.getDate()} ${date.toLocaleString('default', { month: 'long' })} ${date.getFullYear()}`;
-            const scenario = `Provide the Harvard reference for the YouTube video "${title}", uploaded by ${channel} in ${year}.`;
+            const scenario = `Reference for the YouTube video "${title}", uploaded by ${channel} in ${year}.`;
             
             const components = {
                 content: [ `${channel}`, `${year}`, `${title}`, `YouTube video, added by ${channel}`, `Available at: ${url}`, `(Accessed: ${accessDate})` ],
-                structure: '{0} ({1}) <i>{2}</i>. {3}. {4} {5}.', // Video title italicized
+                structure: '{0} ({1}) <i>{2}</i>. {3}. {4} {5}.',
                 distractors: [ `'${title}'`, `[Video]`, `YouTube`, `[accessed ${accessDate}]` ]
             };
             const fullReference = components.structure
@@ -1030,12 +1019,11 @@
             else if (numAuthors <= 3) authorString = authors.map(a => a.last).join(' and ');
             else authorString = `${authors[0].last} et al.`;
             
-            const scenario = `Provide the Harvard in-text citation for a quote from page ${page} of a work by ${formatScenarioNameList(authors)}, published in ${year}. The citation goes here ||.`;
+            const scenario = `In-text citation for a quote from page ${page} of a work by ${formatScenarioNameList(authors)}, published in ${year}. The citation goes here ||.`;
             const components = {
                 correct: [`(${authorString}, ${year}, p. ${page})`],
                 distractors: [ `(${authorString} ${year}: ${page})`, `(${authorString}, p. ${page})`, `(${authors[0].last}, ${year}, page ${page})`, `(${authorString.replace('and', '&')}, ${year}, p. ${page})` ]
             };
-            // For in-text, fullReference is the correct in-text citation string itself
             return { scenario, fullReference: components.correct[0], components, hint: 'Harvard in-text citations for quotes require Author, Year, and Page Number. Use "et al." for four or more authors.', originalTitle: 'in-text' };
         }
 
@@ -1049,11 +1037,11 @@
             const publisher = getRandomItem(data.publishers);
             const location = getRandomItem(data.locations);
             const year = new Date().getFullYear() - Math.floor(Math.random() * 5);
-            const scenario = `Provide the Chicago (NB) reference for a book titled "${title}" by ${formatScenarioNameList(authors)}, published by ${publisher} in ${year}.`;
+            const scenario = `Reference for a book titled "${title}" by ${formatScenarioNameList(authors)}, published by ${publisher} in ${year}.`;
 
             const components = {
                 content: [ `${authorString}`, `${title}`, `${location}: ${publisher}`, `${year}` ],
-                structure: '{0}. <i>{1}</i>. {2}, {3}.', // Book title italicized
+                structure: '{0}. <i>{1}</i>. {2}, {3}.',
                 distractors: [ `${authors.map(a => `${a.first} ${a.last}`).join(', ')}`, `(${year})`, `"${title}"`, `${publisher} (${location})` ]
             };
             const fullReference = components.structure
@@ -1074,11 +1062,11 @@
             const location = getRandomItem(data.locations);
             const year = new Date().getFullYear() - Math.floor(Math.random() * 5);
             const edLabel = numEditors > 1 ? 'eds.' : 'ed.';
-            const scenario = `Provide the Chicago (NB) reference for the edited book "${title}", edited by ${formatScenarioNameList(editors)}, published by ${publisher} in ${year}.`;
+            const scenario = `Reference for an edited book titled "${title}", edited by ${formatScenarioNameList(editors)}, published by ${publisher} in ${year}.`;
 
             const components = {
                 content: [ `${editorString}, ${edLabel}`, `${title}`, `${location}: ${publisher}`, `${year}` ],
-                structure: '{0}. <i>{1}</i>. {2}, {3}.', // Book title italicized
+                structure: '{0}. <i>{1}</i>. {2}, {3}.',
                 distractors: [ `${editors.map(e => `${e.first} ${e.last}`).join(', ')}, ${edLabel}`, `"${title}"`, `(Editor)`, `${publisher}, ${year}` ]
             };
             const fullReference = components.structure
@@ -1101,11 +1089,11 @@
             const issue = Math.floor(Math.random() * 4) + 1;
             const pages = `${Math.floor(Math.random() * 50) + 100}–${Math.floor(Math.random() * 10) + 150}`;
             const doi = `https://doi.org/10.1234/jet.${year}.${Math.floor(Math.random()*9000)+1000}`;
-            const scenario = `Provide the Chicago (NB) reference for the article "${articleTitle}" by ${formatScenarioNameList(authors)} from ${journalTitle} (Vol. ${volume}), published in ${year}.`;
+            const scenario = `Reference for the article "${articleTitle}" by ${formatScenarioNameList(authors)} from ${journalTitle} (Vol. ${volume}), published in ${year}.`;
 
             const components = {
                 content: [ `${authorString}`, `"${articleTitle}"`, `${journalTitle} ${volume}, no. ${issue}`, `${year}`, `${pages}`, `${doi}` ],
-                structure: '{0}. {1}. <i>{2}</i> ({3}): {4}. {5}.', // Journal title italicized
+                structure: '{0}. {1}. <i>{2}</i> ({3}): {4}. {5}.',
                 distractors: [ `'${articleTitle}'`, `${journalTitle} vol. ${volume}`, `${year}`, `pp. ${pages}` ]
             };
             const fullReference = components.structure
@@ -1125,11 +1113,11 @@
             const month = new Date().toLocaleString('default', { month: 'long' });
             const day = new Date().getDate();
             const url = `https://www.${org.toLowerCase().replace(/\s/g, '')}.org/data/report`;
-            const scenario = `Provide the Chicago (NB) reference for the webpage "${title}" from ${org}, last modified on ${month} ${day}, ${year}.`;
+            const scenario = `Reference for the webpage "${title}" from ${org}, last modified on ${month} ${day}, ${year}.`;
 
             const components = {
                 content: [ `${org}`, `"${title}"`, `Last modified ${month} ${day}, ${year}`, `${url}` ],
-                structure: '{0}. {1}. {2}. {3}.', // No italics for website title in Chicago NB
+                structure: '{0}. {1}. {2}. {3}.',
                 distractors: [ `${title}`, `Published ${year}`, `Accessed ${month} ${day}, ${year}`, `Retrieved from: ${url}` ]
             };
             const fullReference = components.structure
@@ -1149,11 +1137,11 @@
             const location = getRandomItem(data.locations);
             const year = new Date().getFullYear() - Math.floor(Math.random() * 5);
             const pages = `${Math.floor(Math.random() * 20) + 50}-${Math.floor(Math.random() * 10) + 70}`;
-            const scenario = `Provide the Chicago (NB) reference for the chapter "${chapterTitle}" by ${formatScenarioNameList([author])} from the edited book "${bookTitle}", edited by ${formatScenarioNameList([editor])}, published by ${publisher} in ${year}.`;
+            const scenario = `Reference for the chapter "${chapterTitle}" by ${formatScenarioNameList([author])} from the edited book "${bookTitle}", edited by ${formatScenarioNameList([editor])}, published by ${publisher} in ${year}.`;
 
             const components = {
                 content: [ `${author.last}, ${author.first}`, `"${chapterTitle}"`, `${bookTitle}`, `edited by ${editor.first} ${editor.last}`, `${pages}`, `${location}: ${publisher}, ${year}` ],
-                structure: '{0}. {1}. In <i>{2}</i>, {3}, {4}. {5}.', // Book title italicized
+                structure: '{0}. {1}. In <i>{2}</i>, {3}, {4}. {5}.',
                 distractors: [ `${chapterTitle}`, `In ${bookTitle}`, `(Ed. ${editor.first} ${editor.last})`, `pp. ${pages}` ]
             };
             const fullReference = components.structure
@@ -1173,11 +1161,11 @@
             const year = new Date().getFullYear() - Math.floor(Math.random() * 2);
             const month = new Date().toLocaleString('default', { month: 'long' });
             const day = new Date().getDate();
-            const scenario = `Provide the Chicago (NB) reference for the newspaper article "${articleTitle}" by ${formatScenarioNameList([author])} from ${newspaper}, published on ${month} ${day}, ${year}.`;
+            const scenario = `Reference for the newspaper article "${articleTitle}" by ${formatScenarioNameList([author])} from ${newspaper}, published on ${month} ${day}, ${year}.`;
 
             const components = {
                 content: [ `${author.last}, ${author.first}`, `"${articleTitle}"`, `${newspaper}`, `${month} ${day}, ${year}` ],
-                structure: '{0}. {1}. <i>{2}</i>, {3}.', // Newspaper title italicized
+                structure: '{0}. {1}. <i>{2}</i>, {3}.',
                 distractors: [ `'${articleTitle}'`, `Newspaper: ${newspaper}`, `(${year})`, `${author.first} ${author.last}` ]
             };
             const fullReference = components.structure
@@ -1195,11 +1183,11 @@
             const month = new Date(year, Math.floor(Math.random() * 12)).toLocaleString('default', { month: 'long' });
             const day = Math.floor(Math.random() * 28) + 1;
             const archive = getRandomItem(data.archives);
-            const scenario = `Provide the Chicago (NB) reference for the unpublished letter from ${formatScenarioNameList([author])} to ${formatScenarioNameList([recipient])}, dated ${month} ${day}, ${year}, and held at ${archive}.`;
+            const scenario = `Reference for the unpublished letter from ${formatScenarioNameList([author])} to ${formatScenarioNameList([recipient])}, dated ${month} ${day}, ${year}, and held at ${archive}.`;
             
             const components = {
                 content: [ `${author.last}, ${author.first}`, `Letter to ${recipient.first} ${recipient.last}`, `${month} ${day}, ${year}`, `${archive}` ],
-                structure: '{0}. {1}. {2}. {3}.', // No italics for primary source description
+                structure: '{0}. {1}. {2}. {3}.',
                 distractors: [ `${recipient.last}, ${recipient.first}`, `Personal correspondence`, `Dated ${year}`, `From the ${archive} collection` ]
             };
             const fullReference = components.structure
@@ -1217,11 +1205,11 @@
             const month = new Date().toLocaleString('default', { month: 'long' });
             const day = new Date().getDate();
             const url = `https://www.youtube.com/watch?v=${Math.random().toString(36).substring(2, 13)}`;
-            const scenario = `Provide the Chicago (NB) reference for the YouTube video "${title}", uploaded by ${channel} on ${month} ${day}, ${year}.`;
+            const scenario = `Reference for the YouTube video "${title}", uploaded by ${channel} on ${month} ${day}, ${year}.`;
             
             const components = {
                 content: [ `${channel}`, `"${title}"`, `YouTube video`, `${Math.floor(Math.random() * 10)}:${Math.floor(Math.random() * 50 + 10)}`, `${month} ${day}, ${year}`, `${url}` ],
-                structure: '{0}. {1}. {2}, {3}. {4}. {5}.', // Video title in quotes, no italics for YouTube video
+                structure: '{0}. {1}. {2}, {3}. {4}. {5}.',
                 distractors: [ `${title}`, `Uploaded by ${channel}`, `[Video]`, `YouTube, ${year}` ]
             };
             const fullReference = components.structure
@@ -1244,12 +1232,11 @@
             else if (numAuthors <= 3) authorString = authors.map(a => a.last).join(' and ');
             else authorString = `${authors[0].last} et al.`;
             
-            const scenario = `Provide the Chicago (NB) in-text citation for a quote from page ${page} of a work by ${formatScenarioNameList(authors)}, published in ${year}. The citation goes here ||.`;
+            const scenario = `In-text citation for a quote from page ${page} of a work by ${formatScenarioNameList(authors)}, published in ${year}. The citation goes here ||.`;
             const components = {
                 correct: [`(${authorString} ${year}, ${page})`],
                 distractors: [ `(${authorString}, ${year}, p. ${page})`, `(${authorString} ${page})`, `(${authors[0].last}, ${year})`, `[${authorString} ${year}, ${page}]` ]
             };
-            // For in-text, fullReference is the correct in-text citation string itself
             return { scenario, fullReference: components.correct[0], components, hint: 'A Chicago (Author-Date) in-text citation includes the Author, Year, and Page Number inside parentheses.', originalTitle: 'in-text' };
         }
 
@@ -1262,11 +1249,11 @@
             const publisher = getRandomItem(data.publishers);
             const location = getRandomItem(data.locations);
             const year = new Date().getFullYear() - Math.floor(Math.random() * 5);
-            const scenario = `Provide the MHRA reference for a book titled "${title}" by ${formatScenarioNameList(authors)}, published by ${publisher} in ${year}.`;
+            const scenario = `Reference for a book titled "${title}" by ${formatScenarioNameList(authors)}, published by ${publisher} in ${year}.`;
             
             const components = {
                 content: [ `${authorString}`, `${title}`, `(${location}: ${publisher}, ${year})` ],
-                structure: '{0}, <i>{1}</i> {2}', // Book title italicized
+                structure: '{0}, <i>{1}</i> {2}',
                 distractors: [ `${authors.map(a => `${a.first} ${a.last}`).join(' and ')}`, `"${title}"`, `${location}: ${publisher}, ${year}` ]
             };
             const fullReference = components.structure
@@ -1285,11 +1272,11 @@
             const location = getRandomItem(data.locations);
             const year = new Date().getFullYear() - Math.floor(Math.random() * 5);
             const edLabel = numEditors > 1 ? 'eds,' : 'ed.,';
-            const scenario = `Provide the MHRA reference for the edited book "${title}", edited by ${formatScenarioNameList(editors)}, published by ${publisher} in ${year}.`;
+            const scenario = `Reference for an edited book titled "${title}", edited by ${formatScenarioNameList(editors)}, published by ${publisher} in ${year}.`;
             
             const components = {
                 content: [ `${editorString}, ${edLabel}`, `${title}`, `(${location}: ${publisher}, ${year})` ],
-                structure: '{0} <i>{1}</i> {2}', // Book title italicized
+                structure: '{0} <i>{1}</i> {2}',
                 distractors: [ `${editorString}, (ed.)`, `"${title}"`, `${location}: ${publisher}, ${year}` ]
             };
             const fullReference = components.structure
@@ -1309,11 +1296,11 @@
             const volume = Math.floor(Math.random() * 20) + 30;
             const issue = Math.floor(Math.random() * 4) + 1;
             const pages = `${Math.floor(Math.random() * 50) + 100}–${Math.floor(Math.random() * 10) + 150}`;
-            const scenario = `Provide the MHRA reference for the article "${articleTitle}" by ${formatScenarioNameList(authors)} from ${journalTitle} (Vol. ${volume}), published in ${year}.`;
+            const scenario = `Reference for the article "${articleTitle}" by ${formatScenarioNameList(authors)} from ${journalTitle} (Vol. ${volume}), published in ${year}.`;
 
             const components = {
                 content: [ `${authorString}`, `'${articleTitle}'`, `${journalTitle}`, `${volume}.${issue} (${year})`, `${pages}` ],
-                structure: '{0}, {1}, <i>{2}</i>, {3}, {4}', // Journal title italicized
+                structure: '{0}, {1}, <i>{2}</i>, {3}, {4}',
                 distractors: [ `"${articleTitle}"`, `Journal: ${journalTitle}`, `pp. ${pages}`, `(${year})` ]
             };
             const fullReference = components.structure
@@ -1332,14 +1319,13 @@
             const url = `https://www.${org.toLowerCase().replace(/\s/g, '')}.org/data/report`;
             const date = new Date();
             const accessDate = `${date.getDate()} ${date.toLocaleString('default', { month: 'long' })} ${date.getFullYear()}`;
-            const scenario = `Provide the MHRA reference for the webpage "${title}" from ${org}, published in ${year}, accessed on ${accessDate}.`;
+            const scenario = `Reference for the webpage "${title}" from ${org}, published in ${year}, accessed on ${accessDate}.`;
             
             const components = {
                 content: [ `${org}`, `'${title}'`, `${year}`, `<${url}> [accessed ${accessDate}]` ],
-                structure: '{0}, {1}, {2} <span style="text-decoration: underline;">{3}</span>', // URL often underlined in MHRA
+                structure: '{0}, {1}, {2} <span style="text-decoration: underline;">{3}</span>',
                 distractors: [ `${title}`, `(${year})`, `URL: ${url}`, `(Accessed: ${accessDate})` ]
             };
-            // Note: MHRA usually doesn't italicize the website title/article itself, but the overall site name might be in some contexts. Sticking to single quotes for article title.
             const fullReference = components.structure
                 .replace('{0}', components.content[0])
                 .replace('{1}', components.content[1])
@@ -1357,11 +1343,11 @@
             const location = getRandomItem(data.locations);
             const year = new Date().getFullYear() - Math.floor(Math.random() * 5);
             const pages = `${Math.floor(Math.random() * 20) + 50}-${Math.floor(Math.random() * 10) + 70}`;
-            const scenario = `Provide the MHRA reference for the chapter "${chapterTitle}" by ${formatScenarioNameList([author])} from the edited book "${bookTitle}", edited by ${formatScenarioNameList([editor])}, published by ${publisher} in ${year}.`;
+            const scenario = `Reference for the chapter "${chapterTitle}" by ${formatScenarioNameList([author])} from the edited book "${bookTitle}", edited by ${formatScenarioNameList([editor])}, published by ${publisher} in ${year}.`;
 
             const components = {
                 content: [ `${author.last}, ${author.first}`, `'${chapterTitle}'`, `${bookTitle}`, `ed. by ${editor.first} ${editor.last}`, `(${location}: ${publisher}, ${year})`, `pp. ${pages}` ],
-                structure: '{0}, {1}, in <i>{2}</i>, {3} {4}, {5}', // Book title italicized
+                structure: '{0}, {1}, in <i>{2}</i>, {3} {4}, {5}',
                 distractors: [ `"${chapterTitle}"`, `in ${chapterTitle}`, `(ed. ${editor.first} ${editor.last})`, `pages ${pages}` ]
             };
             const fullReference = components.structure
@@ -1379,11 +1365,11 @@
             const title = getRandomItem(data.articleTitles); // Using articleTitles for generic thesis titles
             const university = getRandomItem(data.universities);
             const year = new Date().getFullYear() - Math.floor(Math.random() * 3);
-            const scenario = `Provide the MHRA reference for an unpublished PhD thesis titled "${title}" by ${formatScenarioNameList([author])}, from ${university} in ${year}.`;
+            const scenario = `Reference for an unpublished PhD thesis titled "${title}" by ${formatScenarioNameList([author])}, from ${university} in ${year}.`;
             
             const components = {
                 content: [ `${author.last}, ${author.first}`, `'${title}'`, `(unpublished PhD thesis, ${university}, ${year})` ],
-                structure: '{0}, {1} {2}', // Thesis title in single quotes
+                structure: '{0}, {1} {2}',
                 distractors: [ `"${title}"`, `PhD dissertation`, `${university}`, `(${year})` ]
             };
             const fullReference = components.structure
@@ -1400,11 +1386,11 @@
             const url = `https://www.youtube.com/watch?v=${Math.random().toString(36).substring(2, 13)}`;
             const date = new Date();
             const accessDate = `${date.getDate()} ${date.toLocaleString('default', { month: 'long' })} ${date.getFullYear()}`;
-            const scenario = `Provide the MHRA reference for the YouTube video "${title}", uploaded by ${channel} in ${year}.`;
+            const scenario = `Reference for the YouTube video "${title}", uploaded by ${channel} in ${year}.`;
             
             const components = {
                 content: [ `${channel}`, `'${title}'`, `YouTube`, `${year}`, `<${url}> [accessed ${accessDate}]` ],
-                structure: '{0}, {1}, <i>{2}</i>, {3} <span style="text-decoration: underline;">{4}</span>', // Platform (YouTube) italicized
+                structure: '{0}, {1}, <i>{2}</i>, {3} <span style="text-decoration: underline;">{4}</span>',
                 distractors: [ `"${title}"`, `YouTube Video`, `Uploaded by ${channel}`, `Accessed on ${accessDate}` ]
             };
             const fullReference = components.structure
@@ -1426,12 +1412,11 @@
             let authorString = authors.map(a => `${a.first} ${a.last}`).join(' and ');
             if (numAuthors > 3) authorString = `${authors[0].first} ${authors[0].last} and others`;
             
-            const scenario = `Provide the MHRA footnote citation for a work by ${formatScenarioNameList(authors)} (page ${page}), published in ${year}. The citation goes here ||.`;
+            const scenario = `Footnote for a work by ${formatScenarioNameList(authors)} (page ${page}), published in ${year}. The citation goes here ||.`;
             const components = {
                 correct: [`${authorString}, p. ${page}`],
                 distractors: [ `(${authorString}, p. ${page})`, `${authorString}, page ${page}`, `${authors[0].last}, p. ${page}` ]
             };
-            // For in-text, fullReference is the correct in-text citation string itself
             return { scenario, fullReference: components.correct[0], components, hint: 'MHRA uses footnotes. A simplified footnote includes the author(s) name(s) and the page number preceded by "p.". No parentheses are used.', originalTitle: 'in-text' };
         }
         
@@ -1460,29 +1445,29 @@
             let attemptCount = 0;
             const maxAttempts = 20; // Prevent infinite loops
             const baseTransformations = [
-                (s) => s.replace(/\./g, '___TEMP_DOT___').replace(/,/g, '.').replace(/___TEMP_DOT___/g, ','), // Swap comma/period
-                (s) => s.replace(/\((.*?)\)/g, '[$1]').replace(/\[(.*?)\]/g, '($1)'), // Swap parentheses/brackets
-                (s) => s.replace(/pp\. /g, '').replace(/p\. /g, ''), // Remove page indicators
-                (s) => { // Change capitalization of a significant part (e.g., a title if available)
+                (s) => s.replace(/\./g, '___TEMP_DOT___').replace(/,/g, '.').replace(/___TEMP_DOT___/g, ','),
+                (s) => s.replace(/\((.*?)\)/g, '[$1]').replace(/\[(.*?)\]/g, '($1)'),
+                (s) => s.replace(/pp\. /g, '').replace(/p\. /g, ''),
+                (s) => {
                     if (originalTitle && s.includes(originalTitle)) {
                         return s.replace(originalTitle, originalTitle.split(' ').map(word => {
                             if (word.length > 2) return word.charAt(0).toUpperCase() + word.slice(1);
                             return word;
-                        }).join(' ')); // Title case attempt
+                        }).join(' '));
                     }
                     return s;
                 },
-                (s) => { // Reorder authors if multiple present
+                (s) => {
                     const authorMatch = s.match(/^([^,]+), ([^,]+)/);
                     if (authorMatch) {
                         return `${authorMatch[2]}, ${authorMatch[1]}${s.substring(authorMatch[0].length)}`;
                     }
                     return s;
                 },
-                (s) => { // Remove year if present in parentheses
+                (s) => {
                     return s.replace(/(\(\d{4}\))/g, '').replace(/(\(\d{4}\.\))/g, '').trim();
                 },
-                (s) => { // Add or remove 'pp.' or 'p.' before page numbers (if not already handled)
+                (s) => {
                     if (s.match(/\d+–\d+/) && !s.includes('pp.') && !s.includes('p.')) return s.replace(/(\d+–\d+)/, 'pp. $1');
                     if (s.match(/\d+/) && !s.includes('pp.') && !s.includes('p.')) return s.replace(/(\d+)$/, 'p. $1');
                     return s;
@@ -1490,11 +1475,10 @@
             ];
 
             while (distractors.size < 3 && attemptCount < maxAttempts) {
-                let newDistractor = correctRef; // Start with the correct answer to generate variations
+                let newDistractor = correctRef;
                 const transformation = getRandomItem(baseTransformations);
                 newDistractor = transformation(newDistractor);
 
-                // Add a random word from data.bookTitles if it's not too long and different
                 if (Math.random() < 0.3 && newDistractor.length < 150) {
                     const randomWord = getRandomItem(data.bookTitles).split(' ')[0];
                     if (!newDistractor.includes(randomWord)) {
@@ -1512,68 +1496,56 @@
 
             let optionsArray = Array.from(distractors);
 
-            // If still less than 3 unique options, fill by duplicating existing with minor changes
             while (optionsArray.length < 3) {
                 let fillerDistractor = getRandomItem(optionsArray);
-                // Simple variations to ensure distinct options
                 if (fillerDistractor.includes('.')) {
                     fillerDistractor = fillerDistractor.replace('.', ';');
                 } else if (fillerDistractor.includes(',')) {
                     fillerDistractor = fillerDistractor.replace(',', '.');
                 } else {
-                    fillerDistractor += ' (alt)'; // Add a generic alteration
+                    fillerDistractor += ' (alt)';
                 }
                 const cleanedFillerDistractor = cleanHtmlTags(fillerDistractor);
                 if (cleanedFillerDistractor !== correctRef && cleanedFillerDistractor.trim() !== '' && !optionsArray.includes(cleanedFillerDistractor)) {
                     optionsArray.push(cleanedFillerDistractor);
-                } else if (optionsArray.length < 2) { // Ensure at least 2 distinct ones if possible
+                } else if (optionsArray.length < 2) {
                      optionsArray.push(cleanedFillerDistractor);
                 }
             }
 
-            // Ensure we have exactly 3 distractors
             if (optionsArray.length > 3) {
                 optionsArray = shuffleArray(optionsArray).slice(0, 3);
             } else if (optionsArray.length < 3) {
-                 // Fallback if somehow still not 3, duplicate existing to reach 3
                  while(optionsArray.length < 3) {
                      optionsArray.push(optionsArray[0] + ' (var)');
                  }
             }
 
 
-            optionsArray = shuffleArray(optionsArray); // Final shuffle to randomize order of options
+            optionsArray = shuffleArray(optionsArray);
             
-            // Build the options string WITHOUT letter prefixes
             let optionsString = '';
             for (let i = 0; i < optionsArray.length; i++) {
                 optionsString += `${optionsArray[i]}\n`;
             }
 
-            // Combine scenario and question
-            const fullQuestionText = `${scenario}\n\nWhich of the following is the correct reference?`;
-
-            // Reordered output for MCQs
-            const mcqHtml = `Question Title:\n${title} (MCQ)\n\nQuestion:\n${fullQuestionText}\n\nCorrect Answer:\n${correctRef}\n\nOptions:\n${optionsString}\nHint/Explanation:\n${hint}`;
+            const mcqHtml = `Question Title:\n${title} (MCQ)\n\nQuestion:\n${scenario}\n\nCorrect Answer:\n${correctRef}\n\nOptions:\n${optionsString}\nHint/Explanation:\n${hint}`;
             
             return { htmlOutput: mcqHtml, originalTitle: originalTitle };
         }
 
         // --- Event Listeners & Page Setup ---
         document.addEventListener('DOMContentLoaded', () => {
-            // Page navigation
             const landingPage = document.getElementById('landingPage');
             const generatorPage = document.getElementById('generatorPage');
             const getStartedBtn = document.getElementById('getStartedBtn');
             const homeTitle = document.getElementById('homeTitle');
 
-            // Check if user previously navigated to the generator page
             if (localStorage.getItem('currentPage') === 'generator') {
                 landingPage.style.display = 'none';
                 generatorPage.style.display = 'block';
             }
 
-            // Event listener for "Get Started" button to transition to generator page
             getStartedBtn.addEventListener('click', () => {
                 localStorage.setItem('currentPage', 'generator');
                 landingPage.style.transition = 'opacity 0.5s';
@@ -1589,24 +1561,20 @@
                 }, 500);
             });
             
-            // Event listener for clicking the title to return to the landing page
             homeTitle.addEventListener('click', () => {
-                localStorage.removeItem('currentPage'); // Clear navigation state
-                window.location.reload(); // Reload to show landing page
+                localStorage.removeItem('currentPage');
+                window.location.reload();
             });
 
-            // Dark mode toggle functionality
             const toggle = document.getElementById('checkbox');
             const html = document.documentElement;
 
-            // Set initial theme based on localStorage or system preference
             const currentTheme = localStorage.getItem('theme');
             if (currentTheme === 'dark' || (!currentTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
                 html.classList.add('dark');
                 toggle.checked = true;
             }
 
-            // Event listener for theme toggle switch
             toggle.addEventListener('change', () => {
                 if (toggle.checked) {
                     html.classList.add('dark');
@@ -1617,32 +1585,26 @@
                 }
             });
 
-            // Generator controls event listeners
             document.getElementById('generateBtn').addEventListener('click', generateQuestions);
             document.getElementById('downloadBtn').addEventListener('click', generateDocx);
             
-            // Re-generate questions on change of these settings to provide immediate feedback
             document.getElementById('questionCategory').addEventListener('change', () => {
-                updateSourceTypes(); // Update source types dropdown first
+                updateSourceTypes();
                 generateQuestions();
             });
             document.getElementById('citationStyle').addEventListener('change', () => {
-                updateSourceTypes(); // Update source types dropdown first
+                updateSourceTypes();
                 generateQuestions();
             });
             document.getElementById('sourceType').addEventListener('change', generateQuestions);
-            // Also generate questions when number of questions changes
             document.getElementById('numQuestions').addEventListener('change', generateQuestions);
-            // Also generate questions when question type checkboxes change
             document.getElementById('dndCheckbox').addEventListener('change', generateQuestions);
             document.getElementById('mcqCheckbox').addEventListener('change', generateQuestions);
 
 
-            // Initial setup when the page loads
             updateSourceTypes();
-            generateQuestions(); // Generate initial set of questions on load
+            generateQuestions();
 
-            // Landing Page Canvas Animation
             const canvas = document.getElementById('landingCanvas');
             const ctx = canvas.getContext('2d');
             canvas.width = window.innerWidth;
@@ -1650,20 +1612,17 @@
 
             let particlesArray;
 
-            // Mouse object to track its position and interaction radius
             const mouse = {
                 x: null,
                 y: null,
-                radius: (canvas.height/120) * (canvas.width/120) // Responsive radius
+                radius: (canvas.height/120) * (canvas.width/120)
             };
 
-            // Update mouse position on mouse move
             window.addEventListener('mousemove', (event) => {
                 mouse.x = event.x;
                 mouse.y = event.y;
             });
 
-            // Particle class for the canvas animation
             class Particle {
                 constructor(x, y, directionX, directionY, size, color) {
                     this.x = x;
@@ -1673,16 +1632,13 @@
                     this.size = size;
                     this.color = color;
                 }
-                // Draw individual particle
                 draw() {
                     ctx.beginPath();
                     ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2, false);
                     ctx.fillStyle = 'rgba(200, 215, 255, 0.6)';
                     ctx.fill();
                 }
-                // Update particle position and draw
                 update() {
-                    // Reverse direction if hitting canvas edges
                     if (this.x > canvas.width || this.x < 0) {
                         this.directionX = -this.directionX;
                     }
@@ -1695,7 +1651,6 @@
                 }
             }
 
-            // Initialize the particles array
             function initCanvas() {
                 particlesArray = [];
                 let numberOfParticles = (canvas.height * canvas.width) / 9000;
@@ -1705,25 +1660,23 @@
                     let y = (Math.random() * ((innerHeight - size * 2) - (size * 2)) + size * 2);
                     let directionX = (Math.random() * 0.4) - 0.2;
                     let directionY = (Math.random() * 0.4) - 0.2;
-                    let color = '#8C9EFF'; // Not currently used, but could be for varied particle colors
+                    let color = '#8C9EFF';
                     particlesArray.push(new Particle(x, y, directionX, directionY, size, color));
                 }
             }
 
-            // Connect particles with lines if they are close enough
             function connect() {
                 let opacityValue = 1;
                 for (let a = 0; a < particlesArray.length; a++) {
                     for (let b = a; b < particlesArray.length; b++) {
                         let distance = ((particlesArray[a].x - particlesArray[b].x) * (particlesArray[a].x - particlesArray[b].x))
                                         + ((particlesArray[a].y - particlesArray[b].y) * (particlesArray[a].y - particlesArray[b].y));
-                        // Only connect if distance is within a threshold
                         if (distance < (canvas.width/7) * (canvas.height/7)) {
-                            opacityValue = 1 - (distance/20000); // Fade lines based on distance
+                            opacityValue = 1 - (distance/20000);
                             let dx = mouse.x - particlesArray[a].x;
                             let dy = mouse.y - particlesArray[a].y;
                             let mouseDistance = Math.sqrt(dx*dx + dy*dy);
-                            if (mouseDistance < mouse.radius) { // Stronger connection near mouse
+                            if (mouseDistance < mouse.radius) {
                                 ctx.strokeStyle = `rgba(220, 230, 255, ${opacityValue})`;
                             } else {
                                 ctx.strokeStyle = `rgba(200, 215, 255, ${opacityValue * 0.3})`;
@@ -1738,66 +1691,54 @@
                 }
             }
 
-            // Animation loop for the canvas
             function animate() {
                 requestAnimationFrame(animate);
-                ctx.clearRect(0, 0, innerWidth, innerHeight); // Clear previous frame
-                ctx.fillStyle = '#111827'; // Dark background for canvas
+                ctx.clearRect(0, 0, innerWidth, innerHeight);
+                ctx.fillStyle = '#111827';
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
 
                 for (let i = 0; i < particlesArray.length; i++) {
-                    particlesArray[i].update(); // Update and redraw each particle
+                    particlesArray[i].update();
                 }
-                connect(); // Draw connections between particles
+                connect();
             }
             
-            // Handle window resizing to keep canvas responsive
             window.addEventListener('resize', () => {
                 canvas.width = innerWidth;
                 canvas.height = innerHeight;
                 mouse.radius = ((canvas.height/120) * (canvas.width/120));
-                initCanvas(); // Reinitialize particles for new canvas size
+                initCanvas();
             });
 
-            // Reset mouse position when mouse leaves the window
             window.addEventListener('mouseout', () => {
                 mouse.x = undefined;
                 mouse.y = undefined;
             });
 
-            initCanvas(); // Initialize particles on load
-            animate(); // Start the animation loop
+            initCanvas();
+            animate();
         });
 
-        // --- Utility ---
-        /**
-         * Copies the text content of a specified HTML element to the clipboard.
-         * @param {string} elementId The ID of the element whose text content should be copied.
-         */
         function copyToClipboard(elementId) {
             const element = document.getElementById(elementId);
             const textToCopy = element.innerText || element.textContent;
             const textArea = document.createElement('textarea');
             textArea.value = textToCopy;
             textArea.style.position = 'absolute';
-            textArea.style.left = '-9999px'; // Off-screen positioning
+            textArea.style.left = '-9999px';
             textArea.setAttribute('readonly', '');
             document.body.appendChild(textArea);
             textArea.select();
             try {
-                document.execCommand('copy'); // Deprecated but widely supported in iframes
-                showMessageBox('Copied to clipboard!', 'success'); // Custom success message
+                document.execCommand('copy');
+                showMessageBox('Copied to clipboard!', 'success');
             } catch (err) {
                 console.error('Failed to copy text: ', err);
-                showMessageBox('Failed to copy text. Please try manually.', 'error'); // Custom error message
+                showMessageBox('Failed to copy text. Please try manually.', 'error');
             }
             document.body.removeChild(textArea);
         }
 
-        /**
-         * Generates and downloads a Word document (.docx) of the generated questions.
-         * Uses the 'docx' and 'FileSaver.js' libraries.
-         */
         function generateDocx() {
             if (lastGeneratedQuestions.length === 0) {
                 showMessageBox("Please generate some questions first!", 'error');
@@ -1811,22 +1752,18 @@
                         const lines = q.split('\n');
                         const children = [];
                         
-                        // Add "Question X" as a heading
                         children.push(new docx.Paragraph({
                             text: `Question ${index + 1}`,
                             heading: docx.HeadingLevel.HEADING_1,
                             spacing: { after: 200 }
                         }));
                         
-                        // Add the rest of the question content as normal text
-                        // Skip the first two lines ("Question X" and "---")
                         lines.slice(2).forEach(line => {
                             if (line.trim() !== '') {
                                 children.push(new docx.Paragraph({ text: line }));
                             }
                         });
                         
-                        // Add a page break after each question except the last one
                         if (index < lastGeneratedQuestions.length - 1) {
                             children.push(new docx.Paragraph({ children: [new docx.PageBreak()] }));
                         }
@@ -1836,7 +1773,6 @@
                 }],
             });
 
-            // Pack the document and trigger download
             docx.Packer.toBlob(doc).then(blob => {
                 saveAs(blob, "citex-questions.docx");
             });
