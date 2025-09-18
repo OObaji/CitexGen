@@ -478,10 +478,13 @@
                 }
             });
 
+            // Randomly select only two distracting words
+            const distractingWords = shuffleArray(components.distractors).slice(0, 2);
+
             const cleanedFixedPartsString = cleanHtmlTags(fixedPartsString);
             const cleanedFullReference = cleanHtmlTags(fullReference);
 
-            const htmlOutput = `Question Title:\n${title}\n\nQuestion:\n${scenario}\n\nQuestion Parts (Correct Drag Items):\n${draggableItems.map(item => cleanHtmlTags(item)).join('\n')}\n\nFixed Parts:\n${cleanedFixedPartsString}\n\nConfusing Words (Distractor Drag Items):\n${components.distractors.map(item => cleanHtmlTags(item)).join('\n')}\n\nHint:\n${hint}`;
+            const htmlOutput = `Question Title:\n${title}\n\nQuestion:\n${scenario}\n\nQuestion Parts (Correct Drag Items):\n${draggableItems.map(item => cleanHtmlTags(item)).join('\n')}\n\nFixed Parts:\n${cleanedFixedPartsString}\n\nConfusing Words (Distractor Drag Items):\n${distractingWords.map(item => cleanHtmlTags(item)).join('\n')}\n\nHint:\n${hint}`;
 
             return { htmlOutput: htmlOutput, originalTitle: questionData.originalTitle };
         }
@@ -498,10 +501,13 @@
             const fixedPartsString = scenario.replace('||', ' || '); 
             const draggableItems = components.correct;
             
+            // Randomly select only two distracting words
+            const distractingWords = shuffleArray(components.distractors).slice(0, 2);
+
             const cleanedFixedPartsString = cleanHtmlTags(fixedPartsString);
             const cleanedFullReference = cleanHtmlTags(fullReference);
 
-            const htmlOutput = `Question Title:\n${title}\n\nQuestion:\n${scenario}\n\nQuestion Parts (Correct Drag Items):\n${draggableItems.map(item => cleanHtmlTags(item)).join('\n')}\n\nFixed Parts:\n${cleanedFixedPartsString}\n\nConfusing Words (Distractor Drag Items):\n${components.distractors.map(item => cleanHtmlTags(item)).join('\n')}\n\nHint:\n${hint}`;
+            const htmlOutput = `Question Title:\n${title}\n\nQuestion:\n${scenario}\n\nQuestion Parts (Correct Drag Items):\n${draggableItems.map(item => cleanHtmlTags(item)).join('\n')}\n\nFixed Parts:\n${cleanedFixedPartsString}\n\nConfusing Words (Distractor Drag Items):\n${distractingWords.map(item => cleanHtmlTags(item)).join('\n')}\n\nHint:\n${hint}`;
 
             return { htmlOutput: htmlOutput, originalTitle: questionData.originalTitle };
         }
@@ -516,11 +522,11 @@
             const title = getRandomItem(data.bookTitles);
             const publisher = getRandomItem(data.publishers);
             const year = new Date().getFullYear() - Math.floor(Math.random() * 5);
-            const scenario = `Reference for a book titled "${title}" by ${formatScenarioNameList(authors)}, published by ${publisher} in ${year}.`;
+            const scenario = `Reference for a book by ${formatScenarioNameList(authors)}, titled "${title}", published in ${year}.`;
             
             const components = {
                 content: [ authorString, year, title, publisher ],
-                structure: '{0}. ({1}). <i>{2}</i>. {3}.',
+                structure: '{0} ({1}). <i>{2}</i>. {3}.',
                 distractors: [ `${authors.map(a => `${a.last}, ${a.first}`).join(' & ')}`, `"${title}"`, `in press`, `${publisher}, ${year}` ]
             };
             const fullReference = components.structure
@@ -539,7 +545,7 @@
             const title = getRandomItem(data.bookTitles);
             const publisher = getRandomItem(data.publishers);
             const year = new Date().getFullYear() - Math.floor(Math.random() * 5);
-            const scenario = `Reference for an edited book titled "${title}", edited by ${formatScenarioNameList(editors)}, published by ${publisher} in ${year}.`;
+            const scenario = `Reference for an edited book titled "${title}", edited by ${formatScenarioNameList(editors)}, published in ${year}.`;
             const edLabel = numEditors > 1 ? '(Eds.).' : '(Ed.).';
             
             const components = {
@@ -618,7 +624,7 @@
 
             const components = {
                 content: [ `${author.last}, ${author.first.charAt(0)}.`, `${year}`, `${chapterTitle}`, `In ${editor.first.charAt(0)}. ${editor.last} (Ed.),`, `${bookTitle}`, `pp. ${pages}`, `${publisher}` ],
-                structure: '{0}. ({1}). {2}. {3} <i>{4}</i> ({5}). {6}.',
+                structure: '{0} ({1}). {2}. {3} <i>{4}</i> ({5}). {6}.',
                 distractors: [ `'${chapterTitle}'`, `ed. by ${editor.first} ${editor.last}`, `(pages ${pages})`, `In ${chapterTitle}` ]
             };
             const fullReference = components.structure
@@ -664,7 +670,7 @@
             else if (numAuthors === 2) authorString = `${authors[0].last} & ${authors[1].last}`;
             else authorString = `${authors[0].last} et al.`;
             
-            const scenario = `A quote from page ${page} of a work by ${formatScenarioNameList(authors)}, published in ${year}. The citation goes here ||.`;
+            const scenario = `In-text citation for a quote from page ${page} of a work by ${formatScenarioNameList(authors)}, published in ${year}. The citation goes here ||.`;
             const components = {
                 correct: [`(${authorString}, ${year}, p. ${page})`],
                 distractors: [ `(${authorString}, ${year})`, `(${authorString}, p. ${page})`, `(${authors[0].last}, ${year}, p. ${page})`, `(${authorString.replace('&', 'and')}, ${year}, p. ${page})` ]
@@ -687,7 +693,7 @@
             const title = getRandomItem(data.bookTitles);
             const publisher = getRandomItem(data.publishers);
             const year = new Date().getFullYear() - Math.floor(Math.random() * 5);
-            const scenario = `Reference for a book titled "${title}" by ${formatScenarioNameList(authors)}, published by ${publisher} in ${year}.`;
+            const scenario = `Reference for a book by ${formatScenarioNameList(authors)}, titled "${title}", published by ${publisher} in ${year}.`;
             
             const components = {
                 content: [ `${authorString}`, `${title}`, `${publisher}`, `${year}` ],
@@ -714,7 +720,7 @@
             const title = getRandomItem(data.bookTitles);
             const publisher = getRandomItem(data.publishers);
             const year = new Date().getFullYear() - Math.floor(Math.random() * 5);
-            const scenario = `Reference for an edited book titled "${title}", edited by ${formatScenarioNameList(editors)}, published by ${publisher} in ${year}.`;
+            const scenario = `Reference for an edited book by ${formatScenarioNameList(editors)}, titled "${title}", published by ${publisher} in ${year}.`;
             
             const components = {
                 content: [ `${editorString}`, `${title}`, `${publisher}`, `${year}` ],
@@ -862,7 +868,7 @@
             const publisher = getRandomItem(data.publishers);
             const location = getRandomItem(data.locations);
             const year = new Date().getFullYear() - Math.floor(Math.random() * 5);
-            const scenario = `Reference for a book titled "${title}", by ${formatScenarioNameList(authors)}, published by ${publisher} in ${year}.`;
+            const scenario = `Reference for a book by ${formatScenarioNameList(authors)}, titled "${title}", published by ${publisher} in ${year}.`;
 
             const components = {
                 content: [ `${authorString}`, `${year}`, `${title}`, `${location}: ${publisher}` ],
@@ -887,7 +893,7 @@
             const location = getRandomItem(data.locations);
             const year = new Date().getFullYear() - Math.floor(Math.random() * 5);
             const edLabel = numEditors > 1 ? '(eds.)' : '(ed.)';
-            const scenario = `Reference for an edited book titled "${title}", edited by ${formatScenarioNameList(editors)}, published by ${publisher} in ${year}.`;
+            const scenario = `Reference for an edited book by ${formatScenarioNameList(editors)}, titled "${title}", published by ${publisher} in ${year}.`;
 
             const components = {
                 content: [ `${editorString}`, `${year}`, `${title}`, `${location}: ${publisher}` ],
@@ -1037,7 +1043,7 @@
             const publisher = getRandomItem(data.publishers);
             const location = getRandomItem(data.locations);
             const year = new Date().getFullYear() - Math.floor(Math.random() * 5);
-            const scenario = `Reference for a book titled "${title}" by ${formatScenarioNameList(authors)}, published by ${publisher} in ${year}.`;
+            const scenario = `Reference for a book by ${formatScenarioNameList(authors)}, titled "${title}", published by ${publisher} in ${year}.`;
 
             const components = {
                 content: [ `${authorString}`, `${title}`, `${location}: ${publisher}`, `${year}` ],
@@ -1062,7 +1068,7 @@
             const location = getRandomItem(data.locations);
             const year = new Date().getFullYear() - Math.floor(Math.random() * 5);
             const edLabel = numEditors > 1 ? 'eds.' : 'ed.';
-            const scenario = `Reference for an edited book titled "${title}", edited by ${formatScenarioNameList(editors)}, published by ${publisher} in ${year}.`;
+            const scenario = `Reference for an edited book by ${formatScenarioNameList(editors)}, titled "${title}", published by ${publisher} in ${year}.`;
 
             const components = {
                 content: [ `${editorString}, ${edLabel}`, `${title}`, `${location}: ${publisher}`, `${year}` ],
@@ -1249,7 +1255,7 @@
             const publisher = getRandomItem(data.publishers);
             const location = getRandomItem(data.locations);
             const year = new Date().getFullYear() - Math.floor(Math.random() * 5);
-            const scenario = `Reference for a book titled "${title}" by ${formatScenarioNameList(authors)}, published by ${publisher} in ${year}.`;
+            const scenario = `Reference for a book by ${formatScenarioNameList(authors)}, titled "${title}", published by ${publisher} in ${year}.`;
             
             const components = {
                 content: [ `${authorString}`, `${title}`, `(${location}: ${publisher}, ${year})` ],
@@ -1272,7 +1278,7 @@
             const location = getRandomItem(data.locations);
             const year = new Date().getFullYear() - Math.floor(Math.random() * 5);
             const edLabel = numEditors > 1 ? 'eds,' : 'ed.,';
-            const scenario = `Reference for an edited book titled "${title}", edited by ${formatScenarioNameList(editors)}, published by ${publisher} in ${year}.`;
+            const scenario = `Reference for an edited book by ${formatScenarioNameList(editors)}, titled "${title}", published by ${publisher} in ${year}.`;
             
             const components = {
                 content: [ `${editorString}, ${edLabel}`, `${title}`, `(${location}: ${publisher}, ${year})` ],
