@@ -521,6 +521,29 @@
         }
 
 
+        /**
+         * Builds the text output for an In-Text Drag and Drop question.
+         * @param {Object} questionData The data for the question.
+         * @param {number} questionNumber The current question number.
+         * @returns {Object} An object containing the HTML output and original title.
+         */
+        function buildInTextDragAndDrop(questionData, questionNumber) {
+            const { baseTitle, scenario, fullReference, components, hint } = questionData;
+            const title = `${baseTitle}`;
+            
+            // In-text DnD is simpler. The full citation is usually one draggable item.
+            const draggableItems = components.correct;
+            const distractingItems = shuffleArray(components.distractors).slice(0, 2);
+
+            // The main text is the fixed part.
+            const fixedPartsString = scenario.replace('||', '|');
+
+            const htmlOutput = `Question Title:\n${title}\n\nQuestion:\n${fixedPartsString}\n\nQuestion Parts (Correct Drag Items):\n${draggableItems.map(item => cleanHtmlTags(item)).join('\n')}\n\nConfusing Words (Distractor Drag Items):\n${distractingItems.map(item => cleanHtmlTags(item)).join('\n')}\n\nHint:\n${hint}`;
+
+            return { htmlOutput: htmlOutput, originalTitle: questionData.originalTitle };
+        }
+
+
         // --- APA 7 Generators ---
         function generateApaBook(getUniqueItem, numAuthors = 1) {
             const authors = Array.from({ length: numAuthors }, () => getUniqueItem('authors'));
@@ -1431,6 +1454,7 @@
         
         /**
          * Converts a generated question into a Multiple Choice Question format.
+         * Generates subtle, plausible distractors based on common citation errors.
          * @param {Object} questionData The data for the question.
          * @param {number} questionNumber The current question number.
          * @returns {Object} An object containing the HTML output and original title.
@@ -1438,107 +1462,124 @@
         function convertToMcq(questionData, questionNumber) {
             const { baseTitle, scenario, fullReference, hint, originalTitle, components } = questionData;
             const title = `${baseTitle}`;
-            const correctRef = cleanHtmlTags(fullReference);
+            const correctRef = fullReference; // Keep HTML for transformations (e.g., <i>)
+            const correctRefClean = cleanHtmlTags(correctRef);
 
             let distractors = new Set();
+            
+            // Define subtle transformations based on common citation errors.
+            // Each function introduces one specific, common error.
+            const subtleTransformations = [
+                // Italicization/Quotation Errors
+                (s) => s.replace(/<i>(.*?)<\/i>/g, '"$1"'),          // Italic to quotes
+                (s) => s.replace(/"(.*?)"/g, '<i>$1</i>'),          // Quotes to italic
+                (s) => s.replace(/<i>(.*?)<\/i>/g, '$1'),            // Remove italics
+                (s) => s.replace(/"(.*?)"/g, '$1'),              // Remove quotes
 
-            // Add pre-defined distractors, ensuring they are plain text and not identical to correctRef
-            components.distractors.forEach(d => {
-                const cleanedDistractor = cleanHtmlTags(d);
-                if (cleanedDistractor !== correctRef && cleanedDistractor.trim() !== '') {
-                    distractors.add(cleanedDistractor);
-                }
-            });
+                // Punctuation Errors
+                (s) => s.replace(/(\(\d{4}\))\./g, '$1,'),         // Period to comma after year
+                (s) => s.replace(/, & /g, ' and '),                  // Incorrect ampersand use
+                (s) => { // Swap author/year punctuation
+                    const authorMatch = s.match(/^([^,]+, [^,]+)/);
+                    if (authorMatch) return s.replace(authorMatch[0] + '.', authorMatch[0] + ',');
+                    return s;
+                },
 
-            // Generate more unique and plausible distractors until we have at least 3
-            let attemptCount = 0;
-            const maxAttempts = 20; // Prevent infinite loops
-            const baseTransformations = [
-                (s) => s.replace(/\./g, '___TEMP_DOT___').replace(/,/g, '.').replace(/___TEMP_DOT___/g, ','),
-                (s) => s.replace(/\((.*?)\)/g, '[$1]').replace(/\[(.*?)\]/g, '($1)'),
-                (s) => s.replace(/pp\. /g, '').replace(/p\. /g, ''),
-                (s) => {
-                    if (originalTitle && s.includes(originalTitle)) {
-                        return s.replace(originalTitle, originalTitle.split(' ').map(word => {
-                            if (word.length > 2) return word.charAt(0).toUpperCase() + word.slice(1);
-                            return word;
-                        }).join(' '));
+                // Year/Date Errors
+                (s) => { // Move year to the end
+                    const yearMatch = s.match(/\(\d{4}\)/);
+                    if (yearMatch) {
+                        const modified = s.replace(yearMatch[0], '').replace('..', '.').trim();
+                        // Check if the string ends with a period.
+                        return modified.endsWith('.') ? `${modified.slice(0, -1)}, ${yearMatch[0]}.` : `${modified}, ${yearMatch[0]}.`;
                     }
                     return s;
                 },
+                (s) => s.replace(/(\d{4})/, (match) => parseInt(match) - 1), // Change year by 1
+
+                // Author/Editor Formatting Errors
+                (s) => s.replace(/, ed\./, ' (ed.)'),             // Incorrect editor format
+                (s) => s.replace(/, eds\./, ' (eds.)'),            // Incorrect editors format
+                (s) => { // Incorrectly format "et al."
+                    if (s.includes('et al.')) return s.replace('et al.', 'et. al');
+                    return s.includes('et al') ? s.replace('et al', 'et al.') : s;
+                },
+
+                // Page Number Errors
+                (s) => s.replace(/pp\. (\d+–\d+)/, 'p. $1'),       // pp. to p. for a range
+                (s) => s.replace(/p\. (\d+)/, 'pp. $1'),          // p. to pp. for a single page
+                (s) => s.replace(/(pp|p)\. /g, ''),               // Remove page indicators
+
+                // Capitalization Errors (using originalTitle for context)
                 (s) => {
-                    const authorMatch = s.match(/^([^,]+), ([^,]+)/);
-                    if (authorMatch) {
-                        return `${authorMatch[2]}, ${authorMatch[1]}${s.substring(authorMatch[0].length)}`;
+                    if (originalTitle && s.includes(originalTitle) && originalTitle !== 'in-text') {
+                        // A simple Title Case transformation for demonstration
+                        const titleCased = originalTitle.split(' ').map(word => {
+                             if (word.length === 0) return '';
+                             return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+                        }).join(' ');
+                        // Only apply if it creates a different string
+                        if (titleCased !== originalTitle) return s.replace(originalTitle, titleCased);
                     }
-                    return s;
+                    // Return s with a minor change if no other transformation is applicable
+                    return s + ',';
                 },
-                (s) => {
-                    return s.replace(/(\(\d{4}\))/g, '').replace(/(\(\d{4}\.\))/g, '').trim();
-                },
-                (s) => {
-                    if (s.match(/\d+–\d+/) && !s.includes('pp.') && !s.includes('p.')) return s.replace(/(\d+–\d+)/, 'pp. $1');
-                    if (s.match(/\d+/) && !s.includes('pp.') && !s.includes('p.')) return s.replace(/(\d+)$/, 'p. $1');
-                    return s;
-                }
             ];
 
-            while (distractors.size < 3 && attemptCount < maxAttempts) {
-                let newDistractor = correctRef;
-                const transformation = getRandomItem(baseTransformations);
-                newDistractor = transformation(newDistractor);
+            let attempts = 0;
+            const maxAttempts = 50; // To prevent infinite loops
 
-                if (Math.random() < 0.3 && newDistractor.length < 150) {
-                    const randomWord = getRandomItem(data.bookTitles).split(' ')[0];
-                    if (!newDistractor.includes(randomWord)) {
-                        const insertionPoint = Math.floor(Math.random() * newDistractor.length);
-                        newDistractor = newDistractor.slice(0, insertionPoint) + ' ' + randomWord + ' ' + newDistractor.slice(insertionPoint);
+            // Generate 3 unique distractors
+            while (distractors.size < 3 && attempts < maxAttempts) {
+                // Pick a random transformation function from the shuffled list
+                const transform = getRandomItem(shuffleArray([...subtleTransformations]));
+                
+                // Apply it to the correct reference
+                let newDistractor = transform(correctRef);
+                
+                // Clean HTML tags for comparison and final output
+                const cleanedDistractor = cleanHtmlTags(newDistractor);
+
+                // Add to the set if it's different from the correct answer and not already present
+                if (cleanedDistractor.trim() !== '' && cleanedDistractor !== correctRefClean && !distractors.has(cleanedDistractor)) {
+                    distractors.add(cleanedDistractor);
+                }
+                attempts++;
+            }
+            
+            // Fallback in case we can't generate enough subtle distractors
+            if (distractors.size < 3) {
+                const fallbackDistractors = [
+                    correctRefClean.replace('.', ';'),
+                    correctRefClean.replace(',', '.'),
+                    correctRefClean.slice(0, -1) + ')'
+                ];
+                for (const d of fallbackDistractors) {
+                    if (distractors.size < 3 && d !== correctRefClean && !distractors.has(d)) {
+                        distractors.add(d);
                     }
                 }
-
-                const cleanedNewDistractor = cleanHtmlTags(newDistractor);
-                if (cleanedNewDistractor !== correctRef && cleanedNewDistractor.trim() !== '' && !distractors.has(cleanedNewDistractor)) {
-                    distractors.add(cleanedNewDistractor);
-                }
-                attemptCount++;
             }
 
             let optionsArray = Array.from(distractors);
 
+            // Ensure we have exactly 3 distractors
+            while (optionsArray.length > 3) {
+                optionsArray.pop();
+            }
             while (optionsArray.length < 3) {
-                let fillerDistractor = getRandomItem(optionsArray);
-                if (fillerDistractor.includes('.')) {
-                    fillerDistractor = fillerDistractor.replace('.', ';');
-                } else if (fillerDistractor.includes(',')) {
-                    fillerDistractor = fillerDistractor.replace(',', '.');
+                // Create a plausible filler if needed
+                let filler = optionsArray.length > 0 ? optionsArray[0] : correctRefClean;
+                filler = filler.replace(/(\d{4})/, (m) => parseInt(m) + 1); // Change year
+                if (filler !== correctRefClean && !optionsArray.includes(filler)) {
+                    optionsArray.push(filler);
                 } else {
-                    fillerDistractor += ' (alt)';
-                }
-                const cleanedFillerDistractor = cleanHtmlTags(fillerDistractor);
-                if (cleanedFillerDistractor !== correctRef && cleanedFillerDistractor.trim() !== '' && !optionsArray.includes(cleanedFillerDistractor)) {
-                    optionsArray.push(cleanedFillerDistractor);
-                } else if (optionsArray.length < 2) {
-                     optionsArray.push(cleanedFillerDistractor);
+                    optionsArray.push(filler + "."); // Last resort
                 }
             }
-
-            if (optionsArray.length > 3) {
-                optionsArray = shuffleArray(optionsArray).slice(0, 3);
-            } else if (optionsArray.length < 3) {
-                 while(optionsArray.length < 3) {
-                     optionsArray.push(optionsArray[0] + ' (var)');
-                 }
-            }
-
-
-            optionsArray = shuffleArray(optionsArray);
             
-            let optionsString = '';
-            for (let i = 0; i < optionsArray.length; i++) {
-                optionsString += `${optionsArray[i]}\n`;
-            }
-
-            const mcqHtml = `Question Title:\n${title} (MCQ)\n\nQuestion:\n${scenario}\n\nCorrect Answer:\n${correctRef}\n\nOptions:\n${optionsString}\nHint/Explanation:\n${hint}`;
+            const optionsString = optionsArray.join('\n');
+            const mcqHtml = `Question Title:\n${title}\n\nQuestion:\n${scenario}\n\nCorrect Answer:\n${correctRefClean}\n\nOptions:\n${optionsString}\nHint/Explanation:\n${hint}`;
             
             return { htmlOutput: mcqHtml, originalTitle: originalTitle };
         }
@@ -1790,6 +1831,3 @@
     </script>
 </body>
 </html>
-
-
-
