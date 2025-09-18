@@ -205,33 +205,35 @@
         // Global variable to store the last generated questions for DOCX export
         let lastGeneratedQuestions = [];
         
-        // --- Data for Generation ---
+        // --- Data for Generation (UK-specific) ---
         const data = {
             authors: [
-                { first: 'John', last: 'Smith' }, { first: 'Jane', last: 'Doe' }, { first: 'Mark', last: 'Johnson' }, { first: 'Emily', last: 'Davis' }, { first: 'David', last: 'Wilson' }, { first: 'Sarah', last: 'Taylor' }, { first: 'Chris', last: 'Evans' }, { first: 'Laura', last: 'White' }, { first: 'James', last: 'Brown' }, { first: 'Lisa', last: 'Hall' }
+                { first: 'Harry', last: 'Smith' }, { first: 'Amelia', last: 'Jones' }, { first: 'Oliver', last: 'Taylor' }, { first: 'Isla', last: 'Brown' }, { first: 'George', last: 'Williams' }, { first: 'Freya', last: 'Wilson' }, { first: 'Noah', last: 'Davies' }, { first: 'Olivia', last: 'Robinson' }, { first: 'Leo', last: 'Wright' }, { first: 'Ava', last: 'Thompson' },
+                { first: 'Arthur', last: 'Johnson' }, { first: 'Mia', last: 'Roberts' }, { first: 'Freddie', last: 'Clarke' }, { first: 'Lily', last: 'Hall' }, { first: 'Theo', last: 'Thomas' }, { first: 'Grace', last: 'Khan' }, { first: 'Oscar', last: 'Lewis' }, { first: 'Ivy', last: 'Jackson' }, { first: 'Charlie', last: 'Wood' }, { first: 'Florence', last: 'Green' }
             ],
-            editors: [ { first: 'Peter', last: 'Jones' }, { first: 'Linda', last: 'Harris' }, { first: 'Michael', last: 'Clark'}, { first: 'Susan', last: 'Miller' } ],
-            bookTitles: [ 'The Social Fabric', 'Echoes of the Past', 'Digital Communities', 'Future Imperfect', 'Rethinking Society', 'Urban Labyrinths', 'The Quantum Moment', 'Coastal Ecology' ],
-            chapterTitles: [ 'The role of media in modern politics', 'Case studies in digital ethics', 'The future of work', 'Migration patterns in the 21st century', 'AI and human creativity' ],
-            journalTitles: [ 'Journal of Educational Technology', 'Cognitive Science Quarterly', 'Media Psychology Review', 'International Journal of Sociology', 'Environmental Science & Policy' ],
-            articleTitles: [ 'Cognitive load in virtual reality learning', 'The persistence of online memory', 'User engagement in mobile apps', 'Cross-cultural communication barriers', 'The impact of microplastics on marine life' ],
+            editors: [ { first: 'Charlotte', last: 'Evans' }, { first: 'Thomas', last: 'Walker' }, { first: 'Sophia', last: 'White'}, { first: 'Jack', last: 'Harris' }, { first: 'Emily', last: 'Scott' }, { first: 'James', last: 'Turner' } ],
+            bookTitles: [ 'A History of the Tudors', 'Gardening in the Shires', 'The British Seaside', 'London\'s Hidden Alleys', 'Post-War British Cinema', 'The Industrial North', 'Celtic Mythology Reimagined', 'A Guide to the Cotswolds', 'Navigating the Broads', 'Echoes of Victorian England', 'The Rise of the Premier League' ],
+            chapterTitles: [ 'The impact of the NHS on public health', 'Devolution and Scottish politics', 'Representations of class in British literature', 'The rise of Britpop in the 1990s', 'Archaeological finds in Roman Britain', 'The architecture of Charles Rennie Mackintosh', 'Suffragette movements in Edwardian England' ],
+            journalTitles: [ 'The British Medical Journal', 'Journal of British Studies', 'The Economic Journal', 'English Historical Review', 'Cultural and Social History', 'British Journal of Sociology', 'Notes and Queries' ],
+            articleTitles: [ 'Brexit\'s long-term effect on the UK economy', 'Urban regeneration in Manchester and Salford', 'The conservation of the Scottish wildcat', 'Shakespeare\'s influence on modern theatre', 'The role of the monarchy in the 21st century', 'A re-evaluation of the Battle of Hastings', 'The cultural significance of afternoon tea' ],
             publisherLocations: [
-                { publisher: 'Routledge', location: 'London' },
-                { publisher: 'Penguin Press', location: 'New York' },
-                { publisher: 'Sage Publications', location: 'Thousand Oaks, CA' },
-                { publisher: 'MIT Press', location: 'Cambridge, MA' },
-                { publisher: 'Oxford University Press', location: 'Oxford' },
-                { publisher: 'Cambridge University Press', location: 'Cambridge' },
-                { publisher: 'John Wiley & Sons', location: 'Hoboken, NJ' },
-                { publisher: 'Palgrave Macmillan', location: 'London' }
+                { publisher: 'Penguin Books', location: 'London' },
+                { publisher: 'Bloomsbury Publishing', location: 'London' },
+                { publisher: 'Faber & Faber', location: 'London' },
+                { publisher: 'Edinburgh University Press', location: 'Edinburgh' },
+                { publisher: 'Manchester University Press', location: 'Manchester' },
+                { publisher: 'Verso Books', location: 'London' },
+                { publisher: 'Canongate Books', location: 'Edinburgh' },
+                { publisher: 'Polity Press', location: 'Cambridge' },
+                { publisher: 'Liverpool University Press', location: 'Liverpool' }
             ],
-            organizations: [ 'World Health Organization', 'Pew Research Center', 'United Nations', 'Doctors Without Borders', 'Amnesty International', 'The World Bank' ],
-            webTitles: [ 'Global health observatory', 'The state of digital news', 'Sustainable development goals report', 'Annual human rights review', 'Global economic prospects' ],
-            youtubeChannels: [ 'SciShow', 'Veritasium', 'CrashCourse', 'TED', 'National Geographic', 'SmarterEveryDay' ],
-            youtubeVideoTitles: [ 'The Science of Laziness', 'What Is Quantum Computing?', 'The History of the Silk Road', 'How to Build a Habit', 'The Hidden World of Fungi' ],
-            newspapers: ['The Guardian', 'The New York Times', 'The Wall Street Journal', 'Le Monde'],
-            universities: ['University of Oxford', 'Harvard University', 'University of Cambridge', 'Stanford University'],
-            archives: ['The National Archives, Kew', 'Library of Congress, Washington, D.C.', 'Bodleian Libraries, Oxford']
+            organizations: [ 'British Broadcasting Corporation (BBC)', 'National Health Service (NHS)', 'The British Museum', 'The Royal Society', 'English Heritage', 'The National Trust', 'Ordnance Survey', 'The Met Office' ],
+            webTitles: [ 'BBC News home', 'The history of the UK Parliament', 'GOV.UK service manual', 'Tate Modern collection guide', 'National Trust property listings', 'A guide to using the London Underground' ],
+            youtubeChannels: [ 'BBC Earth', 'The Graham Norton Show', 'SortedFood', 'Tom Scott', 'Jay Foreman', 'English Heritage', 'The Great British Bake Off' ],
+            youtubeVideoTitles: [ 'Inside the Tower of London', 'How the London Underground Was Built', 'Making the Perfect Sunday Roast', 'Exploring the Scottish Highlands', 'The Secret Tunnels Underneath Britain', 'Restoring Hadrian\'s Wall', 'A Tour of Stonehenge' ],
+            newspapers: ['The Times', 'The Daily Telegraph', 'The Independent', 'The Guardian', 'The Financial Times', 'The Scotsman'],
+            universities: ['University of Manchester', 'University of Edinburgh', 'King\'s College London', 'University of Bristol', 'University of Glasgow', 'University of Leeds', 'University of Warwick', 'Durham University'],
+            archives: ['The National Archives, Kew', 'British Library, London', 'National Records of Scotland, Edinburgh', 'Bodleian Libraries, Oxford', 'The Churchill Archives Centre, Cambridge']
         };
 
         // Source types for "Reference List Entry" category
@@ -385,6 +387,19 @@
                 return;
             }
 
+            // Create a disposable pool of data for this generation batch to ensure uniqueness.
+            const dynamicDataPool = JSON.parse(JSON.stringify(data));
+
+            // Helper function to get a unique item from the dynamic pool
+            const getUniqueItem = (key) => {
+                if (!dynamicDataPool[key] || dynamicDataPool[key].length === 0) {
+                    // If we run out of unique items, restock from the master list
+                    dynamicDataPool[key] = [...data[key]];
+                }
+                const index = Math.floor(Math.random() * dynamicDataPool[key].length);
+                return dynamicDataPool[key].splice(index, 1)[0];
+            };
+
             let allQuestionsOutput = '';
             lastGeneratedQuestions = []; // Reset global array for DOCX export
 
@@ -395,11 +410,11 @@
                 
                 // Map to retrieve the correct generation function based on style and source type
                 const generatorMap = {
-                    'apa7-book': () => generateApaBook(getRandomItem([1,2,3])), 'apa7-edited_book': () => generateApaEditedBook(getRandomItem([1,2])), 'apa7-journal': () => generateApaJournal(getRandomItem([1,2,3])), 'apa7-website': generateApaWebsite, 'apa7-book_chapter': generateApaBookChapter, 'apa7-youtube': generateApaYouTube, 'apa7-in_text_single': () => generateApaInText(1), 'apa7-in_text_two': () => generateApaInText(2), 'apa7-in_text_three': () => generateApaInText(3), 'apa7-in_text_four_plus': () => generateApaInText(4),
-                    'mla9-book': () => generateMlaBook(getRandomItem([1,2,3])), 'mla9-edited_book': () => generateMlaEditedBook(getRandomItem([1,2])), 'mla9-journal': () => generateMlaJournal(getRandomItem([1,2,3])), 'mla9-book_chapter': generateMlaBookChapter, 'mla9-youtube': generateMlaYouTube, 'mla9-website': generateMlaWebsite, 'mla9-in_text_single': () => generateMlaInText(1), 'mla9-in_text_two': () => generateMlaInText(2), 'mla9-in_text_three': () => generateMlaInText(3), 'mla9-in_text_four_plus': () => generateMlaInText(4),
-                    'harvard-book': () => generateHarvardBook(getRandomItem([1,2,3])), 'harvard-edited_book': () => generateHarvardEditedBook(getRandomItem([1,2])), 'harvard-journal': () => generateHarvardJournal(getRandomItem([1,2,3])), 'harvard-website': generateHarvardWebsite, 'harvard-book_chapter': generateHarvardBookChapter, 'harvard-youtube': generateHarvardYouTube, 'harvard-in_text_single': () => generateHarvardInText(1), 'harvard-in_text_two': () => generateHarvardInText(2), 'harvard-in_text_three': () => generateHarvardInText(3), 'harvard-in_text_four_plus': () => generateHarvardInText(4),
-                    'chicago-book': () => generateChicagoBook(getRandomItem([1,2,3])), 'chicago-edited_book': () => generateChicagoEditedBook(getRandomItem([1,2])), 'chicago-journal': () => generateChicagoJournal(getRandomItem([1,2,3])), 'chicago-website': generateChicagoWebsite, 'chicago-book_chapter': generateChicagoBookChapter, 'chicago-newspaper': generateChicagoNewspaper, 'chicago-primary_source': generateChicagoPrimarySource, 'chicago-youtube': generateChicagoYouTube, 'chicago-in_text_single': () => generateChicagoInText(1), 'chicago-in_text_two': () => generateChicagoInText(2), 'chicago-in_text_three': () => generateChicagoInText(3), 'chicago-in_text_four_plus': () => generateChicagoInText(4),
-                    'mhra-book': () => generateMhraBook(getRandomItem([1,2,3])), 'mhra-edited_book': () => generateMhraEditedBook(getRandomItem([1,2])), 'mhra-journal': () => generateMhraJournal(getRandomItem([1,2,3])), 'mhra-website': generateMhraWebsite, 'mhra-book_chapter': generateMhraBookChapter, 'mhra-thesis': () => generateMhraThesis, 'mhra-youtube': generateMhraYouTube, 'mhra-in_text_single': () => generateMhraInText(1), 'mhra-in_text_two': () => generateMhraInText(2), 'mhra-in_text_three': () => generateMhraInText(3), 'mhra-in_text_four_plus': () => generateMhraInText(4),
+                    'apa7-book': () => generateApaBook(getUniqueItem, getRandomItem([1,2,3])), 'apa7-edited_book': () => generateApaEditedBook(getUniqueItem, getRandomItem([1,2])), 'apa7-journal': () => generateApaJournal(getUniqueItem, getRandomItem([1,2,3])), 'apa7-website': () => generateApaWebsite(getUniqueItem), 'apa7-book_chapter': () => generateApaBookChapter(getUniqueItem), 'apa7-youtube': () => generateApaYouTube(getUniqueItem), 'apa7-in_text_single': () => generateApaInText(getUniqueItem, 1), 'apa7-in_text_two': () => generateApaInText(getUniqueItem, 2), 'apa7-in_text_three': () => generateApaInText(getUniqueItem, 3), 'apa7-in_text_four_plus': () => generateApaInText(getUniqueItem, 4),
+                    'mla9-book': () => generateMlaBook(getUniqueItem, getRandomItem([1,2,3])), 'mla9-edited_book': () => generateMlaEditedBook(getUniqueItem, getRandomItem([1,2])), 'mla9-journal': () => generateMlaJournal(getUniqueItem, getRandomItem([1,2,3])), 'mla9-book_chapter': () => generateMlaBookChapter(getUniqueItem), 'mla9-youtube': () => generateMlaYouTube(getUniqueItem), 'mla9-website': () => generateMlaWebsite(getUniqueItem), 'mla9-in_text_single': () => generateMlaInText(getUniqueItem, 1), 'mla9-in_text_two': () => generateMlaInText(getUniqueItem, 2), 'mla9-in_text_three': () => generateMlaInText(getUniqueItem, 3), 'mla9-in_text_four_plus': () => generateMlaInText(getUniqueItem, 4),
+                    'harvard-book': () => generateHarvardBook(getUniqueItem, getRandomItem([1,2,3])), 'harvard-edited_book': () => generateHarvardEditedBook(getUniqueItem, getRandomItem([1,2])), 'harvard-journal': () => generateHarvardJournal(getUniqueItem, getRandomItem([1,2,3])), 'harvard-website': () => generateHarvardWebsite(getUniqueItem), 'harvard-book_chapter': () => generateHarvardBookChapter(getUniqueItem), 'harvard-youtube': () => generateHarvardYouTube(getUniqueItem), 'harvard-in_text_single': () => generateHarvardInText(getUniqueItem, 1), 'harvard-in_text_two': () => generateHarvardInText(getUniqueItem, 2), 'harvard-in_text_three': () => generateHarvardInText(getUniqueItem, 3), 'harvard-in_text_four_plus': () => generateHarvardInText(getUniqueItem, 4),
+                    'chicago-book': () => generateChicagoBook(getUniqueItem, getRandomItem([1,2,3])), 'chicago-edited_book': () => generateChicagoEditedBook(getUniqueItem, getRandomItem([1,2])), 'chicago-journal': () => generateChicagoJournal(getUniqueItem, getRandomItem([1,2,3])), 'chicago-website': () => generateChicagoWebsite(getUniqueItem), 'chicago-book_chapter': () => generateChicagoBookChapter(getUniqueItem), 'chicago-newspaper': () => generateChicagoNewspaper(getUniqueItem), 'chicago-primary_source': () => generateChicagoPrimarySource(getUniqueItem), 'chicago-youtube': () => generateChicagoYouTube(getUniqueItem), 'chicago-in_text_single': () => generateChicagoInText(getUniqueItem, 1), 'chicago-in_text_two': () => generateChicagoInText(getUniqueItem, 2), 'chicago-in_text_three': () => generateChicagoInText(getUniqueItem, 3), 'chicago-in_text_four_plus': () => generateChicagoInText(getUniqueItem, 4),
+                    'mhra-book': () => generateMhraBook(getUniqueItem, getRandomItem([1,2,3])), 'mhra-edited_book': () => generateMhraEditedBook(getUniqueItem, getRandomItem([1,2])), 'mhra-journal': () => generateMhraJournal(getUniqueItem, getRandomItem([1,2,3])), 'mhra-website': () => generateMhraWebsite(getUniqueItem), 'mhra-book_chapter': () => generateMhraBookChapter(getUniqueItem), 'mhra-thesis': () => generateMhraThesis(getUniqueItem), 'mhra-youtube': () => generateMhraYouTube(getUniqueItem), 'mhra-in_text_single': () => generateMhraInText(getUniqueItem, 1), 'mhra-in_text_two': () => generateMhraInText(getUniqueItem, 2), 'mhra-in_text_three': () => generateMhraInText(getUniqueItem, 3), 'mhra-in_text_four_plus': () => generateMhraInText(getUniqueItem, 4),
                 };
 
                 const generatorKey = `${citationStyle}-${sourceType}`;
@@ -507,13 +522,12 @@
 
 
         // --- APA 7 Generators ---
-        function generateApaBook(numAuthors = 1) {
-            const authors = [];
-            while(authors.length < numAuthors) { const author = getRandomItem(data.authors); if (!authors.find(a => a.last === author.last)) authors.push(author); }
+        function generateApaBook(getUniqueItem, numAuthors = 1) {
+            const authors = Array.from({ length: numAuthors }, () => getUniqueItem('authors'));
             const authorList = authors.map(a => `${a.last}, ${a.first.charAt(0)}.`);
             const authorString = authorList.length > 1 ? authorList.slice(0, -1).join(', ') + ', & ' + authorList.slice(-1) : authorList[0];
-            const title = getRandomItem(data.bookTitles);
-            const pubInfo = getRandomItem(data.publisherLocations);
+            const title = getUniqueItem('bookTitles');
+            const pubInfo = getUniqueItem('publisherLocations');
             const publisher = pubInfo.publisher;
             const year = new Date().getFullYear() - Math.floor(Math.random() * 5);
             const scenario = `Reference for a book by ${formatScenarioNameList(authors)}, titled "${title}", published in ${year}.`;
@@ -531,13 +545,12 @@
             return { scenario, fullReference, components, hint: 'For a book reference in APA 7, the title of the book is italicized and written in sentence case.', originalTitle: title };
         }
 
-        function generateApaEditedBook(numEditors = 1) {
-            const editors = [];
-            while(editors.length < numEditors) { const editor = getRandomItem(data.editors); if (!editors.find(e => e.last === editor.last)) editors.push(editor); }
+        function generateApaEditedBook(getUniqueItem, numEditors = 1) {
+            const editors = Array.from({ length: numEditors }, () => getUniqueItem('editors'));
             const editorList = editors.map(e => `${e.last}, ${e.first.charAt(0)}.`);
             const editorString = editorList.length > 1 ? editorList.slice(0, -1).join(', ') + ', & ' + editorList.slice(-1) : editorList[0];
-            const title = getRandomItem(data.bookTitles);
-            const pubInfo = getRandomItem(data.publisherLocations);
+            const title = getUniqueItem('bookTitles');
+            const pubInfo = getUniqueItem('publisherLocations');
             const publisher = pubInfo.publisher;
             const year = new Date().getFullYear() - Math.floor(Math.random() * 5);
             const scenario = `Reference for an edited book titled "${title}", edited by ${formatScenarioNameList(editors)}, published in ${year}.`;
@@ -556,13 +569,12 @@
             return { scenario, fullReference, components, hint: 'For an edited book, the editor\'s name is followed by (Ed.) for one editor or (Eds.) for multiple editors. The book title is italicized.', originalTitle: title };
         }
 
-        function generateApaJournal(numAuthors = 1) {
-            const authors = [];
-            while(authors.length < numAuthors) { const author = getRandomItem(data.authors); if (!authors.find(a => a.last === author.last)) authors.push(author); }
+        function generateApaJournal(getUniqueItem, numAuthors = 1) {
+            const authors = Array.from({ length: numAuthors }, () => getUniqueItem('authors'));
             const authorList = authors.map(a => `${a.last}, ${a.first.charAt(0)}.`);
             const authorString = authorList.length > 1 ? authorList.slice(0, -1).join(', ') + ', & ' + authorList.slice(-1) : authorList[0];
-            const articleTitle = getRandomItem(data.articleTitles);
-            const journalTitle = getRandomItem(data.journalTitles);
+            const articleTitle = getUniqueItem('articleTitles');
+            const journalTitle = getUniqueItem('journalTitles');
             const year = new Date().getFullYear() - Math.floor(Math.random() * 3);
             const volume = Math.floor(Math.random() * 20) + 30;
             const issue = Math.floor(Math.random() * 4) + 1;
@@ -586,9 +598,9 @@
             return { scenario, fullReference, components, hint: 'In APA 7, the journal title and volume number are italicized. The article title is not.', originalTitle: journalTitle };
         }
 
-        function generateApaWebsite() { 
-            const org = getRandomItem(data.organizations);
-            const title = getRandomItem(data.webTitles);
+        function generateApaWebsite(getUniqueItem) { 
+            const org = getUniqueItem('organizations');
+            const title = getUniqueItem('webTitles');
             const year = new Date().getFullYear();
             const month = new Date().toLocaleString('default', { month: 'long' });
             const day = new Date().getDate();
@@ -607,12 +619,12 @@
             return { scenario, fullReference, components, hint: 'When a webpage has a specific publication date, include it in the reference. In APA 7, the title of a standalone webpage is italicized.', originalTitle: title };
         }
 
-        function generateApaBookChapter() {
-            const author = getRandomItem(data.authors);
-            const editor = getRandomItem(data.editors);
-            const chapterTitle = getRandomItem(data.chapterTitles);
-            const bookTitle = getRandomItem(data.bookTitles);
-            const pubInfo = getRandomItem(data.publisherLocations);
+        function generateApaBookChapter(getUniqueItem) {
+            const author = getUniqueItem('authors');
+            const editor = getUniqueItem('editors');
+            const chapterTitle = getUniqueItem('chapterTitles');
+            const bookTitle = getUniqueItem('bookTitles');
+            const pubInfo = getUniqueItem('publisherLocations');
             const publisher = pubInfo.publisher;
             const year = new Date().getFullYear() - Math.floor(Math.random() * 5);
             const pages = `${Math.floor(Math.random() * 20) + 50}–${Math.floor(Math.random() * 10) + 70}`;
@@ -634,9 +646,9 @@
             return { scenario, fullReference, components, hint: 'In APA 7, the book title is italicized, but the chapter title is not. The editor\'s name follows "In".', originalTitle: bookTitle };
         }
 
-        function generateApaYouTube() { 
-            const channel = getRandomItem(data.youtubeChannels);
-            const title = getRandomItem(data.youtubeVideoTitles);
+        function generateApaYouTube(getUniqueItem) { 
+            const channel = getUniqueItem('youtubeChannels');
+            const title = getUniqueItem('youtubeVideoTitles');
             const year = new Date().getFullYear() - Math.floor(Math.random() * 2);
             const month = new Date().toLocaleString('default', { month: 'long' });
             const day = new Date().getDate();
@@ -656,9 +668,8 @@
             return { scenario, fullReference, components, hint: 'In APA 7, the title of the YouTube video is italicized. Include "[Video]" in brackets after the title.', originalTitle: title };
         }
 
-        function generateApaInText(numAuthors) {
-            const authors = [];
-            while(authors.length < numAuthors) { const author = getRandomItem(data.authors); if (!authors.find(a => a.last === author.last)) authors.push(author); }
+        function generateApaInText(getUniqueItem, numAuthors) {
+            const authors = Array.from({ length: numAuthors }, () => getUniqueItem('authors'));
             const year = new Date().getFullYear() - Math.floor(Math.random() * 5);
             const page = Math.floor(Math.random() * 200) + 20;
             let authorString;
@@ -675,9 +686,8 @@
         }
 
         // --- MLA 9 Generators ---
-        function generateMlaBook(numAuthors = 1) {
-            const authors = [];
-            while(authors.length < numAuthors) { const author = getRandomItem(data.authors); if (!authors.find(a => a.last === author.last)) authors.push(author); }
+        function generateMlaBook(getUniqueItem, numAuthors = 1) {
+            const authors = Array.from({ length: numAuthors }, () => getUniqueItem('authors'));
             let authorString;
             if (numAuthors === 1) {
                 authorString = `${authors[0].last}, ${authors[0].first}`;
@@ -686,8 +696,8 @@
             } else {
                  authorString = `${authors[0].last}, ${authors[0].first}, et al`;
             }
-            const title = getRandomItem(data.bookTitles);
-            const pubInfo = getRandomItem(data.publisherLocations);
+            const title = getUniqueItem('bookTitles');
+            const pubInfo = getUniqueItem('publisherLocations');
             const publisher = pubInfo.publisher;
             const year = new Date().getFullYear() - Math.floor(Math.random() * 5);
             const scenario = `Reference for a book by ${formatScenarioNameList(authors)}, titled "${title}", published by ${publisher} in ${year}.`;
@@ -705,17 +715,16 @@
             return { scenario, fullReference, components, hint: 'MLA style uses the author\'s full name and places the publication year at the very end. The book title is italicized.', originalTitle: title };
         }
 
-        function generateMlaEditedBook(numEditors = 1) {
-            const editors = [];
-            while(editors.length < numEditors) { const editor = getRandomItem(data.editors); if (!editors.find(e => e.last === editor.last)) editors.push(editor); }
+        function generateMlaEditedBook(getUniqueItem, numEditors = 1) {
+            const editors = Array.from({ length: numEditors }, () => getUniqueItem('editors'));
             let editorString;
             if (numEditors === 1) {
                 editorString = `${editors[0].last}, ${editors[0].first}, editor`;
             } else {
                 editorString = `${editors[0].last}, ${editors[0].first}, and ${editors[1].first} ${editors[1].last}, editors`;
             }
-            const title = getRandomItem(data.bookTitles);
-            const pubInfo = getRandomItem(data.publisherLocations);
+            const title = getUniqueItem('bookTitles');
+            const pubInfo = getUniqueItem('publisherLocations');
             const publisher = pubInfo.publisher;
             const year = new Date().getFullYear() - Math.floor(Math.random() * 5);
             const scenario = `Reference for an edited book by ${formatScenarioNameList(editors)}, titled "${title}", published by ${publisher} in ${year}.`;
@@ -733,9 +742,8 @@
             return { scenario, fullReference, components, hint: 'For an edited book in MLA, list the editor(s) name followed by "editor" or "editors". The book title is italicized.', originalTitle: title };
         }
 
-        function generateMlaJournal(numAuthors = 1) {
-            const authors = [];
-            while(authors.length < numAuthors) { const author = getRandomItem(data.authors); if (!authors.find(a => a.last === author.last)) authors.push(author); }
+        function generateMlaJournal(getUniqueItem, numAuthors = 1) {
+            const authors = Array.from({ length: numAuthors }, () => getUniqueItem('authors'));
             let authorString;
             if (numAuthors === 1) {
                 authorString = `${authors[0].last}, ${authors[0].first}`;
@@ -744,8 +752,8 @@
             } else {
                 authorString = `${authors[0].last}, ${authors[0].first}, et al`;
             }
-            const articleTitle = getRandomItem(data.articleTitles);
-            const journalTitle = getRandomItem(data.journalTitles);
+            const articleTitle = getUniqueItem('articleTitles');
+            const journalTitle = getUniqueItem('journalTitles');
             const year = new Date().getFullYear() - Math.floor(Math.random() * 3);
             const volume = Math.floor(Math.random() * 20) + 30;
             const issue = Math.floor(Math.random() * 4) + 1;
@@ -767,9 +775,9 @@
             return { scenario, fullReference, components, hint: 'In MLA 9, the article title is in quotes, and the journal title is italicized. For 3+ authors, use "et al.".', originalTitle: journalTitle };
         }
 
-        function generateMlaWebsite() {
-            const org = getRandomItem(data.organizations);
-            const title = getRandomItem(data.webTitles);
+        function generateMlaWebsite(getUniqueItem) {
+            const org = getUniqueItem('organizations');
+            const title = getUniqueItem('webTitles');
             const year = new Date().getFullYear();
             const month = new Date().toLocaleString('default', { month: 'short' });
             const day = new Date().getDate();
@@ -789,12 +797,12 @@
             return { scenario, fullReference, components, hint: 'In MLA 9, the article/page title is in quotes, and the overall website name is italicized.', originalTitle: org };
         }
 
-        function generateMlaBookChapter() {
-            const author = getRandomItem(data.authors);
-            const editor = getRandomItem(data.editors);
-            const chapterTitle = getRandomItem(data.chapterTitles);
-            const bookTitle = getRandomItem(data.bookTitles);
-            const pubInfo = getRandomItem(data.publisherLocations);
+        function generateMlaBookChapter(getUniqueItem) {
+            const author = getUniqueItem('authors');
+            const editor = getUniqueItem('editors');
+            const chapterTitle = getUniqueItem('chapterTitles');
+            const bookTitle = getUniqueItem('bookTitles');
+            const pubInfo = getUniqueItem('publisherLocations');
             const publisher = pubInfo.publisher;
             const year = new Date().getFullYear() - Math.floor(Math.random() * 5);
             const pages = `${Math.floor(Math.random() * 20) + 50}-${Math.floor(Math.random() * 10) + 70}`;
@@ -816,9 +824,9 @@
             return { scenario, fullReference, components, hint: 'In MLA 9, the chapter title is in quotes and the book title is italicized.', originalTitle: bookTitle };
         }
 
-        function generateMlaYouTube() {
-            const channel = getRandomItem(data.youtubeChannels);
-            const title = getRandomItem(data.youtubeVideoTitles);
+        function generateMlaYouTube(getUniqueItem) {
+            const channel = getUniqueItem('youtubeChannels');
+            const title = getUniqueItem('youtubeVideoTitles');
             const year = new Date().getFullYear() - Math.floor(Math.random() * 2);
             const month = new Date().toLocaleString('default', { month: 'short' });
             const day = new Date().getDate();
@@ -839,9 +847,8 @@
             return { scenario, fullReference, components, hint: 'In MLA 9, the video title is placed in quotation marks. The platform name (YouTube) is italicized.', originalTitle: 'YouTube' };
         }
 
-        function generateMlaInText(numAuthors) {
-            const authors = [];
-            while(authors.length < numAuthors) { const author = getRandomItem(data.authors); if (!authors.find(a => a.last === author.last)) authors.push(author); }
+        function generateMlaInText(getUniqueItem, numAuthors) {
+            const authors = Array.from({ length: numAuthors }, () => getUniqueItem('authors'));
             const year = new Date().getFullYear() - Math.floor(Math.random() * 5); // Define year here
             const page = Math.floor(Math.random() * 200) + 20;
             let authorString;
@@ -858,13 +865,12 @@
         }
 
         // --- Harvard Generators ---
-        function generateHarvardBook(numAuthors = 1) {
-            const authors = [];
-            while(authors.length < numAuthors) { const author = getRandomItem(data.authors); if (!authors.find(a => a.last === author.last)) authors.push(author); }
+        function generateHarvardBook(getUniqueItem, numAuthors = 1) {
+            const authors = Array.from({ length: numAuthors }, () => getUniqueItem('authors'));
             const authorList = authors.map(a => `${a.last}, ${a.first.charAt(0)}.`);
             const authorString = authorList.join(' and ');
-            const title = getRandomItem(data.bookTitles);
-            const pubInfo = getRandomItem(data.publisherLocations);
+            const title = getUniqueItem('bookTitles');
+            const pubInfo = getUniqueItem('publisherLocations');
             const publisher = pubInfo.publisher;
             const location = pubInfo.location;
             const year = new Date().getFullYear() - Math.floor(Math.random() * 5);
@@ -883,13 +889,12 @@
             return { scenario, fullReference, components, hint: 'In Harvard style, the year is in parentheses after the author\'s name. The book title is italicized.', originalTitle: title };
         }
 
-        function generateHarvardEditedBook(numEditors = 1) {
-            const editors = [];
-            while(editors.length < numEditors) { const editor = getRandomItem(data.editors); if (!editors.find(e => e.last === editor.last)) editors.push(editor); }
+        function generateHarvardEditedBook(getUniqueItem, numEditors = 1) {
+            const editors = Array.from({ length: numEditors }, () => getUniqueItem('editors'));
             const editorList = editors.map(e => `${e.last}, ${e.first.charAt(0)}.`);
             const editorString = editorList.join(' and ');
-            const title = getRandomItem(data.bookTitles);
-            const pubInfo = getRandomItem(data.publisherLocations);
+            const title = getUniqueItem('bookTitles');
+            const pubInfo = getUniqueItem('publisherLocations');
             const publisher = pubInfo.publisher;
             const location = pubInfo.location;
             const year = new Date().getFullYear() - Math.floor(Math.random() * 5);
@@ -909,9 +914,8 @@
             return { scenario, fullReference, components, hint: 'For an entire edited book in Harvard style, the editor\'s name is followed by (ed.) or (eds.). The book title is italicized.', originalTitle: title };
         }
 
-        function generateHarvardJournal(numAuthors = 1) {
-            const authors = [];
-            while(authors.length < numAuthors) { const author = getRandomItem(data.authors); if (!authors.find(a => a.last === author.last)) authors.push(author); }
+        function generateHarvardJournal(getUniqueItem, numAuthors = 1) {
+            const authors = Array.from({ length: numAuthors }, () => getUniqueItem('authors'));
             const authorList = authors.map(a => `${a.last}, ${a.first.charAt(0)}.`);
             let authorString;
             if (numAuthors <= 3) {
@@ -919,8 +923,8 @@
             } else {
                 authorString = `${authorList[0]} et al.`;
             }
-            const articleTitle = getRandomItem(data.articleTitles);
-            const journalTitle = getRandomItem(data.journalTitles);
+            const articleTitle = getUniqueItem('articleTitles');
+            const journalTitle = getUniqueItem('journalTitles');
             const year = new Date().getFullYear() - Math.floor(Math.random() * 3);
             const volume = Math.floor(Math.random() * 20) + 30;
             const issue = Math.floor(Math.random() * 4) + 1;
@@ -942,9 +946,9 @@
             return { scenario, fullReference, components, hint: 'In Harvard style, the article title is in single quotes, while the journal title is italicized. Use \'et al.\' for more than three authors.', originalTitle: journalTitle };
         }
 
-        function generateHarvardWebsite() {
-            const org = getRandomItem(data.organizations);
-            const title = getRandomItem(data.webTitles);
+        function generateHarvardWebsite(getUniqueItem) {
+            const org = getUniqueItem('organizations');
+            const title = getUniqueItem('webTitles');
             const year = new Date().getFullYear();
             const url = `https://www.${org.toLowerCase().replace(/\s/g, '')}.org/data/report`;
             const date = new Date();
@@ -965,12 +969,12 @@
             return { scenario, fullReference, components, hint: 'Harvard style often requires an access date for online sources. The title of the webpage is italicized.', originalTitle: title };
         }
 
-        function generateHarvardBookChapter() {
-            const author = getRandomItem(data.authors);
-            const editor = getRandomItem(data.editors);
-            const chapterTitle = getRandomItem(data.chapterTitles);
-            const bookTitle = getRandomItem(data.bookTitles);
-            const pubInfo = getRandomItem(data.publisherLocations);
+        function generateHarvardBookChapter(getUniqueItem) {
+            const author = getUniqueItem('authors');
+            const editor = getUniqueItem('editors');
+            const chapterTitle = getUniqueItem('chapterTitles');
+            const bookTitle = getUniqueItem('bookTitles');
+            const pubInfo = getUniqueItem('publisherLocations');
             const publisher = pubInfo.publisher;
             const location = pubInfo.location;
             const year = new Date().getFullYear() - Math.floor(Math.random() * 5);
@@ -993,9 +997,9 @@
             return { scenario, fullReference, components, hint: 'In Harvard, chapter titles are in single quotes, while book titles are italicized. The editor\'s name is preceded by \'in\'.', originalTitle: bookTitle };
         }
 
-        function generateHarvardYouTube() {
-            const channel = getRandomItem(data.youtubeChannels);
-            const title = getRandomItem(data.youtubeVideoTitles);
+        function generateHarvardYouTube(getUniqueItem) {
+            const channel = getUniqueItem('youtubeChannels');
+            const title = getUniqueItem('youtubeVideoTitles');
             const year = new Date().getFullYear() - Math.floor(Math.random() * 2);
             const url = `https://www.youtube.com/watch?v=${Math.random().toString(36).substring(2, 13)}`;
             const date = new Date();
@@ -1017,9 +1021,8 @@
             return { scenario, fullReference, components, hint: 'For YouTube videos in Harvard style, the title is italicized and you should include the platform name and an access date.', originalTitle: title };
         }
 
-        function generateHarvardInText(numAuthors) {
-            const authors = [];
-            while(authors.length < numAuthors) { const author = getRandomItem(data.authors); if (!authors.find(a => a.last === author.last)) authors.push(author); }
+        function generateHarvardInText(getUniqueItem, numAuthors) {
+            const authors = Array.from({ length: numAuthors }, () => getUniqueItem('authors'));
             const year = new Date().getFullYear() - Math.floor(Math.random() * 5); // Define year here
             const page = Math.floor(Math.random() * 200) + 20;
             let authorString;
@@ -1036,13 +1039,12 @@
         }
 
         // --- Chicago (NB) Generators ---
-        function generateChicagoBook(numAuthors = 1) {
-            const authors = [];
-            while(authors.length < numAuthors) { const author = getRandomItem(data.authors); if (!authors.find(a => a.last === author.last)) authors.push(author); }
+        function generateChicagoBook(getUniqueItem, numAuthors = 1) {
+            const authors = Array.from({ length: numAuthors }, () => getUniqueItem('authors'));
             const authorList = authors.map((a, i) => i === 0 ? `${a.last}, ${a.first}` : `${a.first} ${a.last}`);
             const authorString = authorList.join(', and ');
-            const title = getRandomItem(data.bookTitles);
-            const pubInfo = getRandomItem(data.publisherLocations);
+            const title = getUniqueItem('bookTitles');
+            const pubInfo = getUniqueItem('publisherLocations');
             const publisher = pubInfo.publisher;
             const location = pubInfo.location;
             const year = new Date().getFullYear() - Math.floor(Math.random() * 5);
@@ -1061,13 +1063,12 @@
             return { scenario, fullReference, components, hint: 'In a Chicago bibliography, the author\'s full name is used. The book title is italicized.', originalTitle: title };
         }
 
-        function generateChicagoEditedBook(numEditors = 1) {
-            const editors = [];
-            while(editors.length < numEditors) { const editor = getRandomItem(data.editors); if (!editors.find(e => e.last === editor.last)) editors.push(editor); }
+        function generateChicagoEditedBook(getUniqueItem, numEditors = 1) {
+            const editors = Array.from({ length: numEditors }, () => getUniqueItem('editors'));
             const editorList = editors.map((e, i) => i === 0 ? `${e.last}, ${e.first}` : `${e.first} ${e.last}`);
             const editorString = editorList.join(' and ');
-            const title = getRandomItem(data.bookTitles);
-            const pubInfo = getRandomItem(data.publisherLocations);
+            const title = getUniqueItem('bookTitles');
+            const pubInfo = getUniqueItem('publisherLocations');
             const publisher = pubInfo.publisher;
             const location = pubInfo.location;
             const year = new Date().getFullYear() - Math.floor(Math.random() * 5);
@@ -1087,13 +1088,12 @@
             return { scenario, fullReference, components, hint: 'For an entire edited book in Chicago, list the editor\'s name followed by "ed." or "eds.". The book title is italicized.', originalTitle: title };
         }
 
-        function generateChicagoJournal(numAuthors = 1) {
-            const authors = [];
-            while(authors.length < numAuthors) { const author = getRandomItem(data.authors); if (!authors.find(a => a.last === author.last)) authors.push(author); }
+        function generateChicagoJournal(getUniqueItem, numAuthors = 1) {
+            const authors = Array.from({ length: numAuthors }, () => getUniqueItem('authors'));
             const authorList = authors.map((a, i) => i === 0 ? `${a.last}, ${a.first}` : `${a.first} ${a.last}`);
             const authorString = authorList.join(', and ');
-            const articleTitle = getRandomItem(data.articleTitles);
-            const journalTitle = getRandomItem(data.journalTitles);
+            const articleTitle = getUniqueItem('articleTitles');
+            const journalTitle = getUniqueItem('journalTitles');
             const year = new Date().getFullYear() - Math.floor(Math.random() * 3);
             const volume = Math.floor(Math.random() * 20) + 30;
             const issue = Math.floor(Math.random() * 4) + 1;
@@ -1116,9 +1116,9 @@
             return { scenario, fullReference, components, hint: 'In Chicago style, article titles are in quotes, and journal titles are italicized. The year is in parentheses after the volume/issue number.', originalTitle: journalTitle };
         }
 
-        function generateChicagoWebsite() {
-            const org = getRandomItem(data.organizations);
-            const title = getRandomItem(data.webTitles);
+        function generateChicagoWebsite(getUniqueItem) {
+            const org = getUniqueItem('organizations');
+            const title = getUniqueItem('webTitles');
             const year = new Date().getFullYear();
             const month = new Date().toLocaleString('default', { month: 'long' });
             const day = new Date().getDate();
@@ -1138,12 +1138,12 @@
             return { scenario, fullReference, components, hint: 'For a Chicago bibliography entry, website article titles are in quotes. Use "Last modified" or a publication date if available.', originalTitle: title };
         }
 
-        function generateChicagoBookChapter() {
-            const author = getRandomItem(data.authors);
-            const editor = getRandomItem(data.editors);
-            const chapterTitle = getRandomItem(data.chapterTitles);
-            const bookTitle = getRandomItem(data.bookTitles);
-            const pubInfo = getRandomItem(data.publisherLocations);
+        function generateChicagoBookChapter(getUniqueItem) {
+            const author = getUniqueItem('authors');
+            const editor = getUniqueItem('editors');
+            const chapterTitle = getUniqueItem('chapterTitles');
+            const bookTitle = getUniqueItem('bookTitles');
+            const pubInfo = getUniqueItem('publisherLocations');
             const publisher = pubInfo.publisher;
             const location = pubInfo.location;
             const year = new Date().getFullYear() - Math.floor(Math.random() * 5);
@@ -1165,10 +1165,10 @@
             return { scenario, fullReference, components, hint: 'In Chicago, the chapter title is in quotes. The book title is italicized and preceded by "In".', originalTitle: bookTitle };
         }
 
-        function generateChicagoNewspaper() {
-            const author = getRandomItem(data.authors);
-            const articleTitle = getRandomItem(data.articleTitles);
-            const newspaper = getRandomItem(data.newspapers);
+        function generateChicagoNewspaper(getUniqueItem) {
+            const author = getUniqueItem('authors');
+            const articleTitle = getUniqueItem('articleTitles');
+            const newspaper = getUniqueItem('newspapers');
             const year = new Date().getFullYear() - Math.floor(Math.random() * 2);
             const month = new Date().toLocaleString('default', { month: 'long' });
             const day = new Date().getDate();
@@ -1187,13 +1187,13 @@
             return { scenario, fullReference, components, hint: 'In Chicago style, the newspaper title is italicized, and the article title is in quotation marks.', originalTitle: newspaper };
         }
 
-        function generateChicagoPrimarySource() {
-            const author = getRandomItem(data.authors);
-            const recipient = getRandomItem(data.authors);
+        function generateChicagoPrimarySource(getUniqueItem) {
+            const author = getUniqueItem('authors');
+            const recipient = getUniqueItem('authors');
             const year = Math.floor(Math.random() * 50) + 1880;
             const month = new Date(year, Math.floor(Math.random() * 12)).toLocaleString('default', { month: 'long' });
             const day = Math.floor(Math.random() * 28) + 1;
-            const archive = getRandomItem(data.archives);
+            const archive = getUniqueItem('archives');
             const scenario = `Reference for the unpublished letter from ${formatScenarioNameList([author])} to ${formatScenarioNameList([recipient])}, dated ${month} ${day}, ${year}, and held at ${archive}.`;
             
             const components = {
@@ -1209,9 +1209,9 @@
             return { scenario, fullReference, components, hint: 'For unpublished letters in Chicago style, describe the item (e.g., "Letter to...") and list its date and location in an archive.', originalTitle: 'Letter' };
         }
 
-        function generateChicagoYouTube() {
-            const channel = getRandomItem(data.youtubeChannels);
-            const title = getRandomItem(data.youtubeVideoTitles);
+        function generateChicagoYouTube(getUniqueItem) {
+            const channel = getUniqueItem('youtubeChannels');
+            const title = getUniqueItem('youtubeVideoTitles');
             const year = new Date().getFullYear() - Math.floor(Math.random() * 2);
             const month = new Date().toLocaleString('default', { month: 'long' });
             const day = new Date().getDate();
@@ -1233,9 +1233,8 @@
             return { scenario, fullReference, components, hint: 'In Chicago style, the video title is in quotes. Include the platform, date, and URL.', originalTitle: title };
         }
 
-        function generateChicagoInText(numAuthors) {
-            const authors = [];
-            while(authors.length < numAuthors) { const author = getRandomItem(data.authors); if (!authors.find(a => a.last === author.last)) authors.push(author); }
+        function generateChicagoInText(getUniqueItem, numAuthors) {
+            const authors = Array.from({ length: numAuthors }, () => getUniqueItem('authors'));
             const year = new Date().getFullYear() - Math.floor(Math.random() * 5);
             const page = Math.floor(Math.random() * 200) + 20;
             let authorString;
@@ -1252,12 +1251,11 @@
         }
 
         // --- MHRA Generators ---
-        function generateMhraBook(numAuthors = 1) {
-            const authors = [];
-            while(authors.length < numAuthors) { const author = getRandomItem(data.authors); if (!authors.find(a => a.last === author.last)) authors.push(author); }
+        function generateMhraBook(getUniqueItem, numAuthors = 1) {
+            const authors = Array.from({ length: numAuthors }, () => getUniqueItem('authors'));
             const authorString = authors.map(a => `${a.last}, ${a.first}`).join(' and ');
-            const title = getRandomItem(data.bookTitles);
-            const pubInfo = getRandomItem(data.publisherLocations);
+            const title = getUniqueItem('bookTitles');
+            const pubInfo = getUniqueItem('publisherLocations');
             const publisher = pubInfo.publisher;
             const location = pubInfo.location;
             const year = new Date().getFullYear() - Math.floor(Math.random() * 5);
@@ -1275,12 +1273,11 @@
             return { scenario, fullReference, components, hint: 'In MHRA, the publication details (place, publisher, year) are enclosed in parentheses. The book title is italicized.', originalTitle: title };
         }
 
-        function generateMhraEditedBook(numEditors = 1) {
-            const editors = [];
-            while(editors.length < numEditors) { const editor = getRandomItem(data.editors); if (!editors.find(e => e.last === editor.last)) editors.push(editor); }
+        function generateMhraEditedBook(getUniqueItem, numEditors = 1) {
+            const editors = Array.from({ length: numEditors }, () => getUniqueItem('editors'));
             const editorString = editors.map(e => `${e.last}, ${e.first}`).join(' and ');
-            const title = getRandomItem(data.bookTitles);
-            const pubInfo = getRandomItem(data.publisherLocations);
+            const title = getUniqueItem('bookTitles');
+            const pubInfo = getUniqueItem('publisherLocations');
             const publisher = pubInfo.publisher;
             const location = pubInfo.location;
             const year = new Date().getFullYear() - Math.floor(Math.random() * 5);
@@ -1299,12 +1296,11 @@
             return { scenario, fullReference, components, hint: 'For an entire edited book in MHRA, list the editor\'s name followed by "ed." or "eds.". The book title is italicized.', originalTitle: title };
         }
 
-        function generateMhraJournal(numAuthors = 1) {
-            const authors = [];
-            while(authors.length < numAuthors) { const author = getRandomItem(data.authors); if (!authors.find(a => a.last === author.last)) authors.push(author); }
+        function generateMhraJournal(getUniqueItem, numAuthors = 1) {
+            const authors = Array.from({ length: numAuthors }, () => getUniqueItem('authors'));
             const authorString = authors.map(a => `${a.last}, ${a.first}`).join(' and ');
-            const articleTitle = getRandomItem(data.articleTitles);
-            const journalTitle = getRandomItem(data.journalTitles);
+            const articleTitle = getUniqueItem('articleTitles');
+            const journalTitle = getUniqueItem('journalTitles');
             const year = new Date().getFullYear() - Math.floor(Math.random() * 3);
             const volume = Math.floor(Math.random() * 20) + 30;
             const issue = Math.floor(Math.random() * 4) + 1;
@@ -1325,9 +1321,9 @@
             return { scenario, fullReference, components, hint: 'In MHRA, article titles are in single quotes, journal titles are italicized, and page ranges are not preceded by \'pp.\'.', originalTitle: journalTitle };
         }
 
-        function generateMhraWebsite() {
-            const org = getRandomItem(data.organizations);
-            const title = getRandomItem(data.webTitles);
+        function generateMhraWebsite(getUniqueItem) {
+            const org = getUniqueItem('organizations');
+            const title = getUniqueItem('webTitles');
             const year = new Date().getFullYear();
             const url = `https://www.${org.toLowerCase().replace(/\s/g, '')}.org/data/report`;
             const date = new Date();
@@ -1347,12 +1343,12 @@
             return { scenario, fullReference, components, hint: 'In MHRA, online article titles are in single quotes. The URL is enclosed in angle brackets, followed by the access date in square brackets.', originalTitle: title };
         }
 
-        function generateMhraBookChapter() {
-            const author = getRandomItem(data.authors);
-            const editor = getRandomItem(data.editors);
-            const chapterTitle = getRandomItem(data.chapterTitles);
-            const bookTitle = getRandomItem(data.bookTitles);
-            const pubInfo = getRandomItem(data.publisherLocations);
+        function generateMhraBookChapter(getUniqueItem) {
+            const author = getUniqueItem('authors');
+            const editor = getUniqueItem('editors');
+            const chapterTitle = getUniqueItem('chapterTitles');
+            const bookTitle = getUniqueItem('bookTitles');
+            const pubInfo = getUniqueItem('publisherLocations');
             const publisher = pubInfo.publisher;
             const location = pubInfo.location;
             const year = new Date().getFullYear() - Math.floor(Math.random() * 5);
@@ -1374,10 +1370,10 @@
             return { scenario, fullReference, components, hint: 'In MHRA, chapter titles are in single quotes, and book titles are italicized. The editor is introduced with \'ed. by\'.', originalTitle: bookTitle };
         }
 
-        function generateMhraThesis() {
-            const author = getRandomItem(data.authors);
-            const title = getRandomItem(data.articleTitles); // Using articleTitles for generic thesis titles
-            const university = getRandomItem(data.universities);
+        function generateMhraThesis(getUniqueItem) {
+            const author = getUniqueItem('authors');
+            const title = getUniqueItem('articleTitles'); // Using articleTitles for generic thesis titles
+            const university = getUniqueItem('universities');
             const year = new Date().getFullYear() - Math.floor(Math.random() * 3);
             const scenario = `Reference for an unpublished PhD thesis titled "${title}" by ${formatScenarioNameList([author])}, from ${university} in ${year}.`;
             
@@ -1393,9 +1389,9 @@
             return { scenario, fullReference, components, hint: 'In MHRA, thesis titles are in single quotes. The degree type, university, and year are enclosed in parentheses.', originalTitle: title };
         }
 
-        function generateMhraYouTube() {
-            const channel = getRandomItem(data.youtubeChannels);
-            const title = getRandomItem(data.youtubeVideoTitles);
+        function generateMhraYouTube(getUniqueItem) {
+            const channel = getUniqueItem('youtubeChannels');
+            const title = getUniqueItem('youtubeVideoTitles');
             const year = new Date().getFullYear() - Math.floor(Math.random() * 2);
             const url = `https://www.youtube.com/watch?v=${Math.random().toString(36).substring(2, 13)}`;
             const date = new Date();
@@ -1416,11 +1412,10 @@
             return { scenario, fullReference, components, hint: 'In MHRA, the video title is in single quotes and the platform name (YouTube) is italicized. Include the URL and access date.', originalTitle: title };
         }
 
-        function generateMhraInText(numAuthors) {
+        function generateMhraInText(getUniqueItem, numAuthors) {
             // MHRA uses footnotes, not in-text citations in the same way as APA/Harvard. 
             // This is a simplified representation for quiz purposes.
-            const authors = [];
-            while(authors.length < numAuthors) { const author = getRandomItem(data.authors); if (!authors.find(a => a.last === author.last)) authors.push(author); }
+            const authors = Array.from({ length: numAuthors }, () => getUniqueItem('authors'));
             const year = new Date().getFullYear() - Math.floor(Math.random() * 5); // Define year here
             const page = Math.floor(Math.random() * 200) + 20;
             let authorString = authors.map(a => `${a.first} ${a.last}`).join(' and ');
@@ -1795,4 +1790,6 @@
     </script>
 </body>
 </html>
+
+
 
