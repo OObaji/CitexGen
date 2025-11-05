@@ -208,9 +208,9 @@
         // --- Data for Generation (UK-specific) ---
         const data = {
             authors: [
-                { first: 'Jane', last: 'Austen' }, { first: 'George', last: 'Orwell' }, { first: 'Zadie', last: 'Smith' }, { first: 'Charles', last: 'Dickens' }, { first: 'J.K.', last: 'Rowling' }, { first: 'William', last: 'Shakespeare' }, { first: 'Agatha', last: 'Christie' }, { first: 'Kazuo', last: 'Ishiguro' }, { first: 'C.S.', last: 'Lewis' }, { first: 'Mary', last: 'Shelley' }, { first: 'Ian', last: 'McEwan' }, { first: 'Bernardine', last: 'Evaristo' }, { first: 'J.R.R.', last: 'Tolkien' }, { first: 'Virginia', last: 'Woolf' }, { first: 'Salman', last: 'Rushdie' }
+                { first: 'Z.', last: 'Smith' }, { first: 'A.', last: 'Lee' }, { first: 'S.', last: 'King' }, { first: 'M.', last: 'Patel' }, { first: 'R.', last: 'Kim' }, { first: 'S.', last: 'Khan' }, { first: 'A.', last: 'Cole' }, { first: 'B.', last: 'Ray' }, { first: 'C.', last: 'Fox' }, { first: 'D.', last: 'Hill' }, { first: 'E.', last: 'Bell' }, { first: 'F.', last: 'Gray' }, { first: 'G.', last: 'Shaw' }, { first: 'H.', last: 'Hall' }, { first: 'I.', last: 'Rose' }
             ],
-            editors: [ { first: 'Mary', last: 'Beard' }, { first: 'David', last: 'Attenborough' }, { first: 'Simon', last: 'Schama'}, { first: 'Melvyn', last: 'Bragg' }, { first: 'Niall', last: 'Ferguson' }, { first: 'A.S.', last: 'Byatt' } ],
+            editors: [ { first: 'M.', last: 'Beard' }, { first: 'T.', last: 'Wang' }, { first: 'H.', last: 'Gupta' }, { first: 'J.', last: 'Cox' }, { first: 'K.', last: 'Roth' }, { first: 'L.', last: 'Poe' }, { first: 'M.', last: 'Nye' } ],
             bookTitles: [ 'A History of the Tudors', 'Gardening in the Shires', 'The British Seaside', 'London\'s Hidden Alleys', 'Post-War British Cinema', 'The Industrial North', 'Celtic Mythology Reimagined', 'A Guide to the Cotswolds', 'Navigating the Broads', 'Echoes of Victorian England', 'The Rise of the Premier League' ],
             chapterTitles: [ 'The impact of the NHS on public health', 'Devolution and Scottish politics', 'Representations of class in British literature', 'The rise of Britpop in the 1990s', 'Archaeological finds in Roman Britain', 'The architecture of Charles Rennie Mackintosh', 'Suffragette movements in Edwardian England' ],
             journalTitles: [ 'The British Medical Journal', 'Journal of British Studies', 'The Economic Journal', 'English Historical Review', 'Cultural and Social History', 'British Journal of Sociology', 'Notes and Queries' ],
@@ -220,19 +220,24 @@
                 { publisher: 'Bloomsbury Publishing', location: 'London' },
                 { publisher: 'Faber & Faber', location: 'London' },
                 { publisher: 'Edinburgh University Press', location: 'Edinburgh' },
-                { publisher: 'Manchester University Press', location: 'Manchester' },
-                { publisher: 'Verso Books', location: 'London' },
-                { publisher: 'Canongate Books', location: 'Edinburgh' },
-                { publisher: 'Polity Press', location: 'Cambridge' },
-                { publisher: 'Liverpool University Press', location: 'Liverpool' }
+                { publisher: 'Penguin Random House', location: 'New York' },
+                { publisher: 'HarperCollins', location: 'New York' },
+                { publisher: 'Simon & Schuster', location: 'New York' },
+                { publisher: 'Hachette Livre', location: 'Paris' },
+                { publisher: 'Springer Nature', location: 'Berlin' },
+                { publisher: 'Wiley', location: 'Hoboken' },
+                { publisher: 'Oxford University Press', location: 'Oxford' },
+                { publisher: 'Cambridge University Press', location: 'Cambridge' },
+                { publisher: 'Kodansha', location: 'Tokyo' },
+                { publisher: 'Planeta Group', location: 'Barcelona' }
             ],
             organizations: [ 'British Broadcasting Corporation (BBC)', 'National Health Service (NHS)', 'The British Museum', 'The Royal Society', 'English Heritage', 'The National Trust', 'Ordnance Survey', 'The Met Office' ],
             webTitles: [ 'BBC News home', 'The history of the UK Parliament', 'GOV.UK service manual', 'Tate Modern collection guide', 'National Trust property listings', 'A guide to using the London Underground' ],
             youtubeChannels: [ 'BBC Earth', 'The Graham Norton Show', 'SortedFood', 'Tom Scott', 'Jay Foreman', 'English Heritage', 'The Great British Bake Off' ],
             youtubeVideoTitles: [ 'Inside the Tower of London', 'How the London Underground Was Built', 'Making the Perfect Sunday Roast', 'Exploring the Scottish Highlands', 'The Secret Tunnels Underneath Britain', 'Restoring Hadrian\'s Wall', 'A Tour of Stonehenge' ],
             newspapers: ['The Times', 'The Daily Telegraph', 'The Independent', 'The Guardian', 'The Financial Times', 'The Scotsman'],
-            universities: ['University of Manchester', 'University of Edinburgh', 'King\'s College London', 'University of Bristol', 'University of Glasgow', 'University of Leeds', 'University of Warwick', 'Durham University'],
-            archives: ['The National Archives, Kew', 'British Library, London', 'National Records of Scotland, Edinburgh', 'Bodleian Libraries, Oxford', 'The Churchill Archives Centre, Cambridge']
+            universities: ['University of Manchester', 'University of Edinburgh', 'King\'s College London', 'Harvard University', 'Stanford University', 'University of Tokyo', 'Peking University', 'University of Toronto', 'Sorbonne University', 'University of Cape Town', 'University of Melbourne', 'National University of Singapore'],
+            archives: ['The National Archives, Kew', 'British Library, London', 'National Records of Scotland, Edinburgh', 'Bodleian Libraries, Oxford', 'National Archives, Washington D.C.', 'Bibliothèque nationale de France, Paris', 'National Archives of India, New Delhi', 'Library and Archives Canada, Ottawa', 'National Archives of Australia, Canberra']
         };
 
         // Source types for "Reference List Entry" category
@@ -506,6 +511,11 @@
             // NEW FIX: If the string starts with '||', replace it with a single '|'.
             if (fixedPartsString.trim().startsWith('||')) {
                 fixedPartsString = fixedPartsString.replace(/^(\s*)\|\|/, '$1|');
+            }
+            
+            // USER REQUESTED FIX: If the string ends with '||', replace it with a single '|'.
+            if (fixedPartsString.trim().endsWith('||')) {
+                fixedPartsString = fixedPartsString.replace(/\|\|(\s*)$/, '|$1');
             }
 
             // Randomly select only two distracting words
