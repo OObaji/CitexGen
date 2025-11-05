@@ -147,10 +147,10 @@
                     <div>
                         <label for="citationStyle" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Citation Style</label>
                         <select id="citationStyle" class="w-full p-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-lg shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition">
-                            <option value="apa7">APA 7</option>
-                            <option value="mla9">MLA 9</option>
+                            <option value="apa7">APA</option>
+                            <option value="mla9">MLA</option>
                             <option value="harvard">Harvard</option>
-                            <option value="chicago">Chicago (NB)</option>
+                            <option value="chicago">Chicago</option>
                             <option value="mhra">MHRA</option>
                         </select>
                     </div>
@@ -211,7 +211,7 @@
                 { first: 'Z.', last: 'Smith' }, { first: 'A.', last: 'Lee' }, { first: 'S.', last: 'King' }, { first: 'M.', last: 'Patel' }, { first: 'R.', last: 'Kim' }, { first: 'S.', last: 'Khan' }, { first: 'A.', last: 'Cole' }, { first: 'B.', last: 'Ray' }, { first: 'C.', last: 'Fox' }, { first: 'D.', last: 'Hill' }, { first: 'E.', last: 'Bell' }, { first: 'F.', last: 'Gray' }, { first: 'G.', last: 'Shaw' }, { first: 'H.', last: 'Hall' }, { first: 'I.', last: 'Rose' }
             ],
             editors: [ { first: 'M.', last: 'Beard' }, { first: 'T.', last: 'Wang' }, { first: 'H.', last: 'Gupta' }, { first: 'J.', last: 'Cox' }, { first: 'K.', last: 'Roth' }, { first: 'L.', last: 'Poe' }, { first: 'M.', last: 'Nye' } ],
-            bookTitles: [ 'A History of the Tudors', 'Gardening in the Shires', 'The British Seaside', 'London\'s Hidden Alleys', 'Post-War British Cinema', 'The Industrial North', 'Celtic Mythology Reimagined', 'A Guide to the Cotswolds', 'Navigating the Broads', 'Echoes of Victorian England', 'The Rise of the Premier League' ],
+            bookTitles: [ 'Tudor History', 'Shire Gardens', 'UK Coastlines', 'London Alleys', 'Post-War Film', 'The Ind. North', 'Celtic Myths', 'Cotswold Guide', 'The Broads', 'Victorian Echoes', 'Premier League' ],
             chapterTitles: [ 'The impact of the NHS on public health', 'Devolution and Scottish politics', 'Representations of class in British literature', 'The rise of Britpop in the 1990s', 'Archaeological finds in Roman Britain', 'The architecture of Charles Rennie Mackintosh', 'Suffragette movements in Edwardian England' ],
             journalTitles: [ 'The British Medical Journal', 'Journal of British Studies', 'The Economic Journal', 'English Historical Review', 'Cultural and Social History', 'British Journal of Sociology', 'Notes and Queries' ],
             articleTitles: [ 'Brexit\'s long-term effect on the UK economy', 'Urban regeneration in Manchester and Salford', 'The conservation of the Scottish wildcat', 'Shakespeare\'s influence on modern theatre', 'The role of the monarchy in the 21st century', 'A re-evaluation of the Battle of Hastings', 'The cultural significance of afternoon tea' ],
@@ -242,23 +242,23 @@
 
         // Source types for "Reference List Entry" category
         const referenceListSources = [
-            { value: 'book', text: 'Books' },
-            { value: 'edited_book', text: 'Edited Books' },
-            { value: 'journal', text: 'Journal Articles' },
-            { value: 'website', text: 'Web Resources' },
-            { value: 'book_chapter', text: 'Book Chapter' },
-            { value: 'youtube', text: 'YouTube Video' },
-            { value: 'newspaper', text: 'Newspaper Article (Chicago only)' }, // Specific to Chicago
-            { value: 'primary_source', text: 'Primary Source (Chicago only)' }, // Specific to Chicago
-            { value: 'thesis', text: 'Thesis (MHRA only)' } // Specific to MHRA
+            { value: 'book', text: 'Book' },
+            { value: 'edited_book', text: 'Ed. Book' },
+            { value: 'journal', text: 'Journal' },
+            { value: 'website', text: 'Website' },
+            { value: 'book_chapter', text: 'Chapter' },
+            { value: 'youtube', text: 'YouTube' },
+            { value: 'newspaper', text: 'Newspaper' }, // Specific to Chicago
+            { value: 'primary_source', text: 'Primary Src' }, // Specific to Chicago
+            { value: 'thesis', text: 'Thesis' } // Specific to MHRA
         ];
 
         // Source types for "In-text Citation" category
         const inTextSources = [
-            { value: 'in_text_single', text: 'Single author' }, 
-            { value: 'in_text_two', text: 'Two authors' }, 
-            { value: 'in_text_three', text: 'Three authors' },
-            { value: 'in_text_four_plus', text: 'More than 3 authors' }
+            { value: 'in_text_single', text: '1 Author' }, 
+            { value: 'in_text_two', text: '2 Authors' }, 
+            { value: 'in_text_three', text: '3 Authors' },
+            { value: 'in_text_four_plus', text: '3+ Authors' }
         ];
 
         /**
@@ -451,7 +451,7 @@
                 }
                 
                 const sourceTypeText = document.querySelector(`#sourceType option[value='${sourceType}']`).textContent;
-                const questionTypeText = questionType === 'dnd' ? 'Drag and Drop' : 'MCQ';
+                const questionTypeText = questionType === 'dnd' ? 'DnD' : 'MCQ';
                 const citationStyleText = document.getElementById('citationStyle').selectedOptions[0].text;
                 // Removed question number from baseTitle
                 questionData.baseTitle = `${sourceTypeText} - ${questionTypeText} - ${citationStyleText}`;
@@ -519,7 +519,36 @@
             }
 
             // Randomly select only two distracting words
-            const distractingWords = shuffleArray(components.distractors).slice(0, 2);
+            // const distractingWords = shuffleArray(components.distractors).slice(0, 2); // OLD
+            
+            // --- NEW LOGIC TO PREVENT DUPLICATE DISTRACTORS ---
+            // 1. Get all correct components (both draggable and fixed) and clean them for comparison.
+            //    We must convert all to string in case of numbers (like year).
+            const allCorrectComponents = components.content.map(item => cleanHtmlTags(String(item)));
+
+            // 2. Filter the distractors array to remove any item that is already
+            //    present in the allCorrectComponents list.
+            const uniqueDistractors = components.distractors.filter(distractor => {
+                const cleanedDistractor = cleanHtmlTags(String(distractor));
+                return !allCorrectComponents.includes(cleanedDistractor);
+            });
+
+            // 3. Shuffle the *filtered* list and slice to get the final distractors.
+            const distractingWords = shuffleArray(uniqueDistractors).slice(0, 2);
+
+            // Fallback: If filtering removed all/most distractors, add some generic ones.
+            if (distractingWords.length < 2) {
+                const fallbackDistractors = ['(Incorrect)', 'N.p.', 'n.d.'];
+                let needed = 2 - distractingWords.length;
+                for (const fb of fallbackDistractors) {
+                    // Check it's not a correct component and not already in the list
+                    if (needed > 0 && !allCorrectComponents.includes(fb) && !distractingWords.includes(fb)) {
+                        distractingWords.push(fb);
+                        needed--;
+                    }
+                }
+            }
+            // --- END NEW LOGIC ---
 
             const cleanedFixedPartsString = cleanHtmlTags(fixedPartsString);
             const cleanedFullReference = cleanHtmlTags(fullReference);
@@ -542,7 +571,34 @@
             
             // In-text DnD is simpler. The full citation is usually one draggable item.
             const draggableItems = components.correct;
-            const distractingItems = shuffleArray(components.distractors).slice(0, 2);
+            // const distractingItems = shuffleArray(components.distractors).slice(0, 2); // OLD
+
+            // --- NEW LOGIC TO PREVENT DUPLICATE DISTRACTORS ---
+            // 1. Get all correct components and clean them.
+            const allCorrectComponents = components.correct.map(item => cleanHtmlTags(String(item)));
+
+            // 2. Filter distractors to remove any item that is already correct.
+            const uniqueDistractors = components.distractors.filter(distractor => {
+                const cleanedDistractor = cleanHtmlTags(String(distractor));
+                return !allCorrectComponents.includes(cleanedDistractor);
+            });
+
+            // 3. Shuffle the *filtered* list and slice.
+            const distractingItems = shuffleArray(uniqueDistractors).slice(0, 2);
+
+            // Fallback: If filtering removed all/most distractors, add some generic ones.
+            if (distractingItems.length < 2) {
+                const fallbackDistractors = ['(p. 1)', '(Smith, 2020)', '(n.d.)'];
+                let needed = 2 - distractingItems.length;
+                for (const fb of fallbackDistractors) {
+                    // Check it's not a correct component and not already in the list
+                    if (needed > 0 && !allCorrectComponents.includes(fb) && !distractingItems.includes(fb)) {
+                        distractingItems.push(fb);
+                        needed--;
+                    }
+                }
+            }
+            // --- END NEW LOGIC ---
 
             // The main text is the fixed part.
             const fixedPartsString = scenario.replace('||', '|');
@@ -562,7 +618,7 @@
             const pubInfo = getUniqueItem('publisherLocations');
             const publisher = pubInfo.publisher;
             const year = new Date().getFullYear() - Math.floor(Math.random() * 5);
-            const scenario = `Book by ${formatScenarioNameList(authors)}, "${title}" (${year}).`;
+            const scenario = `Book by ${formatScenarioNameList(authors)}, "${title}" (${year}), published by ${publisher}.`;
             
             const components = {
                 content: [ authorString, year, title, publisher ],
@@ -585,7 +641,7 @@
             const pubInfo = getUniqueItem('publisherLocations');
             const publisher = pubInfo.publisher;
             const year = new Date().getFullYear() - Math.floor(Math.random() * 5);
-            const scenario = `Edited book by ${formatScenarioNameList(editors)}, "${title}" (${year}).`;
+            const scenario = `Edited book by ${formatScenarioNameList(editors)}, "${title}" (${year}), from ${publisher}.`;
             const edLabel = numEditors > 1 ? '(Eds.).' : '(Ed.).';
             
             const components = {
@@ -660,7 +716,7 @@
             const publisher = pubInfo.publisher;
             const year = new Date().getFullYear() - Math.floor(Math.random() * 5);
             const pages = `${Math.floor(Math.random() * 20) + 50}–${Math.floor(Math.random() * 10) + 70}`;
-            const scenario = `Chapter "${chapterTitle}" by ${formatScenarioNameList([author])} in ${formatScenarioNameList([editor])}'s book, "${bookTitle}" (${year}).`;
+            const scenario = `Chapter "${chapterTitle}" by ${formatScenarioNameList([author])} in ${formatScenarioNameList([editor])}'s book, "${bookTitle}" (${year}), from ${publisher}.`;
 
             const components = {
                 content: [ `${author.last}, ${author.first.charAt(0)}.`, `${year}`, `${chapterTitle}`, `In ${editor.first.charAt(0)}. ${editor.last} (Ed.),`, `${bookTitle}`, `pp. ${pages}`, `${publisher}` ],
@@ -732,12 +788,12 @@
             const pubInfo = getUniqueItem('publisherLocations');
             const publisher = pubInfo.publisher;
             const year = new Date().getFullYear() - Math.floor(Math.random() * 5);
-            const scenario = `Book by ${formatScenarioNameList(authors)}, "${title}" (${year}).`;
+            const scenario = `Book by ${formatScenarioNameList(authors)}, "${title}" (${year}), from ${publisher}.`;
             
             const components = {
                 content: [ `${authorString}`, `${title}`, `${publisher}`, `${year}` ],
                 structure: '{0}. <i>{1}</i>. {2}, {3}.',
-                distractors: [ `${authors[0].last}, ${authors[0].first.charAt(0)}.`, `(${year})`, `"${title}"`, `Published by ${publisher}` ]
+                distractors: [ `${authors[0].last}, ${authors[0].first.charAt(0)}.`, `(${year + 1})`, `"${title}"`, `Published by ${publisher}` ]
             };
             const fullReference = components.structure
                 .replace('{0}', components.content[0])
@@ -759,7 +815,7 @@
             const pubInfo = getUniqueItem('publisherLocations');
             const publisher = pubInfo.publisher;
             const year = new Date().getFullYear() - Math.floor(Math.random() * 5);
-            const scenario = `Edited book by ${formatScenarioNameList(editors)}, "${title}" (${year}).`;
+            const scenario = `Edited book by ${formatScenarioNameList(editors)}, "${title}" (${year}), from ${publisher}.`;
             
             const components = {
                 content: [ `${editorString}`, `${title}`, `${publisher}`, `${year}` ],
@@ -838,7 +894,7 @@
             const publisher = pubInfo.publisher;
             const year = new Date().getFullYear() - Math.floor(Math.random() * 5);
             const pages = `${Math.floor(Math.random() * 20) + 50}-${Math.floor(Math.random() * 10) + 70}`;
-            const scenario = `Chapter "${chapterTitle}" by ${formatScenarioNameList([author])} in ${formatScenarioNameList([editor])}'s book, "${bookTitle}" (${year}).`;
+            const scenario = `Chapter "${chapterTitle}" by ${formatScenarioNameList([author])} in ${formatScenarioNameList([editor])}'s book, "${bookTitle}" (${year}), from ${publisher}.`;
 
             const components = {
                 content: [ `${author.last}, ${author.first}`, `"${chapterTitle}"`, `${bookTitle}`, `edited by ${editor.first} ${editor.last}`, `${publisher}`, `${year}`, `pp. ${pages}` ],
@@ -906,12 +962,12 @@
             const publisher = pubInfo.publisher;
             const location = pubInfo.location;
             const year = new Date().getFullYear() - Math.floor(Math.random() * 5);
-            const scenario = `Book by ${formatScenarioNameList(authors)}, "${title}" (${year}).`;
+            const scenario = `Book by ${formatScenarioNameList(authors)}, "${title}" (${year}), from ${publisher} in ${location}.`;
 
             const components = {
                 content: [ `${authorString}`, `${year}`, `${title}`, `${location}: ${publisher}` ],
                 structure: '{0} ({1}) <i>{2}</i>. {3}.',
-                distractors: [ `${authors.map(a => `${a.last}, ${a.first}`).join(' and ')}`, `${year}`, `'${title}'`, `${publisher}, ${location}` ]
+                distractors: [ `${authors.map(a => `${a.last}, ${a.first}`).join(' and ')}`, `(${year - 1})`, `'${title}'`, `${publisher}, ${location}` ]
             };
             const fullReference = components.structure
                 .replace('{0}', components.content[0])
@@ -931,7 +987,7 @@
             const location = pubInfo.location;
             const year = new Date().getFullYear() - Math.floor(Math.random() * 5);
             const edLabel = numEditors > 1 ? '(eds.)' : '(ed.)';
-            const scenario = `Edited book by ${formatScenarioNameList(editors)}, "${title}" (${year}).`;
+            const scenario = `Edited book by ${formatScenarioNameList(editors)}, "${title}" (${year}), from ${publisher} in ${location}.`;
 
             const components = {
                 content: [ `${editorString}`, `${year}`, `${title}`, `${location}: ${publisher}` ],
@@ -1011,7 +1067,7 @@
             const location = pubInfo.location;
             const year = new Date().getFullYear() - Math.floor(Math.random() * 5);
             const pages = `${Math.floor(Math.random() * 20) + 50}-${Math.floor(Math.random() * 10) + 70}`;
-            const scenario = `Chapter "${chapterTitle}" by ${formatScenarioNameList([author])} in ${formatScenarioNameList([editor])}'s book, "${bookTitle}" (${year}).`;
+            const scenario = `Chapter "${chapterTitle}" by ${formatScenarioNameList([author])} in ${formatScenarioNameList([editor])}'s book, "${bookTitle}" (${year}), from ${publisher} in ${location}.`;
 
             const components = {
                 content: [ `${author.last}, ${author.first.charAt(0)}.`, `${year}`, `'${chapterTitle}'`, `in ${editor.last}, ${editor.first.charAt(0)}. (ed.)`, `${bookTitle}`, `${location}: ${publisher}`, `pp. ${pages}` ],
@@ -1080,12 +1136,12 @@
             const publisher = pubInfo.publisher;
             const location = pubInfo.location;
             const year = new Date().getFullYear() - Math.floor(Math.random() * 5);
-            const scenario = `Book by ${formatScenarioNameList(authors)}, "${title}" (${year}).`;
+            const scenario = `Book by ${formatScenarioNameList(authors)}, "${title}" (${year}), from ${publisher} in ${location}.`;
 
             const components = {
                 content: [ `${authorString}`, `${title}`, `${location}: ${publisher}`, `${year}` ],
                 structure: '{0}. <i>{1}</i>. {2}, {3}.',
-                distractors: [ `${authors.map(a => `${a.first} ${a.last}`).join(', ')}`, `(${year})`, `"${title}"`, `${publisher} (${location})` ]
+                distractors: [ `${authors.map(a => `${a.first} ${a.last}`).join(', ')}`, `[${year}]`, `"${title}"`, `${publisher} (${location})` ]
             };
             const fullReference = components.structure
                 .replace('{0}', components.content[0])
@@ -1105,7 +1161,7 @@
             const location = pubInfo.location;
             const year = new Date().getFullYear() - Math.floor(Math.random() * 5);
             const edLabel = numEditors > 1 ? 'eds.' : 'ed.';
-            const scenario = `Edited book by ${formatScenarioNameList(editors)}, "${title}" (${year}).`;
+            const scenario = `Edited book by ${formatScenarioNameList(editors)}, "${title}" (${year}), from ${publisher} in ${location}.`;
 
             const components = {
                 content: [ `${editorString}, ${edLabel}`, `${title}`, `${location}: ${publisher}`, `${year}` ],
@@ -1180,7 +1236,7 @@
             const location = pubInfo.location;
             const year = new Date().getFullYear() - Math.floor(Math.random() * 5);
             const pages = `${Math.floor(Math.random() * 20) + 50}-${Math.floor(Math.random() * 10) + 70}`;
-            const scenario = `Chapter "${chapterTitle}" by ${formatScenarioNameList([author])} in ${formatScenarioNameList([editor])}'s book, "${bookTitle}" (${year}).`;
+            const scenario = `Chapter "${chapterTitle}" by ${formatScenarioNameList([author])} in ${formatScenarioNameList([editor])}'s book, "${bookTitle}" (${year}), from ${publisher} in ${location}.`;
 
             const components = {
                 content: [ `${author.last}, ${author.first}`, `"${chapterTitle}"`, `${bookTitle}`, `edited by ${editor.first} ${editor.last}`, `${pages}`, `${location}: ${publisher}, ${year}` ],
@@ -1291,12 +1347,12 @@
             const publisher = pubInfo.publisher;
             const location = pubInfo.location;
             const year = new Date().getFullYear() - Math.floor(Math.random() * 5);
-            const scenario = `Book by ${formatScenarioNameList(authors)}, "${title}" (${year}).`;
+            const scenario = `Book by ${formatScenarioNameList(authors)}, "${title}" (${year}), from ${publisher} in ${location}.`;
             
             const components = {
                 content: [ `${authorString}`, `${title}`, `(${location}: ${publisher}, ${year})` ],
                 structure: '{0}, <i>{1}</i> {2}',
-                distractors: [ `${authors.map(a => `${a.first} ${a.last}`).join(' and ')}`, `"${title}"`, `${location}: ${publisher}, ${year}` ]
+                distractors: [ `${authors.map(a => `${a.first} ${a.last}`).join(' and ')}`, `"${title}"`, `(${location}: ${publisher})` ]
             };
             const fullReference = components.structure
                 .replace('{0}', components.content[0])
@@ -1314,7 +1370,7 @@
             const location = pubInfo.location;
             const year = new Date().getFullYear() - Math.floor(Math.random() * 5);
             const edLabel = numEditors > 1 ? 'eds,' : 'ed.,';
-            const scenario = `Edited book by ${formatScenarioNameList(editors)}, "${title}" (${year}).`;
+            const scenario = `Edited book by ${formatScenarioNameList(editors)}, "${title}" (${year}), from ${publisher} in ${location}.`;
             
             const components = {
                 content: [ `${editorString}, ${edLabel}`, `${title}`, `(${location}: ${publisher}, ${year})` ],
@@ -1385,7 +1441,7 @@
             const location = pubInfo.location;
             const year = new Date().getFullYear() - Math.floor(Math.random() * 5);
             const pages = `${Math.floor(Math.random() * 20) + 50}-${Math.floor(Math.random() * 10) + 70}`;
-            const scenario = `Chapter "${chapterTitle}" by ${formatScenarioNameList([author])} in ${formatScenarioNameList([editor])}'s book, "${bookTitle}" (${year}).`;
+            const scenario = `Chapter "${chapterTitle}" by ${formatScenarioNameList([author])} in ${formatScenarioNameList([editor])}'s book, "${bookTitle}" (${year}), from ${publisher} in ${location}.`;
 
             const components = {
                 content: [ `${author.last}, ${author.first}`, `'${chapterTitle}'`, `${bookTitle}`, `ed. by ${editor.first} ${editor.last}`, `(${location}: ${publisher}, ${year})`, `pp. ${pages}` ],
