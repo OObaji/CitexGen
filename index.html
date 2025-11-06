@@ -1644,7 +1644,24 @@
             }
             
             const optionsString = optionsArray.join('\n');
-            const mcqHtml = `Question Title:\n${title}\n\nQuestion:\n${scenario}\n\nCorrect Answer:\n${correctRefClean}\n\nOptions:\n${optionsString}\nHint/Explanation:\n${hint}`;
+            
+            // --- NEW LOGIC (User Update: Remove instruction from scenario questions) ---
+            // Randomly decide whether to include the scenario to mix up question formats.
+            let questionText;
+            const hasScenario = scenario && scenario.trim() !== ''; // Check if scenario exists
+
+            if (hasScenario && Math.random() < 0.5) { 
+                // 50% chance: Show Format 1 (With Scenario)
+                // Just show the scenario, no extra instruction.
+                questionText = `${scenario}`;
+            } else {
+                // 50% chance: Show Format 2 (Without Scenario)
+                // Show the instruction as the question.
+                questionText = `Select the correct reference format from the following:`;
+            }
+
+            // Updated the question structure to use the new `questionText` variable
+            const mcqHtml = `Question Title:\n${title}\n\nQuestion:\n${questionText}\n\nCorrect Answer:\n${correctRefClean}\n\nOptions:\n${optionsString}\nHint/Explanation:\n${hint}`;
             
             return { htmlOutput: mcqHtml, originalTitle: originalTitle };
         }
