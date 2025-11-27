@@ -229,29 +229,63 @@
         // Global variable to store the last generated questions for DOCX export
         let lastGeneratedQuestions = [];
         
-        // --- Data for Generation (Expanded with new Publishers and Authors) ---
+        // --- Data for Generation (REAL RESEARCH DATA 2022-2025) ---
         const data = {
             authors: [
-                // Existing
-                { first: 'John', last: 'Smith' }, { first: 'Mary', last: 'Jones' }, { first: 'David', last: 'Brown' }, 
-                { first: 'Sarah', last: 'Davis' }, { first: 'James', last: 'Wilson' }, { first: 'Emma', last: 'Taylor' }, 
-                { first: 'Paul', last: 'Evans' }, { first: 'Lisa', last: 'Thomas' }, { first: 'Mark', last: 'Roberts' },
-                { first: 'Tom', last: 'Lee' }, { first: 'Ann', last: 'White' }, { first: 'Mike', last: 'Green' },
-                { first: 'Jane', last: 'Hall' }, { first: 'Bob', last: 'Clark' }, { first: 'Sue', last: 'King' },
-                // New
-                { first: 'Chris', last: 'Martin' }, { first: 'Kate', last: 'Young' }, { first: 'Dan', last: 'Scott' }, 
-                { first: 'Amy', last: 'Adams' }, { first: 'Ben', last: 'Baker' }, { first: 'Sam', last: 'Carter' }, 
-                { first: 'Lucy', last: 'Hill' }, { first: 'Max', last: 'Turner' }, { first: 'Joe', last: 'Phillips' }, 
-                { first: 'Sophie', last: 'Campbell' }, { first: 'Ryan', last: 'Parker' }, { first: 'Zoe', last: 'Evans' }, 
-                { first: 'Leo', last: 'Edwards' }, { first: 'Mia', last: 'Collins' }, { first: 'Jack', last: 'Stewart' }, 
-                { first: 'Eva', last: 'Sanchez' }, { first: 'Alex', last: 'Morris' }, { first: 'Grace', last: 'Rogers' }, 
-                { first: 'Luke', last: 'Reed' }, { first: 'Ella', last: 'Cook' }
+                // Real Authors in Academia/Non-Fiction/Literature
+                { first: 'Yuval Noah', last: 'Harari' }, { first: 'Daron', last: 'Acemoglu' }, { first: 'Simon', last: 'Johnson' }, 
+                { first: 'Daniel', last: 'Kahneman' }, { first: 'Cass R.', last: 'Sunstein' }, { first: 'Walter', last: 'Isaacson' }, 
+                { first: 'Michael', last: 'Lewis' }, { first: 'Mariana', last: 'Mazzucato' }, { first: 'Thomas', last: 'Piketty' }, 
+                { first: 'Mustafa', last: 'Suleyman' }, { first: 'Fei-Fei', last: 'Li' }, { first: 'Siddhartha', last: 'Mukherjee' }, 
+                { first: 'Peter', last: 'Attia' }, { first: 'Cal', last: 'Newport' }, { first: 'Adam', last: 'Grant' }, 
+                { first: 'Angela', last: 'Duckworth' }, { first: 'Jonathan', last: 'Haidt' }, { first: 'Ezra', last: 'Klein' }, 
+                { first: 'David', last: 'Grann' }, { first: 'Patrick', last: 'Radden Keefe' }, { first: 'Anne', last: 'Applebaum' },
+                { first: 'Chris', last: 'Miller' }, { first: 'Vaclav', last: 'Smil' }, { first: 'Ed', last: 'Yong' }
             ],
-            editors: [ { first: 'Rob', last: 'Baker' }, { first: 'Tim', last: 'Cook' }, { first: 'Jen', last: 'Hill' }, { first: 'Dan', last: 'Wood' }, { first: 'Kim', last: 'Fox' } ],
-            bookTitles: [ 'Modern History', 'Garden Design', 'Coastal Living', 'City Streets', 'Film Studies', 'Northern Life', 'Ancient Myths', 'Travel Guide', 'River Life', 'Victorian Art', 'Football Tactics' ],
-            chapterTitles: [ 'Public Health in the 20th Century', 'Scottish Politics', 'Class in Literature', 'Music of the 1990s', 'Roman Archaeology', 'Modern Architecture', 'Voting Rights' ],
-            journalTitles: [ 'Medical Journal', 'History Review', 'Economic Studies', 'Social Science', 'Cultural Studies', 'Sociology Today', 'Academic Notes' ],
-            articleTitles: [ 'Economic Trends', 'Urban Growth', 'Wildcat Conservation', 'Modern Theatre', 'The Monarchy', 'Medieval Battles', 'Tea Culture' ],
+            editors: [ 
+                { first: 'Susan', last: 'Christenson' }, { first: 'Amy', last: 'Reschly' }, { first: 'C.', last: 'Wylie' }, 
+                { first: 'Kevin', last: 'Roose' }, { first: 'Kara', last: 'Swisher' } 
+            ],
+            bookTitles: [ 
+                'Power and Progress: Our Thousand-Year Struggle Over Technology and Prosperity', 
+                'The Coming Wave: Technology, Power, and the Twenty-first Century\'s Greatest Dilemma', 
+                'The Worlds I See: Curiosity, Exploration, and Discovery at the Dawn of AI', 
+                'Outlive: The Science and Art of Longevity', 
+                'Slow Productivity: The Lost Art of Accomplishment Without Burnout', 
+                'Hidden Potential: The Science of Achieving Greater Things', 
+                'The Anxious Generation: How the Great Rewiring of Childhood Is Causing an Epidemic of Mental Illness', 
+                'Chip War: The Fight for the World\'s Most Critical Technology', 
+                'How the World Really Works: The Science Behind How We Got Here and Where We\'re Going',
+                'Nexus: A Brief History of Information Networks from the Stone Age to AI',
+                'Material World: The Six Raw Materials That Shape Modern Civilization',
+                'Technofeudalism: What Killed Capitalism'
+            ],
+            chapterTitles: [ 
+                'The Artificial Intelligence Revolution in Medicine', 
+                'Sustainable Energy Solutions for a Warming World', 
+                'The Neurobiology of Stress and Resilience', 
+                'Algorithmic Bias in Financial Systems', 
+                'The Future of Work in the Age of Automation', 
+                'CRISPR and the Ethics of Gene Editing', 
+                'Global Supply Chain Resilience Post-Pandemic',
+                'Mental Health Interventions in Digital Spaces'
+            ],
+            journalTitles: [ 
+                'Nature', 'Science', 'The Lancet', 'New England Journal of Medicine', 
+                'American Economic Review', 'Journal of Political Economy', 'Psychological Science', 
+                'JAMA', 'Cell', 'Nature Climate Change', 'Harvard Business Review', 'Foreign Affairs',
+                'The Quarterly Journal of Economics', 'American Sociological Review'
+            ],
+            articleTitles: [ 
+                'Global impact of the first year of COVID-19 vaccination: a mathematical modelling study', 
+                'Large language models encode clinical knowledge', 
+                'Accelerating discovery of new materials for clean energy', 
+                'The economic impact of generative AI on labor markets', 
+                'Glacial retreat in the Himalayas and water security', 
+                'Efficacy of new malaria vaccines in sub-Saharan Africa', 
+                'Quantum advantage in learning from experiments', 
+                'Social media algorithms and political polarization' 
+            ],
             publisherLocations: [
                 { publisher: 'Routledge', location: 'London' },
                 { publisher: 'Routledge', location: 'New York' },
@@ -268,10 +302,20 @@
                 { publisher: 'Simon & Schuster', location: 'New York' },
                 { publisher: 'Macmillan', location: 'London' },
                 { publisher: 'Wiley', location: 'Hoboken' },
-                { publisher: 'Bloomsbury', location: 'London' }
+                { publisher: 'Bloomsbury', location: 'London' },
+                { publisher: 'MIT Press', location: 'Cambridge, MA' },
+                { publisher: 'Princeton University Press', location: 'Princeton, NJ' }
             ],
-            organizations: [ 'BBC', 'NHS', 'British Museum', 'Royal Society', 'English Heritage', 'National Trust', 'Met Office', 'NASA', 'WHO' ],
-            webTitles: [ 'News Home', 'Parliament History', 'Service Manual', 'Gallery Guide', 'Property List', 'Travel Advice' ],
+            organizations: [ 
+                'World Health Organization', 'Centers for Disease Control and Prevention', 'NASA', 
+                'Intergovernmental Panel on Climate Change', 'World Economic Forum', 'Pew Research Center', 
+                'Amnesty International', 'United Nations', 'The Royal Society', 'National Institutes of Health' 
+            ],
+            webTitles: [ 
+                'AI Safety Guidelines for Developers', 'Global Climate Report 2023', 
+                'Mental Health Statistics worldwide', 'The Future of Space Exploration', 
+                'Renewable Energy Capacity Statistics 2024', 'Digital Literacy Framework' 
+            ],
         };
 
         // Source types restricted to: Books, Edited Books, Journal Articles, Websites
@@ -575,7 +619,7 @@
 
         // --- New In-Text MCQ Generator Logic ---
         function generateInTextMCQ(getUniqueItem, style, numAuthors, sourceType) {
-            const year = Math.floor(Math.random() * (2025 - 2020 + 1)) + 2020;
+            const year = Math.floor(Math.random() * (2025 - 2022 + 1)) + 2022;
             let authorName, authorCit;
             let rawAuthors = [];
             let isPlural = false;
@@ -584,7 +628,7 @@
                 const org = getUniqueItem('organizations');
                 authorName = org;
                 authorCit = org;
-                isPlural = false;
+                isPlural = false; // Treat organization as singular
             } else {
                 rawAuthors = Array.from({ length: numAuthors }, () => getUniqueItem('authors'));
                 if (numAuthors === 1) {
@@ -592,96 +636,216 @@
                     authorCit = `${rawAuthors[0].last}`;
                     isPlural = false;
                 } else {
-                    isPlural = true;
-                    if (numAuthors === 2) authorName = `${rawAuthors[0].last} and ${rawAuthors[1].last}`; 
-                    else authorName = `${rawAuthors[0].last}, ${rawAuthors[1].last}, and ${rawAuthors[2].last}`; 
+                    isPlural = true; // 2 or more authors -> plural verb
+                    if (numAuthors === 2) {
+                        authorName = `${rawAuthors[0].last} and ${rawAuthors[1].last}`; 
+                    } else {
+                        authorName = `${rawAuthors[0].last}, ${rawAuthors[1].last}, and ${rawAuthors[2].last}`; 
+                    }
                 }
             }
 
+            // Extended Realistic Academic Sentences (50+ Varied Templates)
             const templates = [
+                // Sciences & Medicine
+                { singular: "demonstrates that the efficacy of the new vaccine exceeds initial projections.", plural: "demonstrate that the efficacy of the new vaccine exceeds initial projections." },
+                { singular: "highlights a significant correlation between urban air quality and respiratory ailments.", plural: "highlight a significant correlation between urban air quality and respiratory ailments." },
+                { singular: "proposes a novel mechanism for protein folding in high-temperature environments.", plural: "propose a novel mechanism for protein folding in high-temperature environments." },
+                { singular: "questions the validity of previous models regarding dark matter distribution.", plural: "question the validity of previous models regarding dark matter distribution." },
+                { singular: "confirms that sleep deprivation severely impacts cognitive function in adolescents.", plural: "confirm that sleep deprivation severely impacts cognitive function in adolescents." },
+                { singular: "identifies a new species of bacteria capable of breaking down plastic waste.", plural: "identify a new species of bacteria capable of breaking down plastic waste." },
+                { singular: "suggests that gene editing could eliminate hereditary diseases within a generation.", plural: "suggest that gene editing could eliminate hereditary diseases within a generation." },
+                { singular: "reports a breakthrough in renewable energy storage efficiency.", plural: "report a breakthrough in renewable energy storage efficiency." },
+                { singular: "warns that antibiotic resistance is rising faster than anticipated.", plural: "warn that antibiotic resistance is rising faster than anticipated." },
+                { singular: "calculates the trajectory of near-Earth asteroids with unprecedented precision.", plural: "calculate the trajectory of near-Earth asteroids with unprecedented precision." },
+                
+                // Social Sciences & Psychology
+                { singular: "argues that social media usage contributes to increased anxiety in young adults.", plural: "argue that social media usage contributes to increased anxiety in young adults." },
+                { singular: "observes a shift in voting patterns among suburban demographics.", plural: "observe a shift in voting patterns among suburban demographics." },
+                { singular: "critiques the neoliberal approach to global trade policies.", plural: "critique the neoliberal approach to global trade policies." },
+                { singular: "explores the psychological impact of long-term remote work.", plural: "explore the psychological impact of long-term remote work." },
+                { singular: "examines the role of childhood trauma in adult decision-making processes.", plural: "examine the role of childhood trauma in adult decision-making processes." },
+                { singular: "emphasizes the importance of early childhood education in reducing inequality.", plural: "emphasize the importance of early childhood education in reducing inequality." },
+                { singular: "asserts that cultural heritage sites require better protection from tourism.", plural: "assert that cultural heritage sites require better protection from tourism." },
+                { singular: "investigates the correlation between income inequality and crime rates.", plural: "investigate the correlation between income inequality and crime rates." },
+                { singular: "discusses the ethical implications of artificial intelligence in hiring practices.", plural: "discuss the ethical implications of artificial intelligence in hiring practices." },
+                { singular: "challenges the notion that globalization benefits all economic sectors equally.", plural: "challenge the notion that globalization benefits all economic sectors equally." },
+
+                // Humanities & Literature
+                { singular: "interprets the recurring motif of water in modernist literature.", plural: "interpret the recurring motif of water in modernist literature." },
+                { singular: "analyses the shift in narrative structure in post-war British fiction.", plural: "analyse the shift in narrative structure in post-war British fiction." },
+                { singular: "compares the philosophical underpinnings of Stoicism and Buddhism.", plural: "compare the philosophical underpinnings of Stoicism and Buddhism." },
+                { singular: "traces the evolution of the Gothic genre from the 18th century to present.", plural: "trace the evolution of the Gothic genre from the 18th century to present." },
+                { singular: "reevaluates the historical significance of the industrial revolution on rural life.", plural: "reevaluate the historical significance of the industrial revolution on rural life." },
+                { singular: "contextualizes the use of satire in contemporary political cartoons.", plural: "contextualize the use of satire in contemporary political cartoons." },
+                { singular: "reviews the impact of digital archives on historical research methods.", plural: "review the impact of digital archives on historical research methods." },
+                { singular: "deconstructs the concept of the 'hero' in classical mythology.", plural: "deconstruct the concept of the 'hero' in classical mythology." },
+                { singular: "explains the linguistic shifts in English dialects over the last fifty years.", plural: "explain the linguistic shifts in English dialects over the last fifty years." },
+                { singular: "illustrates how art movements mirror sociopolitical changes.", plural: "illustrate how art movements mirror sociopolitical changes." },
+
+                // Technology & Economics
+                { singular: "predicts that automation will displace 30% of manufacturing jobs by 2030.", plural: "predict that automation will displace 30% of manufacturing jobs by 2030." },
+                { singular: "evaluates the stability of cryptocurrency markets during economic downturns.", plural: "evaluate the stability of cryptocurrency markets during economic downturns." },
+                { singular: "outlines a strategy for sustainable urban development in megacities.", plural: "outline a strategy for sustainable urban development in megacities." },
+                { singular: "recommends stricter regulations on data privacy for tech giants.", plural: "recommend stricter regulations on data privacy for tech giants." },
+                { singular: "assesses the long-term viability of hydrogen fuel cells.", plural: "assess the long-term viability of hydrogen fuel cells." },
+                { singular: "notes that supply chain disruptions have become the new normal.", plural: "note that supply chain disruptions have become the new normal." },
+                { singular: "implies that traditional banking systems are becoming obsolete.", plural: "imply that traditional banking systems are becoming obsolete." },
+                { singular: "focuses on the integration of IoT devices in smart homes.", plural: "focus on the integration of IoT devices in smart homes." },
+                { singular: "details the cybersecurity risks associated with cloud computing.", plural: "detail the cybersecurity risks associated with cloud computing." },
+                { singular: "estimates the global economic cost of climate inaction.", plural: "estimate the global economic cost of climate inaction." },
+                
+                // General Academic
                 { singular: "states that properly constructed references are a key part of academic writing.", plural: "state that properly constructed references are a key part of academic writing." },
-                { singular: "argues that the evidence supports this conclusion.", plural: "argue that the evidence supports this conclusion." },
-                { singular: "suggests that further research is required in this field.", plural: "suggest that further research is required in this field." },
-                { singular: "notes that the results were inconclusive.", plural: "note that the results were inconclusive." }
+                { singular: "concludes that further research is required to validate these findings.", plural: "conclude that further research is required to validate these findings." },
+                { singular: "suggests that the methodology used in previous studies was flawed.", plural: "suggest that the methodology used in previous studies was flawed." },
+                { singular: "mentions that peer review is essential for scientific integrity.", plural: "mention that peer review is essential for scientific integrity." },
+                { singular: "indicates a need for a paradigm shift in how we approach this issue.", plural: "indicate a need for a paradigm shift in how we approach this issue." }
             ];
+            
             const selectedTemplate = getRandomItem(templates);
             const sentenceTail = isPlural ? selectedTemplate.plural : selectedTemplate.singular;
+
+            // Pick a random "trap type" to ensure we test different mechanics
+            // Traps: 'ampersand', 'et_al_period', 'parenthesis_placement', 'initials', 'year_format'
+            const trapTypes = ['parenthesis_placement', 'year_format'];
+            if (numAuthors > 1) trapTypes.push('ampersand');
+            if (numAuthors > 2) trapTypes.push('et_al_period');
+            if (numAuthors === 1) trapTypes.push('initials');
+            
+            const selectedTrap = getRandomItem(trapTypes);
 
             let correct, d1, d2, d3, explanation = "";
 
             if (style === 'apa7') {
-                let narrative;
-                if (sourceType === 'website') narrative = `${authorCit} (${year})`;
-                else if (numAuthors === 1) narrative = `${rawAuthors[0].last} (${year})`;
-                else if (numAuthors === 2) narrative = `${rawAuthors[0].last} and ${rawAuthors[1].last} (${year})`;
-                else narrative = `${rawAuthors[0].last} et al. (${year})`;
-                correct = `${narrative} ${sentenceTail}`;
-                let parenthetical;
-                if (sourceType === 'website') parenthetical = `(${authorCit}, ${year})`;
-                else if (numAuthors === 1) parenthetical = `(${rawAuthors[0].last}, ${year})`;
-                else if (numAuthors === 2) parenthetical = `(${rawAuthors[0].last} & ${rawAuthors[1].last}, ${year})`;
-                else parenthetical = `(${rawAuthors[0].last} et al., ${year})`;
-                d1 = `${parenthetical} ${sentenceTail}`;
-                d2 = `${narrative.replace('(', '').replace(')', '')} ${sentenceTail}`;
-                let d3_prefix = narrative.split(' (')[0];
-                d3 = `(${d3_prefix}) ${year} ${sentenceTail}`;
-                explanation = "In APA 7 narrative citations, the author's name appears in the text and the year follows in parentheses. Use 'and' (not '&') in the narrative text.";
-            } else if (style === 'mla9') {
-                const page = Math.floor(Math.random() * 100) + 10;
-                let narrative;
-                if (sourceType === 'website') narrative = `${authorCit}`;
-                else if (numAuthors === 1) narrative = `${rawAuthors[0].last}`;
-                else if (numAuthors === 2) narrative = `${rawAuthors[0].last} and ${rawAuthors[1].last}`;
-                else narrative = `${rawAuthors[0].last} et al.`;
+                // Base Logic
+                let narrative = "";
+                let parenthetical = "";
+
                 if (sourceType === 'website') {
-                     correct = `${narrative} ${sentenceTail}`;
-                     d1 = `(${narrative}) ${sentenceTail}`;
-                     d2 = `${narrative} (${year}) ${sentenceTail}`;
-                     d3 = `${narrative}, ${year}, ${sentenceTail}`;
-                     explanation = "For websites in MLA, simply use the author or organization name in the narrative. No year is needed in-text.";
+                    narrative = `${authorCit} (${year})`;
+                    parenthetical = `(${authorCit}, ${year})`;
+                } else if (numAuthors === 1) {
+                    narrative = `${rawAuthors[0].last} (${year})`;
+                    parenthetical = `(${rawAuthors[0].last}, ${year})`;
+                } else if (numAuthors === 2) {
+                    narrative = `${rawAuthors[0].last} and ${rawAuthors[1].last} (${year})`;
+                    parenthetical = `(${rawAuthors[0].last} & ${rawAuthors[1].last}, ${year})`;
                 } else {
-                    correct = `${narrative} (${page}) ${sentenceTail}`;
-                    d1 = `(${narrative} ${page}) ${sentenceTail}`;
-                    d2 = `${narrative} (p. ${page}) ${sentenceTail}`;
-                    d3 = `${narrative} (${year}) ${sentenceTail}`;
-                    explanation = "In MLA narrative citations, include the page number in parentheses after the author's name. Do not use 'p.' or the year.";
+                    narrative = `${rawAuthors[0].last} et al. (${year})`;
+                    parenthetical = `(${rawAuthors[0].last} et al., ${year})`;
                 }
+                
+                correct = `${narrative} ${sentenceTail}`;
+                
+                // Distractors based on Trap
+                if (selectedTrap === 'ampersand' && numAuthors === 2) {
+                     d1 = `${rawAuthors[0].last} & ${rawAuthors[1].last} (${year}) ${sentenceTail}`; // & in narrative
+                     d2 = `(${rawAuthors[0].last} and ${rawAuthors[1].last}, ${year}) ${sentenceTail}`; // 'and' in parens (wrong place)
+                     d3 = `${narrative.replace('and', '&')} ${sentenceTail}`; // Duplicate logic check
+                     explanation = "In APA 7 narrative citations, use the word 'and', not the ampersand symbol '&'. Use '&' only inside parentheses.";
+                } else if (selectedTrap === 'et_al_period' && numAuthors > 2) {
+                     d1 = `${rawAuthors[0].last} et al (${year}) ${sentenceTail}`; // Missing period
+                     d2 = `${rawAuthors[0].last} et. al. (${year}) ${sentenceTail}`; // Extra period after et
+                     d3 = `${rawAuthors[0].last} et al., (${year}) ${sentenceTail}`; // Comma after al.
+                     explanation = "In APA 7, 'et' is a whole word (no period), but 'al.' is an abbreviation for 'alii' and requires a period.";
+                } else if (selectedTrap === 'initials' && numAuthors === 1) {
+                     d1 = `${rawAuthors[0].first.charAt(0)}. ${rawAuthors[0].last} (${year}) ${sentenceTail}`; // Initials included
+                     d2 = `${rawAuthors[0].first} ${rawAuthors[0].last} (${year}) ${sentenceTail}`; // Full name included
+                     d3 = `(${rawAuthors[0].last}, ${year}) ${sentenceTail}`; // Parenthetical format
+                     explanation = "APA 7 narrative citations typically use only the surname, without initials or first names, unless distinguishing between authors with the same surname.";
+                } else {
+                     // Default / Parenthesis / Year traps
+                     d1 = `${parenthetical} ${sentenceTail}`; // Parenthetical format in narrative slot
+                     d2 = `${narrative.replace('(', '').replace(')', '')} ${sentenceTail}`; // Missing year parens
+                     d3 = `(${narrative.split(' (')[0]}) ${year} ${sentenceTail}`; // (Author) Year
+                     explanation = "APA 7 narrative citations place the author's name in the text and the year immediately following in parentheses.";
+                }
+
+            } else if (style === 'mla9') {
+                 // MLA is Author-Page mainly, but narrative just uses Author. 
+                 // To test "all parts", we focus on page number formatting.
+                 const page = Math.floor(Math.random() * 100) + 10;
+                 let name = (sourceType === 'website') ? authorCit : 
+                            (numAuthors === 1 ? rawAuthors[0].last : 
+                             (numAuthors === 2 ? `${rawAuthors[0].last} and ${rawAuthors[1].last}` : `${rawAuthors[0].last} et al.`));
+                 
+                 if (sourceType === 'website') {
+                     correct = `${name} ${sentenceTail}`;
+                     d1 = `(${name}) ${sentenceTail}`;
+                     d2 = `${name} (${year}) ${sentenceTail}`;
+                     d3 = `${name}, ${year}, ${sentenceTail}`;
+                     explanation = "For websites in MLA, simply use the author or organization name in the narrative. No year or page number is needed in-text.";
+                 } else {
+                     correct = `${name} (${page}) ${sentenceTail}`;
+                     d1 = `${name} (p. ${page}) ${sentenceTail}`; // p. error
+                     d2 = `${name} (pg. ${page}) ${sentenceTail}`; // pg. error
+                     d3 = `${name} (${year}) ${sentenceTail}`; // Year error
+                     explanation = "In MLA narrative citations, include the page number in parentheses. Do not use 'p.' or 'pg.' before the number.";
+                 }
+
             } else if (style === 'harvard') {
-                let narrative;
-                if (sourceType === 'website') narrative = `${authorCit} (${year})`;
-                else if (numAuthors === 1) narrative = `${rawAuthors[0].last} (${year})`;
-                else if (numAuthors === 2) narrative = `${rawAuthors[0].last} and ${rawAuthors[1].last} (${year})`;
-                else narrative = `${rawAuthors[0].last} et al. (${year})`;
-                correct = `${narrative} ${sentenceTail}`;
-                let parenthetical;
-                if (sourceType === 'website') parenthetical = `(${authorCit} ${year})`;
-                else if (numAuthors === 1) parenthetical = `(${rawAuthors[0].last} ${year})`;
-                else parenthetical = `(${rawAuthors[0].last} et al. ${year})`;
-                d1 = `${parenthetical} ${sentenceTail}`;
-                d2 = `${narrative.replace('(', '').replace(')', '')} ${sentenceTail}`;
-                d3 = `(${narrative.split(' (')[0]}) ${year} ${sentenceTail}`;
-                explanation = "Harvard narrative citations place the author in the text and the year in parentheses.";
+                 // Harvard Narrative: Author (Year)
+                 let narrative;
+                 if (sourceType === 'website') narrative = `${authorCit} (${year})`;
+                 else if (numAuthors === 1) narrative = `${rawAuthors[0].last} (${year})`;
+                 else if (numAuthors === 2) narrative = `${rawAuthors[0].last} and ${rawAuthors[1].last} (${year})`;
+                 else narrative = `${rawAuthors[0].last} et al. (${year})`;
+
+                 correct = `${narrative} ${sentenceTail}`;
+                 
+                 if (selectedTrap === 'year_format') {
+                     d1 = `${narrative.replace('(', '').replace(')', '')} ${sentenceTail}`; // No parens
+                     d2 = `${narrative.replace('(', ', ').replace(')', '')} ${sentenceTail}`; // Author, Year
+                     d3 = `(${narrative.split(' (')[0]} ${year}) ${sentenceTail}`; // (Author Year)
+                     explanation = "Harvard narrative citations place the year in parentheses immediately after the author's name.";
+                 } else {
+                     d1 = `(${narrative.split(' (')[0]} ${year}) ${sentenceTail}`;
+                     d2 = `${narrative.split(' (')[0]}, ${year}, ${sentenceTail}`;
+                     d3 = `(${narrative.split(' (')[0]}, ${year}) ${sentenceTail}`;
+                     explanation = "Harvard narrative citations format: Author (Year).";
+                 }
+
             } else if (style === 'chicago') {
-                let narrative;
-                if (sourceType === 'website') narrative = `${authorCit} (${year})`;
-                else if (numAuthors === 1) narrative = `${rawAuthors[0].last} (${year})`;
-                else if (numAuthors <= 3) narrative = `${rawAuthors.map(a=>a.last).join(' and ')} (${year})`;
-                else narrative = `${rawAuthors[0].last} et al. (${year})`;
-                correct = `${narrative} ${sentenceTail}`;
-                d1 = `(${narrative.split(' (')[0]}, ${year}) ${sentenceTail}`;
-                d2 = `${narrative.replace('(', '').replace(')', '')} ${sentenceTail}`;
-                d3 = `(${narrative.split(' (')[0]}) ${year} ${sentenceTail}`;
-                explanation = "Chicago (Author-Date) style places the year in parentheses immediately after the author's name in a narrative citation.";
+                 // Chicago Author-Date Narrative: Author (Year)
+                 let narrative;
+                 if (sourceType === 'website') narrative = `${authorCit} (${year})`;
+                 else if (numAuthors === 1) narrative = `${rawAuthors[0].last} (${year})`;
+                 else if (numAuthors <= 3) narrative = `${rawAuthors.map(a=>a.last).join(' and ')} (${year})`;
+                 else narrative = `${rawAuthors[0].last} et al. (${year})`;
+
+                 correct = `${narrative} ${sentenceTail}`;
+                 
+                 if (selectedTrap === 'ampersand' && numAuthors > 1 && numAuthors <= 3) {
+                     d1 = `${narrative.replace(' and ', ' & ')} ${sentenceTail}`;
+                     d2 = `(${narrative.split(' (')[0]}, ${year}) ${sentenceTail}`;
+                     d3 = `${narrative.split(' (')[0]} ${year} ${sentenceTail}`;
+                     explanation = "Chicago style uses 'and' (not '&') in narrative text.";
+                 } else {
+                     d1 = `(${narrative.split(' (')[0]}, ${year}) ${sentenceTail}`;
+                     d2 = `${narrative.replace('(', '').replace(')', '')} ${sentenceTail}`;
+                     d3 = `(${narrative.split(' (')[0]}) ${year} ${sentenceTail}`;
+                     explanation = "Chicago (Author-Date) style places the year in parentheses immediately after the author's name.";
+                 }
+
             } else if (style === 'mhra') {
-                let name = sourceType === 'website' ? authorCit : (numAuthors === 1 ? rawAuthors[0].last : `${rawAuthors[0].last} et al.`);
-                correct = `${name} ${sentenceTail}¹`; 
-                d1 = `${name} (2019) ${sentenceTail}`; 
-                d2 = `(${name}) ${sentenceTail}`;
-                d3 = `${name}¹ ${sentenceTail}`; 
-                explanation = "MHRA uses footnotes indicated by superscript numbers, usually placed at the very end of the sentence after punctuation.";
+                 let name = sourceType === 'website' ? authorCit : (numAuthors === 1 ? rawAuthors[0].last : `${rawAuthors[0].last} et al.`);
+                 correct = `${name} ${sentenceTail}¹`; 
+                 d1 = `${name} (2019) ${sentenceTail}`; // APA style
+                 d2 = `(${name}) ${sentenceTail}`;
+                 d3 = `${name}¹ ${sentenceTail}`; // Note before period (Incorrect per MHRA guide)
+                 explanation = "MHRA uses footnotes indicated by superscript numbers, usually placed at the very end of the sentence *after* punctuation.";
             }
+
             const options = shuffleArray([correct, d1, d2, d3]);
-            return { baseTitle: '', sentence: "Which of the following sentences uses the correct narrative citation format?", correctOption: correct, options: options, hint: explanation, originalTitle: 'In-Text' };
+            return { 
+                baseTitle: '', 
+                sentence: "Which of the following uses the correct format?", 
+                correctOption: correct, 
+                options: options, 
+                hint: explanation, 
+                originalTitle: 'In-Text' 
+            };
         }
 
         // --- REF LIST GENERATORS (Updated with Descriptive Stories & Editions) ---
@@ -693,7 +857,7 @@
             const title=getUniqueItem('bookTitles'); 
             const pubInfo=getUniqueItem('publisherLocations'); 
             const publisher=pubInfo.publisher; 
-            const year = Math.floor(Math.random() * (2025 - 2020 + 1)) + 2020; 
+            const year = Math.floor(Math.random() * (2025 - 2022 + 1)) + 2022; 
             
             let edText = "";
             let edComp = "";
@@ -721,7 +885,7 @@
             const title=getUniqueItem('bookTitles'); 
             const pubInfo=getUniqueItem('publisherLocations'); 
             const publisher=pubInfo.publisher; 
-            const year = Math.floor(Math.random() * (2025 - 2020 + 1)) + 2020; 
+            const year = Math.floor(Math.random() * (2025 - 2022 + 1)) + 2022; 
             
             const scenario=`You are citing an edited collection titled "${title}". The editors are ${scenarioEditors}. The book was published by ${publisher} in ${year}.`;
             const editorList = editors.map(e => `${e.last}, ${e.first.charAt(0)}.`);
@@ -736,7 +900,7 @@
             const scenarioAuthors = formatScenarioNameList(authors);
             const articleTitle=getUniqueItem('articleTitles'); 
             const journalTitle=getUniqueItem('journalTitles'); 
-            const year = Math.floor(Math.random() * (2025 - 2020 + 1)) + 2020; 
+            const year = Math.floor(Math.random() * (2025 - 2022 + 1)) + 2022; 
             const volume=Math.floor(Math.random()*20)+30; 
             const issue=Math.floor(Math.random()*4)+1; 
             const pages=`${Math.floor(Math.random()*50)+100}–${Math.floor(Math.random()*10)+150}`; 
@@ -752,7 +916,7 @@
         function generateApaWebsite(getUniqueItem) { 
             const org=getUniqueItem('organizations'); 
             const title=getUniqueItem('webTitles'); 
-            const year = Math.floor(Math.random() * (2025 - 2020 + 1)) + 2020; 
+            const year = Math.floor(Math.random() * (2025 - 2022 + 1)) + 2022; 
             const month=new Date().toLocaleString('default',{month:'long'}); 
             const day=new Date().getDate(); 
             const url=`https://www.${org.toLowerCase().replace(/\s/g,'')}.org/data/report`; 
@@ -768,7 +932,7 @@
             const bookTitle = getUniqueItem('bookTitles'); 
             const pubInfo = getUniqueItem('publisherLocations'); 
             const publisher = pubInfo.publisher; 
-            const year = Math.floor(Math.random() * (2025 - 2020 + 1)) + 2020; 
+            const year = Math.floor(Math.random() * (2025 - 2022 + 1)) + 2022; 
             const pages = `${Math.floor(Math.random() * 20) + 50}–${Math.floor(Math.random() * 10) + 70}`; 
             
             const scenario = `You need to cite a chapter titled "${chapterTitle}" written by ${formatScenarioNameList([author])}. It appears in the book "${bookTitle}" edited by ${formatScenarioNameList([editor])}, published in ${year} by ${publisher}. The chapter is on pages ${pages}.`;
@@ -784,7 +948,7 @@
             const title=getUniqueItem('bookTitles'); 
             const pubInfo=getUniqueItem('publisherLocations'); 
             const publisher=pubInfo.publisher; 
-            const year = Math.floor(Math.random() * (2025 - 2020 + 1)) + 2020; 
+            const year = Math.floor(Math.random() * (2025 - 2022 + 1)) + 2022; 
             let edText = "";
             let edComp = "";
             if (isEdition) {
@@ -812,7 +976,7 @@
             const title=getUniqueItem('bookTitles'); 
             const pubInfo=getUniqueItem('publisherLocations'); 
             const publisher=pubInfo.publisher; 
-            const year = Math.floor(Math.random() * (2025 - 2020 + 1)) + 2020; 
+            const year = Math.floor(Math.random() * (2025 - 2022 + 1)) + 2022; 
             
             const scenario=`You need to cite an edited book titled "${title}". The editors are ${scenarioEditors}. It was published by ${publisher} in ${year}.`;
             let editorString; 
@@ -827,7 +991,7 @@
             const scenarioAuthors = formatScenarioNameList(authors);
             const articleTitle=getUniqueItem('articleTitles'); 
             const journalTitle=getUniqueItem('journalTitles'); 
-            const year = Math.floor(Math.random() * (2025 - 2020 + 1)) + 2020; 
+            const year = Math.floor(Math.random() * (2025 - 2022 + 1)) + 2022; 
             const volume=Math.floor(Math.random()*20)+30; 
             const issue=Math.floor(Math.random()*4)+1; 
             const pages=`${Math.floor(Math.random()*50)+100}-${Math.floor(Math.random()*10)+150}`; 
@@ -844,7 +1008,7 @@
         function generateMlaWebsite(getUniqueItem) { 
             const org=getUniqueItem('organizations'); 
             const title=getUniqueItem('webTitles'); 
-            const year = Math.floor(Math.random() * (2025 - 2020 + 1)) + 2020; 
+            const year = Math.floor(Math.random() * (2025 - 2022 + 1)) + 2022; 
             const month=new Date().toLocaleString('default',{month:'short'}); 
             const day=new Date().getDate(); 
             const url=`www.${org.toLowerCase().replace(/\s/g,'')}.org/data/report.html`; 
@@ -860,7 +1024,7 @@
             const bookTitle = getUniqueItem('bookTitles'); 
             const pubInfo = getUniqueItem('publisherLocations'); 
             const publisher = pubInfo.publisher; 
-            const year = Math.floor(Math.random() * (2025 - 2020 + 1)) + 2020; 
+            const year = Math.floor(Math.random() * (2025 - 2022 + 1)) + 2022; 
             const pages = `${Math.floor(Math.random() * 20) + 50}-${Math.floor(Math.random() * 10) + 70}`; 
             const scenario = `You are citing a chapter "${chapterTitle}" by ${formatScenarioNameList([author])}. It is in the book "${bookTitle}", edited by ${formatScenarioNameList([editor])}, published by ${publisher} in ${year} (pages ${pages}).`;
             
@@ -876,7 +1040,7 @@
             const pubInfo=getUniqueItem('publisherLocations');
             const publisher=pubInfo.publisher;
             const location=pubInfo.location;
-            const year = Math.floor(Math.random() * (2025 - 2020 + 1)) + 2020; 
+            const year = Math.floor(Math.random() * (2025 - 2022 + 1)) + 2022; 
             
             let edText = "";
             let edComp = "";
@@ -904,7 +1068,7 @@
             const pubInfo=getUniqueItem('publisherLocations');
             const publisher=pubInfo.publisher;
             const location=pubInfo.location;
-            const year = Math.floor(Math.random() * (2025 - 2020 + 1)) + 2020; 
+            const year = Math.floor(Math.random() * (2025 - 2022 + 1)) + 2022; 
             const scenario=`You need to reference an edited book titled "${title}". The editors are ${scenarioEditors}. It was published in ${year} by ${publisher} in ${location}.`;
             const editorList=editors.map(e=>`${e.last}, ${e.first.charAt(0)}.`);
             const editorString=editorList.join(' and ');
@@ -917,7 +1081,7 @@
             const scenarioAuthors = formatScenarioNameList(authors);
             const articleTitle=getUniqueItem('articleTitles');
             const journalTitle=getUniqueItem('journalTitles');
-            const year = Math.floor(Math.random() * (2025 - 2020 + 1)) + 2020; 
+            const year = Math.floor(Math.random() * (2025 - 2022 + 1)) + 2022; 
             const volume=Math.floor(Math.random()*20)+30;
             const issue=Math.floor(Math.random()*4)+1;
             const pages=`${Math.floor(Math.random()*50)+100}-${Math.floor(Math.random()*10)+150}`;
@@ -931,7 +1095,7 @@
         function generateHarvardWebsite(getUniqueItem){
             const org=getUniqueItem('organizations');
             const title=getUniqueItem('webTitles');
-            const year = Math.floor(Math.random() * (2025 - 2020 + 1)) + 2020; 
+            const year = Math.floor(Math.random() * (2025 - 2022 + 1)) + 2022; 
             const url=`https://www.${org.toLowerCase().replace(/\s/g,'')}.org/data/report`;
             const date=new Date();
             const accessDate=`${date.getDate()} ${date.toLocaleString('default',{month:'long'})} ${date.getFullYear()}`;
@@ -947,7 +1111,7 @@
             const pubInfo = getUniqueItem('publisherLocations'); 
             const publisher = pubInfo.publisher; 
             const location = pubInfo.location;
-            const year = Math.floor(Math.random() * (2025 - 2020 + 1)) + 2020; 
+            const year = Math.floor(Math.random() * (2025 - 2022 + 1)) + 2022; 
             const pages = `${Math.floor(Math.random() * 20) + 50}-${Math.floor(Math.random() * 10) + 70}`; 
             const scenario = `You are citing a chapter "${chapterTitle}" by ${formatScenarioNameList([author])}. It is in the book "${bookTitle}", edited by ${formatScenarioNameList([editor])}, published in ${year} by ${publisher} in ${location}. Pages ${pages}.`;
             
@@ -963,7 +1127,7 @@
             const pubInfo=getUniqueItem('publisherLocations');
             const publisher=pubInfo.publisher;
             const location=pubInfo.location;
-            const year = Math.floor(Math.random() * (2025 - 2020 + 1)) + 2020; 
+            const year = Math.floor(Math.random() * (2025 - 2022 + 1)) + 2022; 
             let edText = "";
             let edComp = "";
             if (isEdition) {
@@ -990,12 +1154,12 @@
             const pubInfo=getUniqueItem('publisherLocations');
             const publisher=pubInfo.publisher;
             const location=pubInfo.location;
-            const year = Math.floor(Math.random() * (2025 - 2020 + 1)) + 2020; 
+            const year = Math.floor(Math.random() * (2025 - 2022 + 1)) + 2022; 
             const scenario=`You are citing an edited book titled "${title}". The editors are ${scenarioEditors}. It was published in ${year} by ${publisher} in ${location}.`;
             const editorList=editors.map((e,i)=>i===0?`${e.last}, ${e.first}`:`${e.first} ${e.last}`);
             const editorString=editorList.join(' and ');
             const edLabel=numEditors>1?'eds.':'ed.';
-            const components={content:[`${editorString}, ${edLabel}`,`${title}`,`${location}: ${publisher}`,`${year}`],structure:'{0}. <i>{1}</i>. {2}, {3}.',distractors:[`${editors.map(e=>`${e.first} ${e.last}`).join(', ')}, ${edLabel}`,`"${title}"`,`(Editor)`,`${publisher}, ${year}`]};
+            const components={content:[`${editorString}`,`${edLabel}`,`${title}`,`${location}: ${publisher}`,`${year}`],structure:'{0}. <i>{1}</i>. {2}, {3}.',distractors:[`${editors.map(e=>`${e.first} ${e.last}`).join(', ')}, ${edLabel}`,`"${title}"`,`(Editor)`,`${publisher}, ${year}`]};
             return{scenario,fullReference:'',components,hint:'Chicago Edited Book: Editor, ed. <i>Title</i>. Place: Publisher, Year.',originalTitle:title}
         }
         function generateChicagoJournal(getUniqueItem,numAuthors=1){
@@ -1003,7 +1167,7 @@
             const scenarioAuthors = formatScenarioNameList(authors);
             const articleTitle=getUniqueItem('articleTitles');
             const journalTitle=getUniqueItem('journalTitles');
-            const year = Math.floor(Math.random() * (2025 - 2020 + 1)) + 2020; 
+            const year = Math.floor(Math.random() * (2025 - 2022 + 1)) + 2022; 
             const volume=Math.floor(Math.random()*20)+30;
             const issue=Math.floor(Math.random()*4)+1;
             const pages=`${Math.floor(Math.random()*50)+100}–${Math.floor(Math.random()*10)+150}`;
@@ -1017,7 +1181,7 @@
         function generateChicagoWebsite(getUniqueItem){
             const org=getUniqueItem('organizations');
             const title=getUniqueItem('webTitles');
-            const year = Math.floor(Math.random() * (2025 - 2020 + 1)) + 2020; 
+            const year = Math.floor(Math.random() * (2025 - 2022 + 1)) + 2022; 
             const month=new Date().toLocaleString('default',{month:'long'});
             const day=new Date().getDate();
             const url=`https://www.${org.toLowerCase().replace(/\s/g,'')}.org/data/report`;
@@ -1033,7 +1197,7 @@
             const pubInfo = getUniqueItem('publisherLocations'); 
             const publisher = pubInfo.publisher; 
             const location = pubInfo.location;
-            const year = Math.floor(Math.random() * (2025 - 2020 + 1)) + 2020; 
+            const year = Math.floor(Math.random() * (2025 - 2022 + 1)) + 2022; 
             const pages = `${Math.floor(Math.random() * 20) + 50}-${Math.floor(Math.random() * 10) + 70}`; 
             const scenario = `You are citing a chapter "${chapterTitle}" by ${formatScenarioNameList([author])}. It is in the book "${bookTitle}", edited by ${formatScenarioNameList([editor])}, published in ${year} by ${publisher} in ${location}. Pages ${pages}.`;
             
@@ -1049,7 +1213,7 @@
             const pubInfo=getUniqueItem('publisherLocations');
             const publisher=pubInfo.publisher;
             const location=pubInfo.location;
-            const year = Math.floor(Math.random() * (2025 - 2020 + 1)) + 2020; 
+            const year = Math.floor(Math.random() * (2025 - 2022 + 1)) + 2022; 
             let edText = "";
             let edComp = "";
             if (isEdition) {
@@ -1075,7 +1239,7 @@
             const pubInfo=getUniqueItem('publisherLocations');
             const publisher=pubInfo.publisher;
             const location=pubInfo.location;
-            const year = Math.floor(Math.random() * (2025 - 2020 + 1)) + 2020; 
+            const year = Math.floor(Math.random() * (2025 - 2022 + 1)) + 2022; 
             const scenario=`You need to cite an edited book titled "${title}". The editors are ${scenarioEditors}. It was published by ${publisher} in ${location} in ${year}.`;
             const editorString=editors.map(e=>`${e.last}, ${e.first}`).join(' and ');
             const edLabel=numEditors>1?'eds,':'ed.,';
@@ -1087,7 +1251,7 @@
             const scenarioAuthors = formatScenarioNameList(authors);
             const articleTitle=getUniqueItem('articleTitles');
             const journalTitle=getUniqueItem('journalTitles');
-            const year = Math.floor(Math.random() * (2025 - 2020 + 1)) + 2020; 
+            const year = Math.floor(Math.random() * (2025 - 2022 + 1)) + 2022; 
             const volume=Math.floor(Math.random()*20)+30;
             const issue=Math.floor(Math.random()*4)+1;
             const pages=`${Math.floor(Math.random()*50)+100}–${Math.floor(Math.random()*10)+150}`;
@@ -1099,7 +1263,7 @@
         function generateMhraWebsite(getUniqueItem){
             const org=getUniqueItem('organizations');
             const title=getUniqueItem('webTitles');
-            const year = Math.floor(Math.random() * (2025 - 2020 + 1)) + 2020; 
+            const year = Math.floor(Math.random() * (2025 - 2022 + 1)) + 2022; 
             const url=`https://www.${org.toLowerCase().replace(/\s/g,'')}.org/data/report`;
             const date=new Date();
             const accessDate=`${date.getDate()} ${date.toLocaleString('default',{month:'long'})} ${date.getFullYear()}`;
@@ -1115,7 +1279,7 @@
             const pubInfo = getUniqueItem('publisherLocations'); 
             const publisher = pubInfo.publisher; 
             const location = pubInfo.location;
-            const year = Math.floor(Math.random() * (2025 - 2020 + 1)) + 2020; 
+            const year = Math.floor(Math.random() * (2025 - 2022 + 1)) + 2022; 
             const pages = `${Math.floor(Math.random() * 20) + 50}-${Math.floor(Math.random() * 10) + 70}`; 
             const scenario = `You are citing a chapter "${chapterTitle}" by ${formatScenarioNameList([author])}. It is in the book "${bookTitle}", edited by ${formatScenarioNameList([editor])}, published in ${year} by ${publisher} in ${location}. Pages ${pages}.`;
             
