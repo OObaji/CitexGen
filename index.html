@@ -23,7 +23,7 @@
             z-index: 0;
         }
         
-        /* Glassmorphism Utilities - Dark Mode Only Defaults */
+        /* Glassmorphism Utilities */
         .glass-panel {
             background: rgba(17, 24, 39, 0.7);
             backdrop-filter: blur(12px);
@@ -43,21 +43,10 @@
             box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
         }
 
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: transparent;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #4b5563;
-            border-radius: 4px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #94a3b8;
-        }
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #4b5563; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
 
         .output-block {
             white-space: pre-wrap;
@@ -65,10 +54,7 @@
             font-family: 'JetBrains Mono', monospace;
         }
         
-        /* Animation classes */
-        .fade-in-up {
-            animation: fadeInUp 0.6s ease-out forwards;
-        }
+        .fade-in-up { animation: fadeInUp 0.6s ease-out forwards; }
         @keyframes fadeInUp {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
@@ -79,27 +65,23 @@
 
     <div id="landingPage" class="relative min-h-screen flex flex-col items-center justify-center text-center overflow-hidden p-4">
         <canvas id="landingCanvas"></canvas>
-        
         <div class="z-10 relative glass-panel p-10 md:p-16 rounded-3xl shadow-2xl max-w-3xl mx-auto border-t border-white/60">
             <div class="mb-6 flex justify-center">
                 <div class="bg-indigo-900/30 p-3 rounded-2xl">
-                    <svg class="w-12 h-12 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+                    <svg class="w-12 h-12 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
                 </div>
             </div>
             <h1 class="text-5xl md:text-7xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-violet-400 mb-6 tracking-tight">Citex</h1>
-            <p class="text-xl md:text-2xl text-slate-300 mb-8 leading-relaxed">
-                The intelligent citation engine. <br class="hidden md:block">Generate dynamic, style-specific questions instantly.
-            </p>
+            <p class="text-xl md:text-2xl text-slate-300 mb-8 leading-relaxed">The intelligent citation engine.<br class="hidden md:block">Generate dynamic, style-specific questions instantly.</p>
             <button id="getStartedBtn" class="group relative inline-flex items-center justify-center px-8 py-4 font-semibold text-white transition-all duration-200 bg-gradient-to-r from-indigo-600 to-violet-600 rounded-full hover:from-indigo-700 hover:to-violet-700 focus:outline-none focus:ring-offset-2 focus:ring-4 focus:ring-indigo-500 shadow-lg hover:shadow-indigo-500/30 hover:-translate-y-1">
                 <span>Start Generating</span>
-                <svg class="w-5 h-5 ml-2 -mr-1 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path></svg>
+                <svg class="w-5 h-5 ml-2 -mr-1 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path></svg>
             </button>
         </div>
     </div>
 
     <div id="generatorPage" class="hidden min-h-screen relative z-10">
         <div class="container mx-auto p-4 sm:p-6 lg:p-12 max-w-5xl">
-            
             <header class="flex flex-col md:flex-row justify-between items-center mb-10 fade-in-up" style="animation-delay: 0.1s">
                 <div class="flex items-center gap-3 mb-4 md:mb-0 cursor-pointer group" id="homeTitle" title="Back to Home">
                     <div class="bg-indigo-600 text-white p-2 rounded-lg shadow-lg group-hover:scale-110 transition-transform">
@@ -113,17 +95,39 @@
             </header>
 
             <main class="glass-panel rounded-3xl shadow-2xl p-6 md:p-10 fade-in-up" style="animation-delay: 0.2s">
-                
                 <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-8">
-                    
-                    <!-- Left Column -->
                     <div class="lg:col-span-7 grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="col-span-1 md:col-span-2">
+                            <label for="questionCategory" class="block text-xs font-bold text-slate-400 uppercase mb-2 tracking-wide">Category</label>
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"><svg class="h-5 w-5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg></div>
+                                <select id="questionCategory" class="glass-input w-full pl-10 p-3 rounded-xl focus:outline-none appearance-none cursor-pointer text-white">
+                                    <option value="reference_list">Reference List</option>
+                                    <option value="in_text">In-text Citation</option>
+                                </select>
+                                <div class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none"><svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg></div>
+                            </div>
+                        </div>
+
+                        <div id="subCategoryContainer" class="col-span-1 hidden">
+                            <label for="inTextSubCategory" class="block text-xs font-bold text-slate-400 uppercase mb-2 tracking-wide">Author Count</label>
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"><svg class="h-5 w-5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg></div>
+                                <select id="inTextSubCategory" class="glass-input w-full pl-10 p-3 rounded-xl focus:outline-none appearance-none cursor-pointer text-white">
+                                    <option value="mixed">Mixed</option>
+                                    <option value="single">Single Author</option>
+                                    <option value="two">Two Authors</option>
+                                    <option value="three">Three Authors</option>
+                                    <option value="four_plus">More than 3 Authors</option>
+                                </select>
+                                <div class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none"><svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg></div>
+                            </div>
+                        </div>
+
                         <div class="col-span-1">
                             <label for="numQuestions" class="block text-xs font-bold text-slate-400 uppercase mb-2 tracking-wide">Quantity</label>
                             <div class="relative">
-                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                    <svg class="h-5 w-5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 20l4-16m2 16l4-16M6 9h14M4 15h14"/></svg>
-                                </div>
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"><svg class="h-5 w-5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 20l4-16m2 16l4-16M6 9h14M4 15h14"/></svg></div>
                                 <input type="number" id="numQuestions" value="5" min="1" max="20" class="glass-input w-full pl-10 p-3 rounded-xl focus:outline-none text-white">
                             </div>
                         </div>
@@ -131,69 +135,53 @@
                         <div class="col-span-1">
                             <label for="citationStyle" class="block text-xs font-bold text-slate-400 uppercase mb-2 tracking-wide">Citation Style</label>
                             <div class="relative">
-                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                    <svg class="h-5 w-5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
-                                </div>
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"><svg class="h-5 w-5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg></div>
                                 <select id="citationStyle" class="glass-input w-full pl-10 p-3 rounded-xl focus:outline-none appearance-none cursor-pointer text-white">
-                                    <option value="apa7">APA 7th Ed.</option>
-                                    <option value="mla9">MLA 9th Ed.</option>
                                     <option value="harvard">Harvard</option>
+                                    <option value="mla9">MLA 9th Ed.</option>
+                                    <option value="apa7">APA 7th Ed.</option>
                                     <option value="chicago">Chicago (NB)</option>
                                     <option value="mhra">MHRA</option>
                                 </select>
-                                <div class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
-                                    <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                                </div>
+                                <div class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none"><svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg></div>
                             </div>
                         </div>
 
-                        <!-- Question Category removed per request, focusing only on Output Formats -->
                         <div class="col-span-1 md:col-span-2 bg-slate-800/40 rounded-xl p-4 border border-slate-700">
                             <label class="block text-xs font-bold text-slate-400 uppercase mb-3 tracking-wide">Output Formats</label>
                             <div class="flex space-x-6">
-                                <label class="inline-flex items-center cursor-pointer group" title="Generates Reference List Questions">
+                                <label class="inline-flex items-center cursor-pointer group">
                                     <div class="relative">
                                         <input id="dndCheckbox" name="questionType" type="checkbox" checked class="peer sr-only">
                                         <div class="w-5 h-5 border-2 border-slate-600 rounded bg-slate-700 peer-checked:bg-indigo-600 peer-checked:border-indigo-600 transition-all"></div>
                                         <svg class="w-3 h-3 text-white absolute top-1 left-1 opacity-0 peer-checked:opacity-100 transition-opacity pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
                                     </div>
-                                    <div class="flex flex-col ml-2">
-                                        <span class="text-slate-300 group-hover:text-indigo-400 transition-colors font-semibold">Drag & Drop</span>
-                                        <span class="text-[10px] text-slate-500 uppercase tracking-wider">For Reference Lists</span>
-                                    </div>
+                                    <div class="flex flex-col ml-2"><span class="text-slate-300 font-semibold">Drag & Drop</span><span class="text-[10px] text-slate-500 uppercase tracking-wider">Build Citations</span></div>
                                 </label>
-                                <label class="inline-flex items-center cursor-pointer group" title="Generates In-text Citation Questions">
+                                <label class="inline-flex items-center cursor-pointer group">
                                     <div class="relative">
                                         <input id="mcqCheckbox" name="questionType" type="checkbox" checked class="peer sr-only">
                                         <div class="w-5 h-5 border-2 border-slate-600 rounded bg-slate-700 peer-checked:bg-indigo-600 peer-checked:border-indigo-600 transition-all"></div>
                                         <svg class="w-3 h-3 text-white absolute top-1 left-1 opacity-0 peer-checked:opacity-100 transition-opacity pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
                                     </div>
-                                    <div class="flex flex-col ml-2">
-                                        <span class="text-slate-300 group-hover:text-indigo-400 transition-colors font-semibold">Multi Choice</span>
-                                        <span class="text-[10px] text-slate-500 uppercase tracking-wider">For In-text Citations</span>
-                                    </div>
+                                    <div class="flex flex-col ml-2"><span class="text-slate-300 font-semibold">Multi Choice</span><span class="text-[10px] text-slate-500 uppercase tracking-wider">Identify Correct</span></div>
                                 </label>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Right Column -->
                     <div class="lg:col-span-5 flex flex-col h-full">
-                        <label for="sourceType" class="block text-xs font-bold text-slate-400 uppercase mb-2 tracking-wide">
-                            Source Types <span class="text-indigo-500 font-normal normal-case ml-1">(Ctrl+Click to select multiple)</span>
-                        </label>
-                        <select id="sourceType" multiple class="glass-input w-full flex-grow rounded-xl p-2 focus:outline-none text-sm text-white" style="min-height: 220px;">
-                            <!-- Options populated dynamically -->
-                        </select>
+                        <label for="sourceType" class="block text-xs font-bold text-slate-400 uppercase mb-2 tracking-wide">Source Types (Ctrl+Click)</label>
+                        <select id="sourceType" multiple class="glass-input w-full flex-grow rounded-xl p-2 focus:outline-none text-sm text-white" style="min-height: 220px;"></select>
                     </div>
                 </div>
 
                 <div class="flex flex-col sm:flex-row gap-4 justify-center mb-10">
-                    <button id="generateBtn" class="w-full sm:w-auto bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-700 hover:to-violet-700 text-white font-bold py-3 px-10 rounded-xl shadow-lg shadow-indigo-500/30 transform transition hover:-translate-y-0.5 focus:ring-4 focus:ring-indigo-500/50 flex items-center justify-center gap-2">
+                    <button id="generateBtn" class="w-full sm:w-auto bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-700 hover:to-violet-700 text-white font-bold py-3 px-10 rounded-xl shadow-lg transform transition hover:-translate-y-0.5 focus:ring-4 flex items-center justify-center gap-2">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path></svg>
                         Generate
                     </button>
-                    <button id="downloadBtn" class="hidden w-full sm:w-auto bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-3 px-10 rounded-xl shadow-lg shadow-emerald-500/30 transform transition hover:-translate-y-0.5 focus:ring-4 focus:ring-emerald-500/50 flex items-center justify-center gap-2">
+                    <button id="downloadBtn" class="hidden w-full sm:w-auto bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-3 px-10 rounded-xl shadow-lg transform transition hover:-translate-y-0.5 focus:ring-4 flex items-center justify-center gap-2">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
                         Export .DOCX
                     </button>
@@ -202,15 +190,10 @@
                 <div id="output" class="hidden space-y-6">
                     <div class="rounded-xl overflow-hidden shadow-2xl border border-slate-700">
                         <div class="bg-slate-800 px-4 py-2 border-b border-slate-700 flex items-center justify-between">
-                            <div class="flex gap-2">
-                                <div class="w-3 h-3 rounded-full bg-red-500"></div>
-                                <div class="w-3 h-3 rounded-full bg-amber-500"></div>
-                                <div class="w-3 h-3 rounded-full bg-green-500"></div>
-                            </div>
+                            <div class="flex gap-2"><div class="w-3 h-3 rounded-full bg-red-500"></div><div class="w-3 h-3 rounded-full bg-amber-500"></div><div class="w-3 h-3 rounded-full bg-green-500"></div></div>
                             <div class="text-xs text-slate-400 font-mono">results.html</div>
-                            <button onclick="copyToClipboard('htmlOutput')" class="text-xs flex items-center gap-1 text-slate-300 hover:text-indigo-400 transition-colors" title="Copy to Clipboard">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path></svg>
-                                Copy
+                            <button onclick="copyToClipboard('htmlOutput')" class="text-xs flex items-center gap-1 text-slate-300 hover:text-indigo-400 transition-colors">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path></svg> Copy
                             </button>
                         </div>
                         <div id="htmlOutput" class="p-6 bg-slate-900 text-slate-200 text-sm font-mono leading-relaxed overflow-x-auto output-block border-l-4 border-indigo-500"></div>
@@ -226,110 +209,24 @@
     </div>
 
     <script>
-        // Global variable to store the last generated questions for DOCX export
         let lastGeneratedQuestions = [];
-        
-        // --- Data for Generation (REAL RESEARCH DATA 2022-2025) ---
         const data = {
-            authors: [
-                // Real Authors in Academia/Non-Fiction/Literature
-                { first: 'Yuval Noah', last: 'Harari' }, { first: 'Daron', last: 'Acemoglu' }, { first: 'Simon', last: 'Johnson' }, 
-                { first: 'Daniel', last: 'Kahneman' }, { first: 'Cass R.', last: 'Sunstein' }, { first: 'Walter', last: 'Isaacson' }, 
-                { first: 'Michael', last: 'Lewis' }, { first: 'Mariana', last: 'Mazzucato' }, { first: 'Thomas', last: 'Piketty' }, 
-                { first: 'Mustafa', last: 'Suleyman' }, { first: 'Fei-Fei', last: 'Li' }, { first: 'Siddhartha', last: 'Mukherjee' }, 
-                { first: 'Peter', last: 'Attia' }, { first: 'Cal', last: 'Newport' }, { first: 'Adam', last: 'Grant' }, 
-                { first: 'Angela', last: 'Duckworth' }, { first: 'Jonathan', last: 'Haidt' }, { first: 'Ezra', last: 'Klein' }, 
-                { first: 'David', last: 'Grann' }, { first: 'Patrick', last: 'Radden Keefe' }, { first: 'Anne', last: 'Applebaum' },
-                { first: 'Chris', last: 'Miller' }, { first: 'Vaclav', last: 'Smil' }, { first: 'Ed', last: 'Yong' }
-            ],
-            editors: [ 
-                { first: 'Susan', last: 'Christenson' }, { first: 'Amy', last: 'Reschly' }, { first: 'C.', last: 'Wylie' }, 
-                { first: 'Kevin', last: 'Roose' }, { first: 'Kara', last: 'Swisher' } 
-            ],
-            bookTitles: [ 
-                'Power and Progress: Our Thousand-Year Struggle Over Technology and Prosperity', 
-                'The Coming Wave: Technology, Power, and the Twenty-first Century\'s Greatest Dilemma', 
-                'The Worlds I See: Curiosity, Exploration, and Discovery at the Dawn of AI', 
-                'Outlive: The Science and Art of Longevity', 
-                'Slow Productivity: The Lost Art of Accomplishment Without Burnout', 
-                'Hidden Potential: The Science of Achieving Greater Things', 
-                'The Anxious Generation: How the Great Rewiring of Childhood Is Causing an Epidemic of Mental Illness', 
-                'Chip War: The Fight for the World\'s Most Critical Technology', 
-                'How the World Really Works: The Science Behind How We Got Here and Where We\'re Going',
-                'Nexus: A Brief History of Information Networks from the Stone Age to AI',
-                'Material World: The Six Raw Materials That Shape Modern Civilization',
-                'Technofeudalism: What Killed Capitalism'
-            ],
-            chapterTitles: [ 
-                'The Artificial Intelligence Revolution in Medicine', 
-                'Sustainable Energy Solutions for a Warming World', 
-                'The Neurobiology of Stress and Resilience', 
-                'Algorithmic Bias in Financial Systems', 
-                'The Future of Work in the Age of Automation', 
-                'CRISPR and the Ethics of Gene Editing', 
-                'Global Supply Chain Resilience Post-Pandemic',
-                'Mental Health Interventions in Digital Spaces'
-            ],
-            journalTitles: [ 
-                'Nature', 'Science', 'The Lancet', 'New England Journal of Medicine', 
-                'American Economic Review', 'Journal of Political Economy', 'Psychological Science', 
-                'JAMA', 'Cell', 'Nature Climate Change', 'Harvard Business Review', 'Foreign Affairs',
-                'The Quarterly Journal of Economics', 'American Sociological Review'
-            ],
-            articleTitles: [ 
-                'Global impact of the first year of COVID-19 vaccination: a mathematical modelling study', 
-                'Large language models encode clinical knowledge', 
-                'Accelerating discovery of new materials for clean energy', 
-                'The economic impact of generative AI on labor markets', 
-                'Glacial retreat in the Himalayas and water security', 
-                'Efficacy of new malaria vaccines in sub-Saharan Africa', 
-                'Quantum advantage in learning from experiments', 
-                'Social media algorithms and political polarization' 
-            ],
-            publisherLocations: [
-                { publisher: 'Routledge', location: 'London' },
-                { publisher: 'Routledge', location: 'New York' },
-                { publisher: 'Sage', location: 'Los Angeles' },
-                { publisher: 'Sage', location: 'London' },
-                { publisher: 'Oxford University Press', location: 'Oxford' },
-                { publisher: 'Cambridge University Press', location: 'Cambridge' },
-                { publisher: 'Harvard University Press', location: 'Cambridge, MA' },
-                { publisher: 'Taylor & Francis', location: 'Abingdon' },
-                { publisher: 'Elsevier', location: 'Amsterdam' },
-                { publisher: 'HarperCollins', location: 'New York' },
-                { publisher: 'Penguin Books', location: 'London' },
-                { publisher: 'Random House', location: 'New York' },
-                { publisher: 'Simon & Schuster', location: 'New York' },
-                { publisher: 'Macmillan', location: 'London' },
-                { publisher: 'Wiley', location: 'Hoboken' },
-                { publisher: 'Bloomsbury', location: 'London' },
-                { publisher: 'MIT Press', location: 'Cambridge, MA' },
-                { publisher: 'Princeton University Press', location: 'Princeton, NJ' }
-            ],
-            organizations: [ 
-                'World Health Organization', 'Centers for Disease Control and Prevention', 'NASA', 
-                'Intergovernmental Panel on Climate Change', 'World Economic Forum', 'Pew Research Center', 
-                'Amnesty International', 'United Nations', 'The Royal Society', 'National Institutes of Health' 
-            ],
-            webTitles: [ 
-                'AI Safety Guidelines for Developers', 'Global Climate Report 2023', 
-                'Mental Health Statistics worldwide', 'The Future of Space Exploration', 
-                'Renewable Energy Capacity Statistics 2024', 'Digital Literacy Framework' 
-            ],
+            authors: [{ first: 'J.', last: 'Smith' }, { first: 'A.', last: 'Doe' }, { first: 'M.', last: 'Lee' }, { first: 'S.', last: 'Kim' }, { first: 'R.', last: 'Chen' }, { first: 'L.', last: 'Wang' }, { first: 'P.', last: 'Brown' }, { first: 'K.', last: 'Patel' }, { first: 'T.', last: 'Jones' }, { first: 'B.', last: 'White' }, { first: 'H.', last: 'Green' }, { first: 'D.', last: 'Black' }],
+            editors: [{ first: 'E.', last: 'Cole' }, { first: 'B.', last: 'Wood' }, { first: 'C.', last: 'Page' }],
+            bookTitles: ['Modern Art', 'Future Tech', 'Clean Energy', 'World History', 'Deep Space', 'AI Ethics', 'Biology 101', 'Smart Cities', 'Urban Life', 'Digital Age', 'Basic Math', 'Psychology'],
+            chapterTitles: ['Introduction', 'Methods', 'Results', 'Analysis', 'Overview', 'Case Study', 'Summary', 'Background'],
+            journalTitles: ['Nature', 'Science', 'Cell', 'JAMA', 'Lancet', 'BMJ', 'IEEE', 'PLOS One', 'Time'],
+            articleTitles: ['Gene Study', 'Solar Power', 'New Vaccine', 'Climate Data', 'AI Trends', 'Mental Health', 'Ocean Life', 'Space Travel'],
+            publisherLocations: [{ publisher: 'Penguin', location: 'London' }, { publisher: 'Wiley', location: 'New York' }, { publisher: 'Sage', location: 'Boston' }, { publisher: 'Oxford', location: 'Oxford' }, { publisher: 'MIT', location: 'Boston' }],
+            organizations: ['WHO', 'NASA', 'CDC', 'UN', 'EPA', 'IEEE', 'WTO', 'IMF'],
+            webTitles: ['2024 Report', 'Guidelines', 'Statistics', 'Home Page', 'About Us', 'Safety Data']
         };
-
-        // Source types restricted to: Books, Edited Books, Journal Articles, Websites
         const sourceTypes = [
-            { value: 'book', text: 'Books' },
-            { value: 'edited_book', text: 'Edited Books' },
-            { value: 'journal', text: 'Journal articles' },
-            { value: 'website', text: 'Websites' }
+            { value: 'book', text: 'Books' }, { value: 'edited_book', text: 'Edited Books' },
+            { value: 'journal', text: 'Journal articles' }, { value: 'website', text: 'Websites' }
         ];
 
-        function getRandomItem(arr) {
-            return arr[Math.floor(Math.random() * arr.length)];
-        }
-
+        function getRandomItem(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
         function shuffleArray(array) {
             for (let i = array.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
@@ -337,20 +234,16 @@
             }
             return array;
         }
-        
-        // Helper for Scenarios (Full Names: "John Smith and Mary Jones")
         function formatScenarioNameList(people) {
             const names = people.map(p => `${p.first} ${p.last}`);
             if (names.length === 1) return names[0];
             if (names.length === 2) return names.join(' and ');
             return names.slice(0, -1).join(', ') + ', and ' + names.slice(-1);
         }
-
         function showMessageBox(message, type = 'success') {
             const messageBox = document.getElementById('messageBox');
             const msgText = document.getElementById('msgText');
             msgText.textContent = message;
-            
             if (type === 'error') {
                messageBox.querySelector('svg').classList.replace('text-green-400', 'text-red-400');
                messageBox.querySelector('path').setAttribute('d', 'M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z');
@@ -358,18 +251,10 @@
                messageBox.querySelector('svg').classList.replace('text-red-400', 'text-green-400');
                messageBox.querySelector('path').setAttribute('d', 'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z');
             }
-            
             messageBox.classList.remove('hidden');
-            setTimeout(() => {
-                messageBox.classList.add('hidden');
-            }, 3000);
+            setTimeout(() => { messageBox.classList.add('hidden'); }, 3000);
         }
-
-        function cleanHtmlTags(text) {
-            const stringText = String(text);
-            return stringText.replace(/<i>/g, '').replace(/<\/i>/g, '').replace(/<span style="text-decoration: underline;">/g, '').replace(/<\/span>/g, '');
-        }
-
+        function cleanHtmlTags(text) { return String(text).replace(/<i>/g, '').replace(/<\/i>/g, '').replace(/<span.*?>/g, '').replace(/<\/span>/g, ''); }
         function updateSourceTypes() {
             const sourceDropdown = document.getElementById('sourceType');
             const currentSourceValues = Array.from(sourceDropdown.selectedOptions).map(opt => opt.value);
@@ -384,9 +269,69 @@
             if (sourceDropdown.selectedOptions.length === 0) { sourceDropdown.selectedIndex = 0; }
         }
 
+        // --- CORE GENERATOR FUNCTIONS ---
+        
+        function getScenarioHint(style, scenario) {
+            const hints = {
+                'apa7': {
+                    1: "APA 7: Author. (Year). Title. Publisher.",
+                    2: "APA 7: Use an ampersand (&) between the two authors' names.",
+                    3: "APA 7: List all authors up to 20; use '&' before the last one.",
+                    4: "APA 7: List all authors up to 20; use '&' before the last one.",
+                    5: "APA 7: Place the edition in parentheses after the title, e.g., (2nd ed.).",
+                    6: "APA 7: Do not include the place of publication.",
+                    7: "APA 7: Use the publisher's name as shown on the work.",
+                    8: "APA 7: Use the organization name. If no author, move title to front."
+                },
+                'harvard': {
+                    1: "Harvard: Author (Year) Title. Place: Publisher.",
+                    2: "Harvard: Join names with 'and' (no ampersand usually, though varies).",
+                    3: "Harvard: Use commas and 'and' for the last author.",
+                    4: "When a book has four or more authors, use the first author's surname and initials followed by the Latin abbreviation for 'and others.'",
+                    5: "Place the specific edition abbreviation immediately after the title; ensure initials are spaced correctly.",
+                    6: "Harvard: Include the city of publication followed by a colon.",
+                    7: "Harvard: State the publisher's name clearly.",
+                    8: "Use the full official name of the organization as the author and avoid using acronyms."
+                },
+                'mla9': {
+                    1: "MLA 9: Author. Title. Publisher, Year.",
+                    2: "MLA 9: List both authors separated by 'and'.",
+                    3: "MLA 9: Use 'et al.' for 3 or more authors.",
+                    4: "MLA 9: Use 'et al.' for 3 or more authors.",
+                    5: "MLA 9: Edition goes after title, e.g., '2nd ed.'",
+                    6: "MLA 9: City of publication is optional but often omitted.",
+                    7: "MLA 9: Publisher name, Year.",
+                    8: "MLA 9: Organization name as author."
+                },
+                'chicago': {
+                    1: "Chicago: Author. Title. Place: Publisher, Year.",
+                    2: "Chicago: List both authors.",
+                    3: "Chicago: List all three authors.",
+                    4: "Chicago: List first author followed by 'et al.' in reference list mostly for 10+, but context implies 4+ here.",
+                    5: "Chicago: Edition follows title.",
+                    6: "Chicago: City: Publisher.",
+                    7: "Chicago: Publisher name.",
+                    8: "Chicago: Organization as author."
+                },
+                'mhra': {
+                    1: "MHRA: Author, Title (Place: Publisher, Year).",
+                    2: "MHRA: List both authors.",
+                    3: "MHRA: List all three authors.",
+                    4: "MHRA: List first author 'et al.' if 4+.",
+                    5: "MHRA: Edition follows title.",
+                    6: "MHRA: Place: Publisher.",
+                    7: "MHRA: Publisher name.",
+                    8: "MHRA: Organization as author."
+                }
+            };
+            return hints[style]?.[scenario] || "Arrange: Author, Date, Title, Publication.";
+        }
+
         function generateQuestions() {
             const numQuestions = parseInt(document.getElementById('numQuestions').value) || 1;
             const citationStyle = document.getElementById('citationStyle').value;
+            const category = document.getElementById('questionCategory').value;
+            const inTextSubCategory = document.getElementById('inTextSubCategory').value;
             const selectedSourceTypes = Array.from(document.getElementById('sourceType').selectedOptions).map(opt => opt.value);
             const selectedQuestionTypes = [];
             if (document.getElementById('dndCheckbox').checked) selectedQuestionTypes.push('dnd');
@@ -397,100 +342,94 @@
                 return;
             }
 
+            // Create a fresh pool and logic to ensure unique items in one pass
             const dynamicDataPool = JSON.parse(JSON.stringify(data));
             const getUniqueItem = (key) => {
-                if (!dynamicDataPool[key] || dynamicDataPool[key].length === 0) { dynamicDataPool[key] = [...data[key]]; }
+                if (!dynamicDataPool[key] || dynamicDataPool[key].length === 0) {
+                     dynamicDataPool[key] = [...data[key]]; // Refill if empty
+                }
                 const index = Math.floor(Math.random() * dynamicDataPool[key].length);
-                return dynamicDataPool[key].splice(index, 1)[0];
+                return dynamicDataPool[key].splice(index, 1)[0]; // Remove to ensure uniqueness
             };
 
             let allQuestionsOutput = '';
-            lastGeneratedQuestions = []; 
+            lastGeneratedQuestions = [];
+
+            const getStyleName = (s) => ({ 'apa7': 'APA7', 'mla9': 'MLA9', 'harvard': 'Harvard', 'chicago': 'Chicago', 'mhra': 'MHRA' }[s] || s);
+            const getCatName = (c) => ({ 'reference_list': 'ReferenceList', 'in_text': 'InText' }[c] || c);
+            const getSourceName = (s) => ({ 'book': 'Book', 'edited_book': 'EditedBook', 'journal': 'Journal', 'website': 'Website' }[s] || s);
 
             for (let i = 0; i < numQuestions; i++) {
+                let activeCategory = category;
                 const sourceType = getRandomItem(selectedSourceTypes);
                 const questionType = getRandomItem(selectedQuestionTypes);
                 let questionData = {};
-                
-                if (questionType === 'dnd') {
-                    // Reference List Question (DnD)
-                    const generatorMap = {
-                        // APA 7
-                        'apa7-book': () => {
-                            const subType = getRandomItem(['std','edition','chapter']);
-                            if(subType==='chapter') return generateApaBookChapter(getUniqueItem);
-                            return generateApaBook(getUniqueItem, getRandomItem([1,2,3]), subType==='edition');
-                        }, 
-                        'apa7-edited_book': () => generateApaEditedBook(getUniqueItem, getRandomItem([1,2])), 
-                        'apa7-journal': () => generateApaJournal(getUniqueItem, getRandomItem([1,2])), 
-                        'apa7-website': () => generateApaWebsite(getUniqueItem), 
-                        // MLA 9
-                        'mla9-book': () => {
-                            const subType = getRandomItem(['std','edition','chapter']);
-                            if(subType==='chapter') return generateMlaBookChapter(getUniqueItem);
-                            return generateMlaBook(getUniqueItem, getRandomItem([1,2,3]), subType==='edition');
-                        }, 
-                        'mla9-edited_book': () => generateMlaEditedBook(getUniqueItem, getRandomItem([1,2])), 
-                        'mla9-journal': () => generateMlaJournal(getUniqueItem, getRandomItem([1,2])), 
-                        'mla9-website': () => generateMlaWebsite(getUniqueItem), 
-                        // Harvard
-                        'harvard-book': () => {
-                             const subType = getRandomItem(['std','edition','chapter']);
-                            if(subType==='chapter') return generateHarvardBookChapter(getUniqueItem);
-                            return generateHarvardBook(getUniqueItem, getRandomItem([1,2,3]), subType==='edition');
-                        }, 
-                        'harvard-edited_book': () => generateHarvardEditedBook(getUniqueItem, getRandomItem([1,2])), 
-                        'harvard-journal': () => generateHarvardJournal(getUniqueItem, getRandomItem([1,2])), 
-                        'harvard-website': () => generateHarvardWebsite(getUniqueItem), 
-                        // Chicago
-                        'chicago-book': () => {
-                             const subType = getRandomItem(['std','edition','chapter']);
-                            if(subType==='chapter') return generateChicagoBookChapter(getUniqueItem);
-                            return generateChicagoBook(getUniqueItem, getRandomItem([1,2,3]), subType==='edition');
-                        }, 
-                        'chicago-edited_book': () => generateChicagoEditedBook(getUniqueItem, getRandomItem([1,2])), 
-                        'chicago-journal': () => generateChicagoJournal(getUniqueItem, getRandomItem([1,2])), 
-                        'chicago-website': () => generateChicagoWebsite(getUniqueItem), 
-                        // MHRA
-                        'mhra-book': () => {
-                             const subType = getRandomItem(['std','edition','chapter']);
-                            if(subType==='chapter') return generateMhraBookChapter(getUniqueItem);
-                            return generateMhraBook(getUniqueItem, getRandomItem([1,2,3]), subType==='edition');
-                        }, 
-                        'mhra-edited_book': () => generateMhraEditedBook(getUniqueItem, getRandomItem([1,2])), 
-                        'mhra-journal': () => generateMhraJournal(getUniqueItem, getRandomItem([1,2])), 
-                        'mhra-website': () => generateMhraWebsite(getUniqueItem)
-                    };
+                let htmlQuestionPart = '';
+                const titlePrefix = `${getStyleName(citationStyle)} | ${getCatName(activeCategory)} | ${getSourceName(sourceType)} | ${questionType === 'dnd' ? 'DragDrop' : 'MCQ'} | Q${i+1}`;
 
-                    const generatorKey = `${citationStyle}-${sourceType}`;
-                    const generatorFunction = generatorMap[generatorKey];
+                // --- REFERENCE LIST ---
+                if (activeCategory === 'reference_list') {
+                     if (sourceType === 'book') {
+                        questionData = generateBookScenarioData(getUniqueItem, citationStyle); // Use special book logic for Ref List
+                    } else {
+                        // Other source types
+                        const generatorMap = {
+                            'apa7-edited_book': () => generateApaEditedBook(getUniqueItem, getRandomItem([1,2])), 
+                            'apa7-journal': () => generateApaJournal(getUniqueItem, getRandomItem([1,2])), 
+                            'apa7-website': () => generateApaWebsite(getUniqueItem), 
+                            'mla9-edited_book': () => generateMlaEditedBook(getUniqueItem, getRandomItem([1,2])), 
+                            'mla9-journal': () => generateMlaJournal(getUniqueItem, getRandomItem([1,2])), 
+                            'mla9-website': () => generateMlaWebsite(getUniqueItem), 
+                            'harvard-edited_book': () => generateHarvardEditedBook(getUniqueItem, getRandomItem([1,2])), 
+                            'harvard-journal': () => generateHarvardJournal(getUniqueItem, getRandomItem([1,2])), 
+                            'harvard-website': () => generateHarvardWebsite(getUniqueItem), 
+                            'chicago-edited_book': () => generateChicagoEditedBook(getUniqueItem, getRandomItem([1,2])), 
+                            'chicago-journal': () => generateChicagoJournal(getUniqueItem, getRandomItem([1,2])), 
+                            'chicago-website': () => generateChicagoWebsite(getUniqueItem), 
+                            'mhra-edited_book': () => generateMhraEditedBook(getUniqueItem, getRandomItem([1,2])), 
+                            'mhra-journal': () => generateMhraJournal(getUniqueItem, getRandomItem([1,2])), 
+                            'mhra-website': () => generateMhraWebsite(getUniqueItem)
+                        };
+                        const generatorKey = `${citationStyle}-${sourceType}`;
+                        if (generatorMap[generatorKey]) questionData = generatorMap[generatorKey]();
+                    }
 
-                    if (generatorFunction) {
-                         questionData = generatorFunction();
-                         const sourceTypeText = document.querySelector(`#sourceType option[value='${sourceType}']`).textContent;
-                         const citationStyleText = document.getElementById('citationStyle').selectedOptions[0].text;
-                         questionData.baseTitle = `${sourceTypeText} - Reference List (Drag & Drop) - ${citationStyleText}`;
-                         
-                         const finalOutput = buildDragAndDrop(questionData, i + 1);
-                         const questionHeader = `Question ${i + 1}\n-----------------\n`;
-                         const cleanedQuestionText = cleanHtmlTags(questionHeader + finalOutput.htmlOutput);
-                         allQuestionsOutput += cleanedQuestionText + '\n\n'; 
-                         lastGeneratedQuestions.push(cleanedQuestionText);
-                    } else { i--; continue; }
+                    if (questionData && questionData.components) {
+                        questionData.baseTitle = titlePrefix;
+                        if (questionType === 'dnd') {
+                            const finalOutput = buildDragAndDrop(questionData, i + 1);
+                            htmlQuestionPart = finalOutput.htmlOutput;
+                        } else {
+                            const mcqData = generateRefListMCQ(questionData); 
+                            htmlQuestionPart = `Question Title:\n${questionData.baseTitle}\n\nQuestion:\n${mcqData.sentence}\n\nCorrect Answer:\n${mcqData.correctOption}\n\nOptions:\n${mcqData.options.join('\n')}\n\nHint/Explanation:\n${mcqData.hint}`;
+                        }
+                    } else { i--; continue; } // Retry if generation failed
 
-                } else if (questionType === 'mcq') {
-                    // In-text Question (MCQ)
-                    const numAuthors = getRandomItem([1, 2, 3]); 
-                    questionData = generateInTextMCQ(getUniqueItem, citationStyle, numAuthors, sourceType);
-                    const sourceTypeText = document.querySelector(`#sourceType option[value='${sourceType}']`).textContent;
-                    const citationStyleText = document.getElementById('citationStyle').selectedOptions[0].text;
-                    questionData.baseTitle = `${sourceTypeText} - In-Text Citation (MCQ) - ${citationStyleText}`;
+                // --- IN-TEXT CITATION ---
+                } else if (activeCategory === 'in_text') {
+                    let numAuthors = 1;
+                    if (inTextSubCategory === 'single') numAuthors = 1;
+                    else if (inTextSubCategory === 'two') numAuthors = 2;
+                    else if (inTextSubCategory === 'three') numAuthors = 3;
+                    else if (inTextSubCategory === 'four_plus') numAuthors = 4; 
+                    else numAuthors = getRandomItem([1, 2, 3, 4]);
 
-                    const questionHeader = `Question ${i + 1}\n-----------------\n`;
-                    const mcqText = `Question Title:\n${questionData.baseTitle}\n\nQuestion:\n${questionData.sentence}\n\nCorrect Answer:\n${questionData.correctOption}\n\nOptions:\n${questionData.options.join('\n')}\n\nHint/Explanation:\n${questionData.hint}`;
-                    allQuestionsOutput += questionHeader + mcqText + '\n\n';
-                    lastGeneratedQuestions.push(questionHeader + mcqText);
+                    if (questionType === 'mcq') {
+                        questionData = generateInTextMCQ(getUniqueItem, citationStyle, numAuthors, sourceType);
+                        questionData.baseTitle = titlePrefix;
+                        htmlQuestionPart = `Question Title:\n${questionData.baseTitle}\n\nQuestion:\n${questionData.sentence}\n\nCorrect Answer:\n${questionData.correctOption}\n\nOptions:\n${questionData.options.join('\n')}\n\nHint/Explanation:\n${questionData.hint}`;
+                    } else {
+                        questionData = generateInTextDnD(getUniqueItem, citationStyle, numAuthors, sourceType);
+                        questionData.baseTitle = titlePrefix;
+                        const finalOutput = buildDragAndDrop(questionData, i + 1);
+                        htmlQuestionPart = finalOutput.htmlOutput;
+                    }
                 }
+
+                const questionHeader = `Question ${i + 1}\n`;
+                const cleanedQuestionText = cleanHtmlTags(questionHeader + htmlQuestionPart);
+                allQuestionsOutput += cleanedQuestionText + '\n\n'; 
+                lastGeneratedQuestions.push(cleanedQuestionText);
             }
 
             document.getElementById('htmlOutput').innerText = allQuestionsOutput;
@@ -499,799 +438,457 @@
             document.getElementById('output').scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
 
-        // --- Helper to build DnD Output ---
+        // --- BOOK SCENARIO GENERATOR (8 Scenarios) ---
+        function generateBookScenarioData(getUniqueItem, style) {
+            // 1=Single, 2=Two, 3=Three, 4=Four+, 5=Edition, 6=Place, 7=Publisher, 8=Corp/Anon
+            const scenario = getRandomItem([1, 2, 3, 4, 5, 6, 7, 8]);
+            
+            let authors = [];
+            let isCorp = false;
+            let isAnon = false;
+            let edition = "";
+            let place = getUniqueItem('publisherLocations').location;
+            let pub = getUniqueItem('publisherLocations').publisher;
+            let year = Math.floor(Math.random() * (2027 - 2023 + 1)) + 2023; // Newer years per examples
+            let title = getUniqueItem('bookTitles');
+            let distractors = [];
+            let scenarioName = "";
+
+            if (scenario === 1) { // Single
+                scenarioName = "Single Author (Scenario 1)";
+                authors = [getUniqueItem('authors')];
+                distractors.push(`${authors[0].last}`, `(n.d.)`, `(${year})`);
+            } else if (scenario === 2) { // Two
+                scenarioName = "Two Authors (Scenario 2)";
+                authors = [getUniqueItem('authors'), getUniqueItem('authors')];
+                distractors.push(`${authors[0].last} ${authors[1].last}`, `${authors[1].last} and ${authors[0].last}`);
+            } else if (scenario === 3) { // Three
+                scenarioName = "Three Authors (Scenario 3)";
+                authors = [getUniqueItem('authors'), getUniqueItem('authors'), getUniqueItem('authors')];
+                distractors.push(`${authors[0].last}, ${authors[2].last}`, `${authors[0].last} & ${authors[1].last}`);
+            } else if (scenario === 4) { // Four+
+                scenarioName = "4+ Authors (Scenario 4)";
+                authors = [getUniqueItem('authors'), getUniqueItem('authors'), getUniqueItem('authors'), getUniqueItem('authors')];
+                distractors.push(`${authors[0].last} et al.`, `${authors[0].last} and others`);
+            } else if (scenario === 5) { // Edition
+                scenarioName = "Edition Variations (Scenario 5)";
+                authors = [getUniqueItem('authors')];
+                const edNum = getRandomItem(['2nd', '3rd', '4th']);
+                edition = edNum;
+                distractors.push(`${edNum} Edition`, `(${edNum} edit.)`);
+            } else if (scenario === 6) { // Place
+                scenarioName = "Place Variations (Scenario 6)";
+                authors = [getUniqueItem('authors')];
+                distractors.push(`${pub}: ${place}`, `${place}`);
+            } else if (scenario === 7) { // Publisher
+                scenarioName = "Publisher Variations (Scenario 7)";
+                authors = [getUniqueItem('authors')];
+                distractors.push(`${pub} Press`, `Pub. ${pub}`);
+            } else if (scenario === 8) { // Corp/Anon
+                scenarioName = "Special Author Cases - Corporate (Scenario 8)"; // Or Anon
+                if (Math.random() > 0.5) {
+                    isCorp = true;
+                    authors = [{ last: getUniqueItem('organizations'), first: '' }];
+                    distractors.push(`(Org.)`, `${authors[0].last} Inc.`);
+                } else {
+                    scenarioName = "Special Author Cases - Anonymous (Scenario 8)";
+                    isAnon = true;
+                    authors = [{ last: 'Anonymous', first: '' }];
+                    distractors.push(`Anon.`, `(Anon)`);
+                }
+            }
+            
+            let authText = "";
+            if (isCorp) authText = `${authors[0].last}`; // Use full name directly
+            else if (isAnon) authText = `an anonymous author`;
+            else authText = formatScenarioNameList(authors);
+            
+            let edText = edition ? `, ${edition} edition` : "";
+            // Exact wording from example: "You are citing a [Year] book titled "[Title]" written by [Authors] published by [Publisher] in [City]."
+            let scenarioText = `You are citing a ${edition ? edition + ' edition of a ' : ''}${year} book titled "${title}" ${isCorp || isAnon ? 'published' : 'written'} by ${authText} published by ${pub} in ${place}.`;
+
+            // Style-Specific Formatting Logic
+            let components = {};
+            let hint = getScenarioHint(style, scenario);
+            
+            if (style === 'apa7') {
+                // APA 7: Author. (Year). Title (Edition). Publisher. (No Place)
+                let authorStr = "";
+                if (isAnon) authorStr = title; // Title moves to author position
+                else if (isCorp) authorStr = authors[0].last + ".";
+                else {
+                    const names = authors.map(a => `${a.last}, ${a.first.charAt(0)}.`);
+                    if (names.length > 1) authorStr = names.slice(0, -1).join(', ') + ', & ' + names.slice(-1);
+                    else authorStr = names[0];
+                }
+
+                let titleStr = `<i>${title}</i>`;
+                let edStr = edition ? `(${edition} ed.).` : "";
+                
+                if(isAnon) {
+                     components = { content: [`<i>${title}</i>.`, `(${year}).`, `${pub}.`], structure: '{0} {1} {2}', distractors: [...distractors, `Anonymous.`] };
+                } else {
+                    // Structure depends on presence of edition
+                    components = {
+                        content: [authorStr, `(${year}).`, titleStr, ...(edition ? [edStr] : []), `${pub}.`],
+                        structure: edition ? '{0} {1} {2} {3} {4}' : '{0} {1} {2}. {3}',
+                        distractors: [...distractors, `${place}`]
+                    };
+                }
+            
+            } else if (style === 'mla9') {
+                // MLA 9: Author. Title. Publisher, Year.
+                let authorStr = "";
+                if (isAnon) authorStr = "";
+                else if (isCorp) authorStr = authors[0].last + ".";
+                else {
+                    if (authors.length === 1) authorStr = `${authors[0].last}, ${authors[0].first}.`;
+                    else if (authors.length === 2) authorStr = `${authors[0].last}, ${authors[0].first}, and ${authors[1].first} ${authors[1].last}.`;
+                    else authorStr = `${authors[0].last}, ${authors[0].first}, et al.`;
+                }
+                let titleStr = `<i>${title}</i>.`;
+                let edStr = edition ? `${edition} ed.,` : "";
+                
+                let content = [];
+                if(authorStr) content.push(authorStr);
+                content.push(titleStr);
+                if(edition) content.push(edStr);
+                content.push(pub + ",", year + ".");
+                
+                // Construct dynamic string based on indices present in content array
+                // e.g. [Auth, Title, Ed, Pub, Year] -> {0} {1} {2} {3} {4}
+                let s = "";
+                for(let i=0; i<content.length; i++) s += `{${i}} `;
+                s = s.trim();
+
+                components = { content: content, structure: s, distractors: [...distractors, `${place}`] };
+            
+            } else if (style === 'harvard') {
+                // Harvard: Author (Year) Title. Place: Publisher.
+                let authorStr = "";
+                if (isAnon) authorStr = "Anon.";
+                else if (isCorp) authorStr = authors[0].last;
+                else {
+                    // Scenario 4: 4+ authors -> Use et al. in Harvard (per user request)
+                    if (scenario === 4) {
+                        authorStr = `${authors[0].last}, ${authors[0].first.charAt(0)}. et al.`;
+                    } else {
+                        const names = authors.map(a => `${a.last}, ${a.first.charAt(0)}.`);
+                        if (names.length > 1) authorStr = names.slice(0, -1).join(', ') + ' and ' + names.slice(-1);
+                        else authorStr = names[0];
+                    }
+                }
+                let edStr = edition ? `${edition} edn.` : "";
+                
+                // content array indices: 0=auth, 1=year, 2=title, [3=ed], 3/4=place, 4/5=pub
+                components = {
+                    content: [authorStr, `(${year})`, `<i>${title}</i>.`, ...(edition?[edStr]:[]), `${place}:`, `${pub}.`],
+                    structure: edition ? '{0} {1} {2} {3} {4} {5}' : '{0} {1} {2} {3} {4}',
+                    distractors: distractors
+                };
+
+            } else if (style === 'chicago') {
+                 let authorStr = "";
+                if(isAnon) authorStr = ""; 
+                else if(isCorp) authorStr = authors[0].last + ".";
+                else {
+                    if(authors.length === 1) authorStr = `${authors[0].last}, ${authors[0].first}.`;
+                    else {
+                        let first = `${authors[0].last}, ${authors[0].first}`;
+                        let others = authors.slice(1).map(a => `${a.first} ${a.last}`).join(', and ');
+                        authorStr = `${first}, and ${others}.`;
+                    }
+                }
+                let edStr = edition ? `${edition} ed.` : "";
+                let content = [];
+                if(authorStr) content.push(authorStr);
+                content.push(`<i>${title}</i>.`);
+                if(edition) content.push(edStr);
+                content.push(`${place}:`);
+                content.push(`${pub},`);
+                content.push(`${year}.`);
+                
+                // dynamic structure
+                let s = "";
+                for(let i=0; i<content.length; i++) s += `{${i}} `;
+                s = s.trim();
+
+                components = { content: content, structure: s, distractors: distractors };
+
+            } else if (style === 'mhra') {
+                let authorStr = "";
+                 if(isAnon) authorStr = "Anon.,";
+                 else if(isCorp) authorStr = authors[0].last + ",";
+                 else {
+                     let names = authors.map(a => `${a.last}, ${a.first}`);
+                     if(names.length > 1) authorStr = names.slice(0, -1).join(', ') + ' and ' + names.slice(-1) + ",";
+                     else authorStr = names[0] + ",";
+                 }
+                 let edStr = edition ? `, ${edition} edn` : "";
+                 // content indices: 0=auth, 1=title, [2=ed], 2/3=place, 3/4=pub, 4/5=year
+                 components = {
+                     content: [authorStr, `<i>${title}</i>`, ...(edition?[edStr]:[]), `(${place}:`, `${pub},`, `${year})`],
+                     structure: edition ? '{0} {1}{2} {3} {4} {5}' : '{0} {1} {2} {3} {4}',
+                     distractors: distractors
+                 };
+            }
+
+            return { scenario: scenarioText, components: components, hint: hint, originalTitle: title, scenarioName: scenarioName };
+        }
+
+        // --- In-Text & Helper Logic ---
+
         function buildDragAndDrop(questionData, questionNumber) {
-            const { baseTitle, scenario, fullReference, components, hint } = questionData;
-            const title = `${baseTitle}`;
-            const draggableCount = Math.max(2, Math.min(components.content.length - 1, Math.floor(Math.random() * (components.content.length - 1)) + 2));
-            const allIndices = Array.from(Array(components.content.length).keys());
+            const { baseTitle, scenario, components, hint, scenarioName } = questionData;
+            
+            const totalItems = components.content.length;
+            // Limit to 4 blanks max as requested
+            let maxHide = 4;
+            let minHide = 2;
+            if (totalItems < minHide) minHide = totalItems;
+            if (maxHide > totalItems) maxHide = totalItems;
+            
+            const draggableCount = Math.floor(Math.random() * (maxHide - minHide + 1)) + minHide;
+            const allIndices = Array.from(Array(totalItems).keys());
             const shuffledIndices = shuffleArray(allIndices);
             const draggableIndices = new Set(shuffledIndices.slice(0, draggableCount));
-            const draggableItems = components.content.filter((_, i) => draggableIndices.has(i));
+            
+            let correctDragItems = components.content.filter((_, i) => draggableIndices.has(i));
+            // Shuffle correct items
+            correctDragItems = shuffleArray([...correctDragItems]);
+
+            // Construct Correct Answer Full String
+            let fullCorrectString = components.structure;
+            allIndices.forEach(i => {
+                fullCorrectString = fullCorrectString.replace(`{${i}}`, components.content[i]);
+            });
+            fullCorrectString = cleanHtmlTags(fullCorrectString);
+
             let fixedPartsString = components.structure;
             allIndices.forEach(i => {
                 const placeholder = `{${i}}`;
                 if (draggableIndices.has(i)) {
-                    fixedPartsString = fixedPartsString.replace(placeholder, '||');
+                    fixedPartsString = fixedPartsString.replace(placeholder, '||'); 
                 } else {
                     fixedPartsString = fixedPartsString.replace(placeholder, components.content[i]);
                 }
             });
-            fixedPartsString = fixedPartsString.replace(/\|\|\s*\./g, '||');
-            if (fixedPartsString.trim().startsWith('||')) fixedPartsString = fixedPartsString.replace(/^(\s*)\|\|/, '$1|');
-            if (fixedPartsString.trim().endsWith('||')) fixedPartsString = fixedPartsString.replace(/\|\|(\s*)$/, '|$1');
             
-            // --- SMART DISTRACTOR GENERATION ---
+            // Format pipes
+            fixedPartsString = fixedPartsString.replace(/\s+/g, ' ').replace(/\|/g, ' || '); 
+            fixedPartsString = fixedPartsString.replace(/\|\|\s*\|\|/g, '||');
+
             const allCorrectComponents = components.content.map(item => cleanHtmlTags(String(item)));
-            
-            // Create variations of correct components
             let smartDistractors = [];
-            allCorrectComponents.forEach(comp => {
-                // 1. Punctuation errors
+            
+            components.content.forEach((compRaw, index) => {
+                if (!draggableIndices.has(index)) return; 
+                const comp = cleanHtmlTags(String(compRaw));
                 if (comp.endsWith('.')) smartDistractors.push(comp.slice(0, -1) + ','); 
                 else if (comp.endsWith(',')) smartDistractors.push(comp.slice(0, -1) + '.');
                 else smartDistractors.push(comp + '.');
-                
-                // 2. Parenthesis errors
-                if (comp.startsWith('(') && comp.includes(')')) {
-                     smartDistractors.push(comp.replace('(', '').replace(')', ''));
-                }
-                
-                // 3. "In" capitalization (common in chapters)
-                if (comp.includes('In ')) smartDistractors.push(comp.replace('In ', 'in '));
-                else if (comp.includes('in ')) smartDistractors.push(comp.replace('in ', 'In '));
-
-                // 4. Editor/Edition Abbreviations
-                if (comp.includes('(Ed.)')) smartDistractors.push(comp.replace('(Ed.)', '(ed.)'));
-                if (comp.includes('(Eds.)')) smartDistractors.push(comp.replace('(Eds.)', '(eds.)'));
-                if (comp.includes('Ed.')) smartDistractors.push(comp.replace('Ed.', 'ed.'));
-                if (comp.includes('ed.')) smartDistractors.push(comp.replace('ed.', 'Ed.'));
-                
-                // 5. Ampersand vs And (simple check)
-                if (comp.includes(' & ')) smartDistractors.push(comp.replace(' & ', ' and '));
-                else if (comp.includes(' and ')) smartDistractors.push(comp.replace(' and ', ' & '));
-
-                // 6. Page Numbers
-                if (comp.includes('pp.')) {
-                    smartDistractors.push(comp.replace('pp.', 'p.'));
-                    smartDistractors.push(comp.replace('pp.', ''));
-                } else if (comp.includes('p.')) {
-                    smartDistractors.push(comp.replace('p.', 'pp.'));
-                    smartDistractors.push(comp.replace('p.', ''));
-                }
-
-                // 7. Dates
-                if (/^\d{4}$/.test(comp)) {
-                     smartDistractors.push(`(${comp})`);
-                     smartDistractors.push(`[${comp}]`);
-                }
-                
-                // 8. Name formats
-                if (/^[A-Z][a-z]+, [A-Z]\.$/.test(comp)) {
-                    const [last, first] = comp.split(', ');
-                    smartDistractors.push(`${first} ${last.replace(',', '')}`);
-                }
-                if (/^[A-Z]\. [A-Z][a-z]+$/.test(comp)) {
-                    const [first, last] = comp.split(' ');
-                    smartDistractors.push(`${last}, ${first}`);
-                }
-                
-                // 9. Et al.
-                if (comp.includes('et al')) {
-                     if (comp.includes('et al.')) smartDistractors.push(comp.replace('et al.', 'et al'));
-                     else smartDistractors.push(comp.replace('et al', 'et al.'));
-                }
             });
 
-            // New Hardcoded Challenging Distractors pool
-            const trickyCommonWords = [
-                'n.d.', '(n.d.)', 'no date', 
-                'Retrieved from', 'Available at', 'Accessed', 
-                'doi:', 'DOI:', 'https://doi.org/', 
-                'Vol.', 'vol.', 'Issue', 'no.', 
-                'pp.', 'p.', 'pg.', 
-                'Ed.', 'ed.', 'trans.', 
-                '&', 'and', 
-                'In', 'in'
-            ];
+            const trickyCommonWords = ['n.d.', '(n.d.)', 'Vol.', 'pg.', 'Ed.', '&', 'and'];
+            let potentialDistractors = [...(components.distractors || []), ...smartDistractors, ...trickyCommonWords];
+            const uniqueDistractors = [...new Set(potentialDistractors)].filter(d => !allCorrectComponents.includes(d));
+            const distractingWords = shuffleArray(uniqueDistractors).slice(0, 3);
 
-            let potentialDistractors = [...components.distractors, ...smartDistractors, ...trickyCommonWords];
+            // Add Scenario Name line if available
+            const scenLine = scenarioName ? `Scenario: ${scenarioName}` : "";
             
-            // Filter unique and distinct
-            const uniqueDistractors = [...new Set(potentialDistractors)].filter(distractor => {
-                const cleanedDistractor = cleanHtmlTags(String(distractor));
-                return !allCorrectComponents.includes(cleanedDistractor) && cleanedDistractor.trim() !== '';
-            });
-
-            const distractingWords = shuffleArray(uniqueDistractors).slice(0, 3); 
-
-            if (distractingWords.length < 2) {
-                const fallbackDistractors = ['(Incorrect)', 'N.p.', 'n.d.'];
-                let needed = 2 - distractingWords.length;
-                for (const fb of fallbackDistractors) {
-                    if (needed > 0 && !allCorrectComponents.includes(fb)) { distractingWords.push(fb); needed--; }
-                }
-            }
-            const cleanedFixedPartsString = cleanHtmlTags(fixedPartsString);
-            const htmlOutput = `Question Title:\n${title}\n\nQuestion:\n${scenario}\n\nQuestion Parts (Correct Drag Items):\n${draggableItems.map(item => cleanHtmlTags(item)).join('\n')}\n\nFixed Parts:\n${cleanedFixedPartsString}\n\nConfusing Words (Distractor Drag Items):\n${distractingWords.map(item => cleanHtmlTags(item)).join('\n')}\n\nHint:\n${hint}`;
-            return { htmlOutput: htmlOutput, originalTitle: questionData.originalTitle };
+            // REMOVED INSTRUCTION LINE PER REQUEST
+            const htmlOutput = `Question Title:\n${baseTitle}\n${scenLine}\nQuestion:\n${scenario}\n\nQuestion Parts (Correct Drag Items):\n${correctDragItems.map(item => cleanHtmlTags(item)).join('\n')}\n\nFixed Parts:\n${cleanHtmlTags(fixedPartsString)}\n\nCorrect Answer:\n${fullCorrectString}\n\nConfusing Words (Distractor Drag Items):\n${distractingWords.map(item => cleanHtmlTags(item)).join('\n')}\n\nHint:\n${hint}`;
+            return { htmlOutput: htmlOutput };
         }
 
-        // --- New In-Text MCQ Generator Logic ---
+        function generateRefListMCQ(questionData) {
+            let correctString = questionData.components.structure;
+            questionData.components.content.forEach((item, index) => {
+                correctString = correctString.replace(`{${index}}`, item);
+            });
+            const d1 = correctString.replace(/\./g, ',').replace(/,$/, '.');
+            const d2 = correctString.replace(/&/g, 'and').replace(/\(/g, '').replace(/\)/g, '');
+            const d3 = correctString.replace(/<i>/g, '').replace(/<\/i>/g, '');
+            const options = shuffleArray([correctString, d1, d2, d3]);
+            return {
+                sentence: `Select the correct reference format from the following:\n${questionData.scenario}`,
+                correctOption: correctString,
+                options: options,
+                hint: questionData.hint
+            };
+        }
+
+        function generateInTextDnD(getUniqueItem, style, numAuthors, sourceType) {
+            const year = Math.floor(Math.random() * (2025 - 2022 + 1)) + 2022;
+            const page = Math.floor(Math.random() * 90) + 10;
+            let authors = [];
+            if (sourceType === 'website') authors = [{last: getUniqueItem('organizations'), first:''}];
+            else {
+                // Ensure authors are unique for this call
+                let tempPool = JSON.parse(JSON.stringify(data.authors));
+                for(let k=0; k<numAuthors; k++) {
+                   const index = Math.floor(Math.random() * tempPool.length);
+                   authors.push(tempPool.splice(index, 1)[0]);
+                }
+            }
+            
+            const type = getRandomItem(['narrative', 'parenthetical', 'quote']);
+            const names = authors.map(a => a.last);
+            let title = getUniqueItem('bookTitles');
+            let scenario = "";
+            let components = {};
+
+            // Helper for author string construction
+            const getAuth = (mode) => {
+                let s = "";
+                if(style === 'apa7') {
+                     if(names.length===1) s=names[0];
+                     else if(names.length===2) s=mode==='nar' ? `${names[0]} and ${names[1]}` : `${names[0]} & ${names[1]}`;
+                     else s=`${names[0]} et al.`;
+                } else if(style === 'mla9') {
+                     if(names.length===1) s=names[0];
+                     else if(names.length===2) s=`${names[0]} and ${names[1]}`;
+                     else s=`${names[0]} et al.`;
+                } else if(style === 'harvard') {
+                     if(names.length===1) s=names[0];
+                     else if(names.length===2) s=mode==='nar' ? `${names[0]} and ${names[1]}` : `${names[0]} & ${names[1]}`;
+                     else if(names.length===3) s=mode==='nar' ? `${names[0]}, ${names[1]} and ${names[2]}` : `${names[0]}, ${names[1]} & ${names[2]}`;
+                     else s=`${names[0]} et al.`;
+                } else if(style === 'chicago') {
+                     if(names.length===1) s=names[0];
+                     else if(names.length===2) s=`${names[0]} and ${names[1]}`;
+                     else if(names.length===3) s=`${names[0]}, ${names[1]}, and ${names[2]}`;
+                     else s=`${names[0]} et al.`;
+                } else { // MHRA
+                     if(names.length>3) s=`${names[0]} et al.`; else s=names.join(' and ');
+                }
+                return s;
+            };
+
+            let sourceNoun = "source"; 
+            if (sourceType === 'book') sourceNoun = "book";
+            else if (sourceType === 'journal') sourceNoun = "article";
+            else if (sourceType === 'website') sourceNoun = "web report";
+
+            if (type === 'narrative') {
+                scenario = `A narrative citation for the ${sourceNoun} "${title}" by ${formatScenarioNameList(authors)} published in ${year}.`;
+                let auth = getAuth('nar');
+                if(style==='mhra') components={content:[`${auth}`], structure:'{0}', distractors:[`(${year})`]};
+                else components={content:[`${auth}`, `(${year})`], structure:'{0} {1}', distractors:[`[${year}]`, `${year}`]};
+            } else if (type === 'quote') {
+                scenario = `A direct quote citation for page ${page} of the ${sourceNoun} "${title}" by ${formatScenarioNameList(authors)} published in ${year}.`;
+                let auth = getAuth('par');
+                if(style==='apa7') components={content:[`(${auth},`, `${year},`, `p. ${page})`], structure:'{0} {1} {2}', distractors:[`${year}`,`pg.`]};
+                else if(style==='mla9') components={content:[`(${auth}`, `${page})`], structure:'{0} {1}', distractors:[`p.`, `${year}`]};
+                else if(style==='harvard') components={content:[`(${auth}`, `${year}:`, `${page})`], structure:'{0} {1} {2}', distractors:[`p.`]};
+                else components={content:[`(${auth}`, `${year})`], structure:'{0}, {1}', distractors:[`${page}`]};
+            } else {
+                scenario = `A parenthetical citation for the ${sourceNoun} "${title}" by ${formatScenarioNameList(authors)} published in ${year}.`;
+                let auth = getAuth('par');
+                if(style==='mhra') components={content:[`${auth}`], structure:'{0}', distractors:[`(${year})`]};
+                else if(style==='mla9') components={content:[`(${auth})`], structure:'{0}', distractors:[`${year}`]};
+                else components={content:[`(${auth}`, `${year})`], structure:'{0}, {1}', distractors:[`${auth}`]};
+            }
+
+            return { baseTitle: 'In-Text Citation', scenario: scenario, components: components, hint: `Style: ${style.toUpperCase()}`, originalTitle: title };
+        }
+
         function generateInTextMCQ(getUniqueItem, style, numAuthors, sourceType) {
             const year = Math.floor(Math.random() * (2025 - 2022 + 1)) + 2022;
-            let authorName, authorCit;
+            const page = Math.floor(Math.random() * 90) + 10;
+            const scenarioType = getRandomItem([1, 2, 3, 4]); // 1=Nar, 2=Par, 3=Quote, 4=Multi
+            
             let rawAuthors = [];
-            let isPlural = false;
-
-            if (sourceType === 'website') {
-                const org = getUniqueItem('organizations');
-                authorName = org;
-                authorCit = org;
-                isPlural = false; // Treat organization as singular
+            // Ensure unique authors for this question
+            let tempPool = JSON.parse(JSON.stringify(data.authors));
+            
+            if (scenarioType === 4) {
+                 for(let k=0; k<3; k++) {
+                     const index = Math.floor(Math.random() * tempPool.length);
+                     rawAuthors.push(tempPool.splice(index, 1)[0]);
+                 }
+                 rawAuthors.sort((a,b) => a.last.localeCompare(b.last));
             } else {
-                rawAuthors = Array.from({ length: numAuthors }, () => getUniqueItem('authors'));
-                if (numAuthors === 1) {
-                    authorName = `${rawAuthors[0].last}`;
-                    authorCit = `${rawAuthors[0].last}`;
-                    isPlural = false;
-                } else {
-                    isPlural = true; // 2 or more authors -> plural verb
-                    if (numAuthors === 2) {
-                        authorName = `${rawAuthors[0].last} and ${rawAuthors[1].last}`; 
-                    } else {
-                        authorName = `${rawAuthors[0].last}, ${rawAuthors[1].last}, and ${rawAuthors[2].last}`; 
-                    }
-                }
+                 if (sourceType === 'website') rawAuthors = [{last: getUniqueItem('organizations'), first:''}];
+                 else {
+                     for(let k=0; k<numAuthors; k++) {
+                        const index = Math.floor(Math.random() * tempPool.length);
+                        rawAuthors.push(tempPool.splice(index, 1)[0]);
+                     }
+                 }
             }
 
-            // Extended Realistic Academic Sentences (50+ Varied Templates)
-            const templates = [
-                // Sciences & Medicine
-                { singular: "demonstrates that the efficacy of the new vaccine exceeds initial projections.", plural: "demonstrate that the efficacy of the new vaccine exceeds initial projections." },
-                { singular: "highlights a significant correlation between urban air quality and respiratory ailments.", plural: "highlight a significant correlation between urban air quality and respiratory ailments." },
-                { singular: "proposes a novel mechanism for protein folding in high-temperature environments.", plural: "propose a novel mechanism for protein folding in high-temperature environments." },
-                { singular: "questions the validity of previous models regarding dark matter distribution.", plural: "question the validity of previous models regarding dark matter distribution." },
-                { singular: "confirms that sleep deprivation severely impacts cognitive function in adolescents.", plural: "confirm that sleep deprivation severely impacts cognitive function in adolescents." },
-                { singular: "identifies a new species of bacteria capable of breaking down plastic waste.", plural: "identify a new species of bacteria capable of breaking down plastic waste." },
-                { singular: "suggests that gene editing could eliminate hereditary diseases within a generation.", plural: "suggest that gene editing could eliminate hereditary diseases within a generation." },
-                { singular: "reports a breakthrough in renewable energy storage efficiency.", plural: "report a breakthrough in renewable energy storage efficiency." },
-                { singular: "warns that antibiotic resistance is rising faster than anticipated.", plural: "warn that antibiotic resistance is rising faster than anticipated." },
-                { singular: "calculates the trajectory of near-Earth asteroids with unprecedented precision.", plural: "calculate the trajectory of near-Earth asteroids with unprecedented precision." },
-                
-                // Social Sciences & Psychology
-                { singular: "argues that social media usage contributes to increased anxiety in young adults.", plural: "argue that social media usage contributes to increased anxiety in young adults." },
-                { singular: "observes a shift in voting patterns among suburban demographics.", plural: "observe a shift in voting patterns among suburban demographics." },
-                { singular: "critiques the neoliberal approach to global trade policies.", plural: "critique the neoliberal approach to global trade policies." },
-                { singular: "explores the psychological impact of long-term remote work.", plural: "explore the psychological impact of long-term remote work." },
-                { singular: "examines the role of childhood trauma in adult decision-making processes.", plural: "examine the role of childhood trauma in adult decision-making processes." },
-                { singular: "emphasizes the importance of early childhood education in reducing inequality.", plural: "emphasize the importance of early childhood education in reducing inequality." },
-                { singular: "asserts that cultural heritage sites require better protection from tourism.", plural: "assert that cultural heritage sites require better protection from tourism." },
-                { singular: "investigates the correlation between income inequality and crime rates.", plural: "investigate the correlation between income inequality and crime rates." },
-                { singular: "discusses the ethical implications of artificial intelligence in hiring practices.", plural: "discuss the ethical implications of artificial intelligence in hiring practices." },
-                { singular: "challenges the notion that globalization benefits all economic sectors equally.", plural: "challenge the notion that globalization benefits all economic sectors equally." },
+            const getAuth = (mode) => {
+                const n = rawAuthors.map(a => a.last);
+                if(style === 'apa7') return n.length===1 ? n[0] : (n.length===2 ? (mode==='nar'?n.join(' and '):n.join(' & ')) : `${n[0]} et al.`);
+                if(style === 'mla9') return n.length===1 ? n[0] : (n.length===2 ? n.join(' and ') : `${n[0]} et al.`);
+                if(style === 'harvard') return n.length===1 ? n[0] : (n.length===2 ? (mode==='nar'?n.join(' and '):n.join(' & ')) : (n.length===3 ? (mode==='nar'?n.slice(0,2).join(', ')+' and '+n[2] : n.slice(0,2).join(', ')+' & '+n[2]) : `${n[0]} et al.`));
+                if(style === 'chicago') return n.length===1 ? n[0] : (n.length<=3 ? (n.length===2?n.join(' and '):n.slice(0,2).join(', ')+', and '+n[2]) : `${n[0]} et al.`);
+                return n[0];
+            };
 
-                // Humanities & Literature
-                { singular: "interprets the recurring motif of water in modernist literature.", plural: "interpret the recurring motif of water in modernist literature." },
-                { singular: "analyses the shift in narrative structure in post-war British fiction.", plural: "analyse the shift in narrative structure in post-war British fiction." },
-                { singular: "compares the philosophical underpinnings of Stoicism and Buddhism.", plural: "compare the philosophical underpinnings of Stoicism and Buddhism." },
-                { singular: "traces the evolution of the Gothic genre from the 18th century to present.", plural: "trace the evolution of the Gothic genre from the 18th century to present." },
-                { singular: "reevaluates the historical significance of the industrial revolution on rural life.", plural: "reevaluate the historical significance of the industrial revolution on rural life." },
-                { singular: "contextualizes the use of satire in contemporary political cartoons.", plural: "contextualize the use of satire in contemporary political cartoons." },
-                { singular: "reviews the impact of digital archives on historical research methods.", plural: "review the impact of digital archives on historical research methods." },
-                { singular: "deconstructs the concept of the 'hero' in classical mythology.", plural: "deconstruct the concept of the 'hero' in classical mythology." },
-                { singular: "explains the linguistic shifts in English dialects over the last fifty years.", plural: "explain the linguistic shifts in English dialects over the last fifty years." },
-                { singular: "illustrates how art movements mirror sociopolitical changes.", plural: "illustrate how art movements mirror sociopolitical changes." },
+            let questionStem = "", correct = "";
+            let auth = getAuth(scenarioType===1 || scenarioType===3 ? 'nar' : 'par');
 
-                // Technology & Economics
-                { singular: "predicts that automation will displace 30% of manufacturing jobs by 2030.", plural: "predict that automation will displace 30% of manufacturing jobs by 2030." },
-                { singular: "evaluates the stability of cryptocurrency markets during economic downturns.", plural: "evaluate the stability of cryptocurrency markets during economic downturns." },
-                { singular: "outlines a strategy for sustainable urban development in megacities.", plural: "outline a strategy for sustainable urban development in megacities." },
-                { singular: "recommends stricter regulations on data privacy for tech giants.", plural: "recommend stricter regulations on data privacy for tech giants." },
-                { singular: "assesses the long-term viability of hydrogen fuel cells.", plural: "assess the long-term viability of hydrogen fuel cells." },
-                { singular: "notes that supply chain disruptions have become the new normal.", plural: "note that supply chain disruptions have become the new normal." },
-                { singular: "implies that traditional banking systems are becoming obsolete.", plural: "imply that traditional banking systems are becoming obsolete." },
-                { singular: "focuses on the integration of IoT devices in smart homes.", plural: "focus on the integration of IoT devices in smart homes." },
-                { singular: "details the cybersecurity risks associated with cloud computing.", plural: "detail the cybersecurity risks associated with cloud computing." },
-                { singular: "estimates the global economic cost of climate inaction.", plural: "estimate the global economic cost of climate inaction." },
-                
-                // General Academic
-                { singular: "states that properly constructed references are a key part of academic writing.", plural: "state that properly constructed references are a key part of academic writing." },
-                { singular: "concludes that further research is required to validate these findings.", plural: "conclude that further research is required to validate these findings." },
-                { singular: "suggests that the methodology used in previous studies was flawed.", plural: "suggest that the methodology used in previous studies was flawed." },
-                { singular: "mentions that peer review is essential for scientific integrity.", plural: "mention that peer review is essential for scientific integrity." },
-                { singular: "indicates a need for a paradigm shift in how we approach this issue.", plural: "indicate a need for a paradigm shift in how we approach this issue." }
-            ];
-            
-            const selectedTemplate = getRandomItem(templates);
-            const sentenceTail = isPlural ? selectedTemplate.plural : selectedTemplate.singular;
-
-            // Pick a random "trap type" to ensure we test different mechanics
-            // Traps: 'ampersand', 'et_al_period', 'parenthesis_placement', 'initials', 'year_format'
-            const trapTypes = ['parenthesis_placement', 'year_format'];
-            if (numAuthors > 1) trapTypes.push('ampersand');
-            if (numAuthors > 2) trapTypes.push('et_al_period');
-            if (numAuthors === 1) trapTypes.push('initials');
-            
-            const selectedTrap = getRandomItem(trapTypes);
-
-            let correct, d1, d2, d3, explanation = "";
-
-            if (style === 'apa7') {
-                // Base Logic
-                let narrative = "";
-                let parenthetical = "";
-
-                if (sourceType === 'website') {
-                    narrative = `${authorCit} (${year})`;
-                    parenthetical = `(${authorCit}, ${year})`;
-                } else if (numAuthors === 1) {
-                    narrative = `${rawAuthors[0].last} (${year})`;
-                    parenthetical = `(${rawAuthors[0].last}, ${year})`;
-                } else if (numAuthors === 2) {
-                    narrative = `${rawAuthors[0].last} and ${rawAuthors[1].last} (${year})`;
-                    parenthetical = `(${rawAuthors[0].last} & ${rawAuthors[1].last}, ${year})`;
-                } else {
-                    narrative = `${rawAuthors[0].last} et al. (${year})`;
-                    parenthetical = `(${rawAuthors[0].last} et al., ${year})`;
-                }
-                
-                correct = `${narrative} ${sentenceTail}`;
-                
-                // Distractors based on Trap
-                if (selectedTrap === 'ampersand' && numAuthors === 2) {
-                     d1 = `${rawAuthors[0].last} & ${rawAuthors[1].last} (${year}) ${sentenceTail}`; // & in narrative
-                     d2 = `(${rawAuthors[0].last} and ${rawAuthors[1].last}, ${year}) ${sentenceTail}`; // 'and' in parens (wrong place)
-                     d3 = `${narrative.replace('and', '&')} ${sentenceTail}`; // Duplicate logic check
-                     explanation = "In APA 7 narrative citations, use the word 'and', not the ampersand symbol '&'. Use '&' only inside parentheses.";
-                } else if (selectedTrap === 'et_al_period' && numAuthors > 2) {
-                     d1 = `${rawAuthors[0].last} et al (${year}) ${sentenceTail}`; // Missing period
-                     d2 = `${rawAuthors[0].last} et. al. (${year}) ${sentenceTail}`; // Extra period after et
-                     d3 = `${rawAuthors[0].last} et al., (${year}) ${sentenceTail}`; // Comma after al.
-                     explanation = "In APA 7, 'et' is a whole word (no period), but 'al.' is an abbreviation for 'alii' and requires a period.";
-                } else if (selectedTrap === 'initials' && numAuthors === 1) {
-                     d1 = `${rawAuthors[0].first.charAt(0)}. ${rawAuthors[0].last} (${year}) ${sentenceTail}`; // Initials included
-                     d2 = `${rawAuthors[0].first} ${rawAuthors[0].last} (${year}) ${sentenceTail}`; // Full name included
-                     d3 = `(${rawAuthors[0].last}, ${year}) ${sentenceTail}`; // Parenthetical format
-                     explanation = "APA 7 narrative citations typically use only the surname, without initials or first names, unless distinguishing between authors with the same surname.";
-                } else {
-                     // Default / Parenthesis / Year traps
-                     d1 = `${parenthetical} ${sentenceTail}`; // Parenthetical format in narrative slot
-                     d2 = `${narrative.replace('(', '').replace(')', '')} ${sentenceTail}`; // Missing year parens
-                     d3 = `(${narrative.split(' (')[0]}) ${year} ${sentenceTail}`; // (Author) Year
-                     explanation = "APA 7 narrative citations place the author's name in the text and the year immediately following in parentheses.";
-                }
-
-            } else if (style === 'mla9') {
-                 // MLA is Author-Page mainly, but narrative just uses Author. 
-                 // To test "all parts", we focus on page number formatting.
-                 const page = Math.floor(Math.random() * 100) + 10;
-                 let name = (sourceType === 'website') ? authorCit : 
-                            (numAuthors === 1 ? rawAuthors[0].last : 
-                             (numAuthors === 2 ? `${rawAuthors[0].last} and ${rawAuthors[1].last}` : `${rawAuthors[0].last} et al.`));
-                 
-                 if (sourceType === 'website') {
-                     correct = `${name} ${sentenceTail}`;
-                     d1 = `(${name}) ${sentenceTail}`;
-                     d2 = `${name} (${year}) ${sentenceTail}`;
-                     d3 = `${name}, ${year}, ${sentenceTail}`;
-                     explanation = "For websites in MLA, simply use the author or organization name in the narrative. No year or page number is needed in-text.";
-                 } else {
-                     correct = `${name} (${page}) ${sentenceTail}`;
-                     d1 = `${name} (p. ${page}) ${sentenceTail}`; // p. error
-                     d2 = `${name} (pg. ${page}) ${sentenceTail}`; // pg. error
-                     d3 = `${name} (${year}) ${sentenceTail}`; // Year error
-                     explanation = "In MLA narrative citations, include the page number in parentheses. Do not use 'p.' or 'pg.' before the number.";
-                 }
-
-            } else if (style === 'harvard') {
-                 // Harvard Narrative: Author (Year)
-                 let narrative;
-                 if (sourceType === 'website') narrative = `${authorCit} (${year})`;
-                 else if (numAuthors === 1) narrative = `${rawAuthors[0].last} (${year})`;
-                 else if (numAuthors === 2) narrative = `${rawAuthors[0].last} and ${rawAuthors[1].last} (${year})`;
-                 else narrative = `${rawAuthors[0].last} et al. (${year})`;
-
-                 correct = `${narrative} ${sentenceTail}`;
-                 
-                 if (selectedTrap === 'year_format') {
-                     d1 = `${narrative.replace('(', '').replace(')', '')} ${sentenceTail}`; // No parens
-                     d2 = `${narrative.replace('(', ', ').replace(')', '')} ${sentenceTail}`; // Author, Year
-                     d3 = `(${narrative.split(' (')[0]} ${year}) ${sentenceTail}`; // (Author Year)
-                     explanation = "Harvard narrative citations place the year in parentheses immediately after the author's name.";
-                 } else {
-                     d1 = `(${narrative.split(' (')[0]} ${year}) ${sentenceTail}`;
-                     d2 = `${narrative.split(' (')[0]}, ${year}, ${sentenceTail}`;
-                     d3 = `(${narrative.split(' (')[0]}, ${year}) ${sentenceTail}`;
-                     explanation = "Harvard narrative citations format: Author (Year).";
-                 }
-
-            } else if (style === 'chicago') {
-                 // Chicago Author-Date Narrative: Author (Year)
-                 let narrative;
-                 if (sourceType === 'website') narrative = `${authorCit} (${year})`;
-                 else if (numAuthors === 1) narrative = `${rawAuthors[0].last} (${year})`;
-                 else if (numAuthors <= 3) narrative = `${rawAuthors.map(a=>a.last).join(' and ')} (${year})`;
-                 else narrative = `${rawAuthors[0].last} et al. (${year})`;
-
-                 correct = `${narrative} ${sentenceTail}`;
-                 
-                 if (selectedTrap === 'ampersand' && numAuthors > 1 && numAuthors <= 3) {
-                     d1 = `${narrative.replace(' and ', ' & ')} ${sentenceTail}`;
-                     d2 = `(${narrative.split(' (')[0]}, ${year}) ${sentenceTail}`;
-                     d3 = `${narrative.split(' (')[0]} ${year} ${sentenceTail}`;
-                     explanation = "Chicago style uses 'and' (not '&') in narrative text.";
-                 } else {
-                     d1 = `(${narrative.split(' (')[0]}, ${year}) ${sentenceTail}`;
-                     d2 = `${narrative.replace('(', '').replace(')', '')} ${sentenceTail}`;
-                     d3 = `(${narrative.split(' (')[0]}) ${year} ${sentenceTail}`;
-                     explanation = "Chicago (Author-Date) style places the year in parentheses immediately after the author's name.";
-                 }
-
-            } else if (style === 'mhra') {
-                 let name = sourceType === 'website' ? authorCit : (numAuthors === 1 ? rawAuthors[0].last : `${rawAuthors[0].last} et al.`);
-                 correct = `${name} ${sentenceTail}¹`; 
-                 d1 = `${name} (2019) ${sentenceTail}`; // APA style
-                 d2 = `(${name}) ${sentenceTail}`;
-                 d3 = `${name}¹ ${sentenceTail}`; // Note before period (Incorrect per MHRA guide)
-                 explanation = "MHRA uses footnotes indicated by superscript numbers, usually placed at the very end of the sentence *after* punctuation.";
+            if (scenarioType === 1) {
+                questionStem = "Which of the following is the correct way to cite a source?";
+                correct = style==='mla9' ? `${auth} states...` : `${auth} (${year}) states...`;
+            } else if (scenarioType === 2) {
+                questionStem = "Select the correct way to present an in-text citation:";
+                correct = style==='mla9' ? `(${auth} ${page}).` : (style==='harvard' ? `(${auth} ${year}).` : `(${auth}, ${year}).`);
+            } else if (scenarioType === 3) {
+                questionStem = `Assuming that you are citing a direct quote by an author on page ${page}, select the correct syntax from the following:`;
+                if(style==='apa7') correct = `${auth} (${year}, p. ${page}) states...`;
+                else if(style==='mla9') correct = `${auth} states... (${page}).`;
+                else if(style==='harvard') correct = `${auth} (${year}: ${page}) states...`;
+                else correct = `${auth} (${year}, ${page}) states...`;
+            } else {
+                questionStem = "Select the correct way to cite multiple authors from the four options below:";
+                let n = rawAuthors.map(a => a.last);
+                correct = style==='mla9' ? `(${n.join('; ')}).` : `(${n[0]}, ${year}; ${n[1]}, ${year-1}; ${n[2]}, ${year-2}).`;
             }
 
+            let d1 = correct.replace(/\(/g,'').replace(/\)/g,'');
+            let d2 = correct.replace(/;/g,',');
+            let d3 = correct.replace(`${year}`, `p.${page}`);
             const options = shuffleArray([correct, d1, d2, d3]);
-            return { 
-                baseTitle: '', 
-                sentence: "Which of the following uses the correct format?", 
-                correctOption: correct, 
-                options: options, 
-                hint: explanation, 
-                originalTitle: 'In-Text' 
+
+            return {
+                sentence: questionStem,
+                correctOption: correct,
+                options: options,
+                hint: `Style: ${style.toUpperCase()}`
             };
         }
 
-        // --- REF LIST GENERATORS (Updated with Descriptive Stories & Editions) ---
-
-        // APA 7
-        function generateApaBook(getUniqueItem, numAuthors=1, isEdition=false) { 
-            const authors=Array.from({length:numAuthors},()=>getUniqueItem('authors')); 
-            const scenarioAuthors = formatScenarioNameList(authors);
-            const title=getUniqueItem('bookTitles'); 
-            const pubInfo=getUniqueItem('publisherLocations'); 
-            const publisher=pubInfo.publisher; 
-            const year = Math.floor(Math.random() * (2025 - 2022 + 1)) + 2022; 
-            
-            let edText = "";
-            let edComp = "";
-            if (isEdition) {
-                const edNum = getRandomItem(['2nd', '3rd', '4th', 'Rev.']);
-                edText = ` It is the ${edNum} edition.`;
-                edComp = `(${edNum} ed.).`;
-            }
-
-            const scenario = `You are writing an essay and found a book to reference. The book is titled "${title}" and was written by ${scenarioAuthors}.${edText} It was published in ${year} by ${publisher}.`;
-            
-            const authorList = authors.map(a => `${a.last}, ${a.first.charAt(0)}.`);
-            const authorString = authorList.length > 1 ? authorList.slice(0, -1).join(', ') + ', & ' + authorList.slice(-1) : authorList[0];
-            
-            const components={
-                content:[authorString, year, title, ...(isEdition ? [edComp] : []), publisher],
-                structure: isEdition ? '{0} ({1}). <i>{2}</i> {3} {4}.' : '{0} ({1}). <i>{2}</i>. {3}.',
-                distractors:[`${authors.map(a=>`${a.last}, ${a.first}`).join(' & ')}`,`"${title}"`,`in press`,`${publisher}, ${year}`]
-            }; 
-            return{scenario,fullReference:'',components,hint:`APA 7 books: Author(s). (Year). <i>Title</i>${isEdition ? ' (Edition)' : ''}. Publisher.`,originalTitle:title}
+        // --- Other Generators (Non-Books) ---
+        function generateApaEditedBook(getUniqueItem) { 
+            const title=getUniqueItem('bookTitles'), pub=getUniqueItem('publisherLocations').publisher, year=2024, eds="Smith, J.";
+            return { scenario: `Edited book "${title}" (${eds}). ${pub}, ${year}.`, components: {content:[`Smith, J. (Ed.).`,`(${year}).`,`<i>${title}</i>.`,`${pub}.`], structure:'{0} {1} {2} {3}', distractors:['(Eds.)']}, hint:'APA 7 Edited Book', originalTitle:title };
         }
-        function generateApaEditedBook(getUniqueItem, numEditors=1) { 
-            const editors=Array.from({length:numEditors},()=>getUniqueItem('editors')); 
-            const scenarioEditors = formatScenarioNameList(editors);
-            const title=getUniqueItem('bookTitles'); 
-            const pubInfo=getUniqueItem('publisherLocations'); 
-            const publisher=pubInfo.publisher; 
-            const year = Math.floor(Math.random() * (2025 - 2022 + 1)) + 2022; 
-            
-            const scenario=`You are citing an edited collection titled "${title}". The editors are ${scenarioEditors}. The book was published by ${publisher} in ${year}.`;
-            const editorList = editors.map(e => `${e.last}, ${e.first.charAt(0)}.`);
-            const editorString = editorList.length > 1 ? editorList.slice(0, -1).join(', ') + ', & ' + editorList.slice(-1) : editorList[0];
-            const edLabel = numEditors > 1 ? '(Eds.).' : '(Ed.).';
-            
-            const components={content:[`${editorString}`,`${year}`,`${title}`,`${publisher}`],structure:`{0} ${edLabel} ({1}). <i>{2}</i>. {3}.`,distractors:[`${editorString} (ed.).`,`(Editors).`,`"${title}."`,`Published by ${publisher}`]}; 
-            return { scenario, fullReference:'', components, hint:'APA 7 Edited Book: Editor(s) (Ed./Eds.). (Year). <i>Title</i>. Publisher.', originalTitle: title }; 
-        }
-        function generateApaJournal(getUniqueItem, numAuthors=1) { 
-            const authors=Array.from({length:numAuthors},()=>getUniqueItem('authors')); 
-            const scenarioAuthors = formatScenarioNameList(authors);
-            const articleTitle=getUniqueItem('articleTitles'); 
-            const journalTitle=getUniqueItem('journalTitles'); 
-            const year = Math.floor(Math.random() * (2025 - 2022 + 1)) + 2022; 
-            const volume=Math.floor(Math.random()*20)+30; 
-            const issue=Math.floor(Math.random()*4)+1; 
-            const pages=`${Math.floor(Math.random()*50)+100}–${Math.floor(Math.random()*10)+150}`; 
-            const doi=`https://doi.org/10.1234/jet.${year}.${Math.floor(Math.random()*9000)+1000}`; 
-            
-            const scenario=`You found an article titled "${articleTitle}" written by ${scenarioAuthors}. It was published in the ${year} issue of the journal "${journalTitle}". The details are: Volume ${volume}, Issue ${issue}, pages ${pages}, and DOI ${doi}.`;
-            const authorList = authors.map(a => `${a.last}, ${a.first.charAt(0)}.`);
-            const authorString = authorList.length > 1 ? authorList.slice(0, -1).join(', ') + ', & ' + authorList.slice(-1) : authorList[0];
-            
-            const components={content:[`${authorString}`,`${year}`,`${articleTitle}`,`${journalTitle}`,`${volume}(${issue})`,`${pages}`,`${doi}`],structure:'{0} ({1}). {2}. <i>{3}</i>, {4}, {5}. {6}',distractors:[`'${articleTitle}'`,`${articleTitle}`,`pp. ${pages}`,`doi:${doi.replace('https://doi.org/','')}`]}; 
-            return { scenario, fullReference:'', components, hint:'APA 7 Journal: Author. (Year). Article. <i>Journal</i>, Vol(Issue), pages. DOI.', originalTitle: journalTitle }; 
-        }
-        function generateApaWebsite(getUniqueItem) { 
-            const org=getUniqueItem('organizations'); 
-            const title=getUniqueItem('webTitles'); 
-            const year = Math.floor(Math.random() * (2025 - 2022 + 1)) + 2022; 
-            const month=new Date().toLocaleString('default',{month:'long'}); 
-            const day=new Date().getDate(); 
-            const url=`https://www.${org.toLowerCase().replace(/\s/g,'')}.org/data/report`; 
-            
-            const scenario=`You are citing a page titled "${title}" from the ${org} website. It was published on ${month} ${day}, ${year}, and the URL is ${url}.`;
-            const components={content:[`${org}`,`${year}, ${month} ${day}`,`${title}`,`${url}`],structure:'{0}. ({1}). <i>{2}</i>. {3}',distractors:[`${year}`,`"${title}"`,`Retrieved from ${url}`,`[accessed ${day} ${month} ${year}]`]}; 
-            return { scenario, fullReference:'', components, hint:'APA 7 Web: Author/Org. (Date). <i>Title</i>. URL.', originalTitle: title }; 
-        }
-        function generateApaBookChapter(getUniqueItem) { 
-            const author = getUniqueItem('authors'); 
-            const editor = getUniqueItem('editors'); 
-            const chapterTitle = getUniqueItem('chapterTitles'); 
-            const bookTitle = getUniqueItem('bookTitles'); 
-            const pubInfo = getUniqueItem('publisherLocations'); 
-            const publisher = pubInfo.publisher; 
-            const year = Math.floor(Math.random() * (2025 - 2022 + 1)) + 2022; 
-            const pages = `${Math.floor(Math.random() * 20) + 50}–${Math.floor(Math.random() * 10) + 70}`; 
-            
-            const scenario = `You need to cite a chapter titled "${chapterTitle}" written by ${formatScenarioNameList([author])}. It appears in the book "${bookTitle}" edited by ${formatScenarioNameList([editor])}, published in ${year} by ${publisher}. The chapter is on pages ${pages}.`;
-            
-            const components = { content: [ `${author.last}, ${author.first.charAt(0)}.`, `${year}`, `${chapterTitle}`, `In ${editor.first.charAt(0)}. ${editor.last} (Ed.),`, `${bookTitle}`, `pp. ${pages}`, `${publisher}` ], structure: '{0} ({1}). {2}. {3} <i>{4}</i> ({5}). {6}.', distractors: [ `'${chapterTitle}'`, `ed. by ${editor.first} ${editor.last}`, `(pages ${pages})`, `In ${chapterTitle}` ] }; 
-            return { scenario, fullReference: '', components, hint: 'APA 7 Chapter: Author. (Year). Chapter. In Editor (Ed.), <i>Book</i> (pp.). Publisher.', originalTitle: bookTitle }; 
-        }
-
-        // MLA 9
-        function generateMlaBook(getUniqueItem, numAuthors=1, isEdition=false) { 
-            const authors=Array.from({length:numAuthors},()=>getUniqueItem('authors')); 
-            const scenarioAuthors = formatScenarioNameList(authors);
-            const title=getUniqueItem('bookTitles'); 
-            const pubInfo=getUniqueItem('publisherLocations'); 
-            const publisher=pubInfo.publisher; 
-            const year = Math.floor(Math.random() * (2025 - 2022 + 1)) + 2022; 
-            let edText = "";
-            let edComp = "";
-            if (isEdition) {
-                const edNum = getRandomItem(['2nd', '3rd', '4th', 'Rev']);
-                edText = ` It is the ${edNum} edition.`;
-                edComp = `${edNum} ed.,`;
-            }
-
-            const scenario=`You are creating a reference for a book titled "${title}" by ${scenarioAuthors}.${edText} It was published by ${publisher} in ${year}.`;
-            let authorString; 
-            if(numAuthors===1){authorString=`${authors[0].last}, ${authors[0].first}`}
-            else if(numAuthors===2){authorString=`${authors[0].last}, ${authors[0].first}, and ${authors[1].first} ${authors[1].last}`}
-            else{authorString=`${authors[0].last}, ${authors[0].first}, et al`}
-            
-            const components={
-                content:[authorString, title, ...(isEdition ? [edComp] : []), publisher, year],
-                structure: isEdition ? '{0}. <i>{1}</i>. {2} {3}, {4}.' : '{0}. <i>{1}</i>. {2}, {3}.',
-                distractors:[`${authors[0].last}, ${authors[0].first.charAt(0)}.`,`(${year+1})`,`"${title}"`,`Published by ${publisher}`]
-            }; 
-            return{scenario,fullReference:'',components,hint:`MLA 9 Book: Author. <i>Title</i>. ${isEdition?'Edition. ':''}Publisher, Year.`,originalTitle:title}
-        }
-        function generateMlaEditedBook(getUniqueItem, numEditors=1) { 
-            const editors=Array.from({length:numEditors},()=>getUniqueItem('editors')); 
-            const scenarioEditors = formatScenarioNameList(editors);
-            const title=getUniqueItem('bookTitles'); 
-            const pubInfo=getUniqueItem('publisherLocations'); 
-            const publisher=pubInfo.publisher; 
-            const year = Math.floor(Math.random() * (2025 - 2022 + 1)) + 2022; 
-            
-            const scenario=`You need to cite an edited book titled "${title}". The editors are ${scenarioEditors}. It was published by ${publisher} in ${year}.`;
-            let editorString; 
-            if(numEditors===1){editorString=`${editors[0].last}, ${editors[0].first}, editor`}
-            else{editorString=`${editors[0].last}, ${editors[0].first}, and ${editors[1].first} ${editors[1].last}, editors`}
-            
-            const components={content:[`${editorString}`,`${title}`,`${publisher}`,`${year}`],structure:'{0}. <i>{1}</i>. {2}, {3}.',distractors:[`${editors.map(e=>`${e.last}, ${e.first}`).join(' and ')} (Eds.)`,`"${title}"`,`(Editors)`,`${publisher}, ${year}`]}; 
-            return{scenario,fullReference:'',components,hint:'MLA 9 Edited Book: Editor, editor. <i>Title</i>. Publisher, Year.',originalTitle:title}
-        }
-        function generateMlaJournal(getUniqueItem, numAuthors=1) { 
-            const authors=Array.from({length:numAuthors},()=>getUniqueItem('authors')); 
-            const scenarioAuthors = formatScenarioNameList(authors);
-            const articleTitle=getUniqueItem('articleTitles'); 
-            const journalTitle=getUniqueItem('journalTitles'); 
-            const year = Math.floor(Math.random() * (2025 - 2022 + 1)) + 2022; 
-            const volume=Math.floor(Math.random()*20)+30; 
-            const issue=Math.floor(Math.random()*4)+1; 
-            const pages=`${Math.floor(Math.random()*50)+100}-${Math.floor(Math.random()*10)+150}`; 
-            
-            const scenario=`You are citing an article by ${scenarioAuthors} titled "${articleTitle}". It appeared in "${journalTitle}", Volume ${volume}, Issue ${issue}, in ${year}, on pages ${pages}.`;
-            let authorString; 
-            if(numAuthors===1){authorString=`${authors[0].last}, ${authors[0].first}`}
-            else if(numAuthors===2){authorString=`${authors[0].last}, ${authors[0].first}, and ${authors[1].first} ${authors[1].last}`}
-            else{authorString=`${authors[0].last}, ${authors[0].first}, et al`}
-            
-            const components={content:[`${authorString}`,`"${articleTitle}"`,`${journalTitle}`,`vol. ${volume}, no. ${issue}`,`${year}`,`pp. ${pages}`],structure:'{0}. {1}. <i>{2}</i>, {3}, {4}, {5}.',distractors:[`'${articleTitle}'`,`(${year})`,`Volume ${volume}, Issue ${issue}`,`pages ${pages}`]}; 
-            return{scenario,fullReference:'',components,hint:'MLA 9 Journal: Author. "Article". <i>Journal</i>, vol. X, no. Y, Year, pp. Z.',originalTitle:journalTitle}
-        }
-        function generateMlaWebsite(getUniqueItem) { 
-            const org=getUniqueItem('organizations'); 
-            const title=getUniqueItem('webTitles'); 
-            const year = Math.floor(Math.random() * (2025 - 2022 + 1)) + 2022; 
-            const month=new Date().toLocaleString('default',{month:'short'}); 
-            const day=new Date().getDate(); 
-            const url=`www.${org.toLowerCase().replace(/\s/g,'')}.org/data/report.html`; 
-            
-            const scenario=`You found a page titled "${title}" on the ${org} website. It was published on ${day} ${month}. ${year}. The URL is ${url}.`;
-            const components={content:[`"${title}"`,`${org}`,`${day} ${month}. ${year}`,`${url}`],structure:'{0}. <i>{1}</i>, {2}, {3}.',distractors:[`${title}`,`${org}`,`(${year})`,`Available at: ${url}`]}; 
-            return{scenario,fullReference:'',components,hint:'MLA 9 Web: "Title". <i>Site Name</i>, Date, URL.',originalTitle:org}
-        }
-        function generateMlaBookChapter(getUniqueItem) { 
-            const author = getUniqueItem('authors'); 
-            const editor = getUniqueItem('editors'); 
-            const chapterTitle = getUniqueItem('chapterTitles'); 
-            const bookTitle = getUniqueItem('bookTitles'); 
-            const pubInfo = getUniqueItem('publisherLocations'); 
-            const publisher = pubInfo.publisher; 
-            const year = Math.floor(Math.random() * (2025 - 2022 + 1)) + 2022; 
-            const pages = `${Math.floor(Math.random() * 20) + 50}-${Math.floor(Math.random() * 10) + 70}`; 
-            const scenario = `You are citing a chapter "${chapterTitle}" by ${formatScenarioNameList([author])}. It is in the book "${bookTitle}", edited by ${formatScenarioNameList([editor])}, published by ${publisher} in ${year} (pages ${pages}).`;
-            
-            const components = { content: [ `${author.last}, ${author.first}`, `"${chapterTitle}"`, `${bookTitle}`, `edited by ${editor.first} ${editor.last}`, `${publisher}`, `${year}`, `pp. ${pages}` ], structure: '{0}. {1}. <i>{2}</i>, {3}, {4}, {5}, {6}.', distractors: [ `'${chapterTitle}'`, `In ${bookTitle}`, `Editor, ${editor.first} ${editor.last}`, `pages ${pages}` ] }; 
-            return { scenario, fullReference: '', components, hint: 'MLA 9 Chapter: Author. "Chapter". <i>Book</i>, edited by Editor, Publisher, Year, pp. Pages.', originalTitle: bookTitle }; 
-        }
-
-        // Harvard
-        function generateHarvardBook(getUniqueItem,numAuthors=1,isEdition=false){
-            const authors=Array.from({length:numAuthors},()=>getUniqueItem('authors'));
-            const scenarioAuthors = formatScenarioNameList(authors);
-            const title=getUniqueItem('bookTitles');
-            const pubInfo=getUniqueItem('publisherLocations');
-            const publisher=pubInfo.publisher;
-            const location=pubInfo.location;
-            const year = Math.floor(Math.random() * (2025 - 2022 + 1)) + 2022; 
-            
-            let edText = "";
-            let edComp = "";
-            if (isEdition) {
-                const edNum = getRandomItem(['2nd', '3rd', '4th', 'revised']);
-                edText = ` It is the ${edNum} edition.`;
-                edComp = `${edNum} edn.`;
-            }
-
-            const scenario=`You are citing a book titled "${title}" written by ${scenarioAuthors}.${edText} It was published in ${year} by ${publisher}, located in ${location}.`;
-            const authorList=authors.map(a=>`${a.last}, ${a.first.charAt(0)}.`);
-            const authorString=authorList.join(' and ');
-            
-            const components={
-                content:[authorString, year, title, ...(isEdition ? [edComp] : []), `${location}: ${publisher}`],
-                structure: isEdition ? '{0} ({1}) <i>{2}</i>. {3} {4}.' : '{0} ({1}) <i>{2}</i>. {3}.',
-                distractors:[`${authors.map(a=>`${a.last}, ${a.first}`).join(' and ')}`,`(${year-1})`,`'${title}'`,`${publisher}, ${location}`]
-            };
-            return{scenario,fullReference:'',components,hint:`Harvard Book: Author (Year) <i>Title</i>. ${isEdition?'Edn. ':''}Place: Publisher.`,originalTitle:title}
-        }
-        function generateHarvardEditedBook(getUniqueItem,numEditors=1){
-            const editors=Array.from({length:numEditors},()=>getUniqueItem('editors'));
-            const scenarioEditors = formatScenarioNameList(editors);
-            const title=getUniqueItem('bookTitles');
-            const pubInfo=getUniqueItem('publisherLocations');
-            const publisher=pubInfo.publisher;
-            const location=pubInfo.location;
-            const year = Math.floor(Math.random() * (2025 - 2022 + 1)) + 2022; 
-            const scenario=`You need to reference an edited book titled "${title}". The editors are ${scenarioEditors}. It was published in ${year} by ${publisher} in ${location}.`;
-            const editorList=editors.map(e=>`${e.last}, ${e.first.charAt(0)}.`);
-            const editorString=editorList.join(' and ');
-            const edLabel=numEditors>1?'(eds.)':'(ed.)';
-            const components={content:[`${editorString}`,`${year}`,`${title}`,`${location}: ${publisher}`],structure:`{0} ${edLabel} ({1}) <i>{2}</i>. {3}.`,distractors:[`${editorString} (Editor)`,`${year}`,`"${title}"`,`${publisher}`]};
-            return{scenario,fullReference:'',components,hint:'Harvard Edited Book: Editor (ed/s.) (Year) <i>Title</i>. Place: Publisher.',originalTitle:title}
-        }
-        function generateHarvardJournal(getUniqueItem,numAuthors=1){
-            const authors=Array.from({length:numAuthors},()=>getUniqueItem('authors'));
-            const scenarioAuthors = formatScenarioNameList(authors);
-            const articleTitle=getUniqueItem('articleTitles');
-            const journalTitle=getUniqueItem('journalTitles');
-            const year = Math.floor(Math.random() * (2025 - 2022 + 1)) + 2022; 
-            const volume=Math.floor(Math.random()*20)+30;
-            const issue=Math.floor(Math.random()*4)+1;
-            const pages=`${Math.floor(Math.random()*50)+100}-${Math.floor(Math.random()*10)+150}`;
-            const scenario=`You are citing the article "${articleTitle}" by ${scenarioAuthors}. It was published in ${year} in the journal "${journalTitle}", Volume ${volume}, Issue ${issue}, pages ${pages}.`;
-            const authorList=authors.map(a=>`${a.last}, ${a.first.charAt(0)}.`);
-            let authorString;
-            if(numAuthors<=3){authorString=authorList.join(' and ')}else{authorString=`${authorList[0]} et al.`}
-            const components={content:[`${authorString}`,`${year}`,`'${articleTitle}'`,`${journalTitle}`,`${volume}(${issue})`,`pp. ${pages}`],structure:'{0} ({1}) {2}, <i>{3}</i>, {4}, {5}.',distractors:[`"${articleTitle}"`,`${journalTitle}`,`vol. ${volume}, no. ${issue}`,`p. ${pages}`]};
-            return{scenario,fullReference:'',components,hint:'Harvard Journal: Author (Year) \'Article\', <i>Journal</i>, Vol(Issue), pp. pages.',originalTitle:journalTitle}
-        }
-        function generateHarvardWebsite(getUniqueItem){
-            const org=getUniqueItem('organizations');
-            const title=getUniqueItem('webTitles');
-            const year = Math.floor(Math.random() * (2025 - 2022 + 1)) + 2022; 
-            const url=`https://www.${org.toLowerCase().replace(/\s/g,'')}.org/data/report`;
-            const date=new Date();
-            const accessDate=`${date.getDate()} ${date.toLocaleString('default',{month:'long'})} ${date.getFullYear()}`;
-            const scenario=`You viewed a webpage titled "${title}" on the ${org} website. It was published in ${year}. You accessed it on ${accessDate}. The URL is ${url}.`;
-            const components={content:[`${org}`,`${year}`,`${title}`,`Available at: ${url}`,`(Accessed: ${accessDate})`],structure:'{0} ({1}) <i>{2}</i>. {3} {4}.',distractors:[`'${title}'`,`[online]`,`URL: ${url}`,`[accessed ${accessDate}]`]};
-            return{scenario,fullReference:'',components,hint:'Harvard Web: Org (Year) <i>Title</i>. Available at: URL (Accessed: Date).',originalTitle:title}
-        }
-        function generateHarvardBookChapter(getUniqueItem) {
-            const author = getUniqueItem('authors'); 
-            const editor = getUniqueItem('editors'); 
-            const chapterTitle = getUniqueItem('chapterTitles'); 
-            const bookTitle = getUniqueItem('bookTitles'); 
-            const pubInfo = getUniqueItem('publisherLocations'); 
-            const publisher = pubInfo.publisher; 
-            const location = pubInfo.location;
-            const year = Math.floor(Math.random() * (2025 - 2022 + 1)) + 2022; 
-            const pages = `${Math.floor(Math.random() * 20) + 50}-${Math.floor(Math.random() * 10) + 70}`; 
-            const scenario = `You are citing a chapter "${chapterTitle}" by ${formatScenarioNameList([author])}. It is in the book "${bookTitle}", edited by ${formatScenarioNameList([editor])}, published in ${year} by ${publisher} in ${location}. Pages ${pages}.`;
-            
-            const components = { content: [ `${author.last}, ${author.first.charAt(0)}.`, `${year}`, `'${chapterTitle}'`, `in ${editor.last}, ${editor.first.charAt(0)}. (ed.)`, `${bookTitle}`, `${location}: ${publisher}`, `pp. ${pages}` ], structure: '{0} ({1}) {2}, {3} <i>{4}</i>. {5}, {6}.', distractors: [ `"${chapterTitle}"`, `In ${editor.first.charAt(0)}. ${editor.last} (Ed.)`, `${bookTitle}`, `pages ${pages}` ] }; 
-            return { scenario, fullReference: '', components, hint: 'Harvard Chapter: Author (Year) \'Chapter\', in Editor (ed.) <i>Book</i>. Place: Publisher, pp. Pages.', originalTitle: bookTitle }; 
-        }
-
-        // Chicago
-        function generateChicagoBook(getUniqueItem,numAuthors=1,isEdition=false){
-            const authors=Array.from({length:numAuthors},()=>getUniqueItem('authors'));
-            const scenarioAuthors = formatScenarioNameList(authors);
-            const title=getUniqueItem('bookTitles');
-            const pubInfo=getUniqueItem('publisherLocations');
-            const publisher=pubInfo.publisher;
-            const location=pubInfo.location;
-            const year = Math.floor(Math.random() * (2025 - 2022 + 1)) + 2022; 
-            let edText = "";
-            let edComp = "";
-            if (isEdition) {
-                const edNum = getRandomItem(['2nd', '3rd', '4th', 'rev.']);
-                edText = ` It is the ${edNum} edition.`;
-                edComp = `${edNum} ed.`;
-            }
-            
-            const scenario=`You are referencing a book titled "${title}" by ${scenarioAuthors}.${edText} It was published in ${year} by ${publisher} in ${location}.`;
-            const authorList=authors.map((a,i)=>i===0?`${a.last}, ${a.first}`:`${a.first} ${a.last}`);
-            const authorString=authorList.join(', and ');
-            
-            const components={
-                content:[authorString, title, ...(isEdition ? [edComp] : []), `${location}: ${publisher}`, `${year}`],
-                structure: isEdition ? '{0}. <i>{1}</i>, {2}. {3}, {4}.' : '{0}. <i>{1}</i>. {2}, {3}.',
-                distractors:[`${authors.map(a=>`${a.first} ${a.last}`).join(', ')}`,`[${year}]`,`"${title}"`,`${publisher} (${location})`]
-            };
-            return{scenario,fullReference:'',components,hint:`Chicago Book: Author. <i>Title</i>. ${isEdition?'Edition. ':''}Place: Publisher, Year.`,originalTitle:title}
-        }
-        function generateChicagoEditedBook(getUniqueItem,numEditors=1){
-            const editors=Array.from({length:numEditors},()=>getUniqueItem('editors'));
-            const scenarioEditors = formatScenarioNameList(editors);
-            const title=getUniqueItem('bookTitles');
-            const pubInfo=getUniqueItem('publisherLocations');
-            const publisher=pubInfo.publisher;
-            const location=pubInfo.location;
-            const year = Math.floor(Math.random() * (2025 - 2022 + 1)) + 2022; 
-            const scenario=`You are citing an edited book titled "${title}". The editors are ${scenarioEditors}. It was published in ${year} by ${publisher} in ${location}.`;
-            const editorList=editors.map((e,i)=>i===0?`${e.last}, ${e.first}`:`${e.first} ${e.last}`);
-            const editorString=editorList.join(' and ');
-            const edLabel=numEditors>1?'eds.':'ed.';
-            const components={content:[`${editorString}`,`${edLabel}`,`${title}`,`${location}: ${publisher}`,`${year}`],structure:'{0}. <i>{1}</i>. {2}, {3}.',distractors:[`${editors.map(e=>`${e.first} ${e.last}`).join(', ')}, ${edLabel}`,`"${title}"`,`(Editor)`,`${publisher}, ${year}`]};
-            return{scenario,fullReference:'',components,hint:'Chicago Edited Book: Editor, ed. <i>Title</i>. Place: Publisher, Year.',originalTitle:title}
-        }
-        function generateChicagoJournal(getUniqueItem,numAuthors=1){
-            const authors=Array.from({length:numAuthors},()=>getUniqueItem('authors'));
-            const scenarioAuthors = formatScenarioNameList(authors);
-            const articleTitle=getUniqueItem('articleTitles');
-            const journalTitle=getUniqueItem('journalTitles');
-            const year = Math.floor(Math.random() * (2025 - 2022 + 1)) + 2022; 
-            const volume=Math.floor(Math.random()*20)+30;
-            const issue=Math.floor(Math.random()*4)+1;
-            const pages=`${Math.floor(Math.random()*50)+100}–${Math.floor(Math.random()*10)+150}`;
-            const doi=`https://doi.org/10.1234/jet.${year}.${Math.floor(Math.random()*9000)+1000}`;
-            const scenario=`You are citing an article "${articleTitle}" by ${scenarioAuthors}. It appeared in the journal "${journalTitle}", Volume ${volume}, Issue ${issue}, in ${year}, pages ${pages}. The DOI is ${doi}.`;
-            const authorList=authors.map((a,i)=>i===0?`${a.last}, ${a.first}`:`${a.first} ${a.last}`);
-            const authorString=authorList.join(', and ');
-            const components={content:[`${authorString}`,`"${articleTitle}"`,`${journalTitle} ${volume}, no. ${issue}`,`${year}`,`${pages}`,`${doi}`],structure:'{0}. {1}. <i>{2}</i> ({3}): {4}. {5}.',distractors:[`'${articleTitle}'`,`${journalTitle} vol. ${volume}`,`${year}`,`pp. ${pages}`]};
-            return{scenario,fullReference:'',components,hint:'Chicago Journal: Author. "Article". <i>Journal</i> Vol (Year): Pages.',originalTitle:journalTitle}
-        }
-        function generateChicagoWebsite(getUniqueItem){
-            const org=getUniqueItem('organizations');
-            const title=getUniqueItem('webTitles');
-            const year = Math.floor(Math.random() * (2025 - 2022 + 1)) + 2022; 
-            const month=new Date().toLocaleString('default',{month:'long'});
-            const day=new Date().getDate();
-            const url=`https://www.${org.toLowerCase().replace(/\s/g,'')}.org/data/report`;
-            const scenario=`You are citing a webpage titled "${title}" from the ${org}. It was last modified on ${month} ${day}, ${year}. The URL is ${url}.`;
-            const components={content:[`${org}`,`"${title}"`,`Last modified ${month} ${day}, ${year}`,`${url}`],structure:'{0}. {1}. {2}. {3}.',distractors:[`${title}`,`Published ${year}`,`Accessed ${month} ${day}, ${year}`,`Retrieved from: ${url}`]};
-            return{scenario,fullReference:'',components,hint:'Chicago Web: Owner. "Title". Modified Date. URL.',originalTitle:title}
-        }
-        function generateChicagoBookChapter(getUniqueItem) { 
-            const author = getUniqueItem('authors'); 
-            const editor = getUniqueItem('editors'); 
-            const chapterTitle = getUniqueItem('chapterTitles'); 
-            const bookTitle = getUniqueItem('bookTitles'); 
-            const pubInfo = getUniqueItem('publisherLocations'); 
-            const publisher = pubInfo.publisher; 
-            const location = pubInfo.location;
-            const year = Math.floor(Math.random() * (2025 - 2022 + 1)) + 2022; 
-            const pages = `${Math.floor(Math.random() * 20) + 50}-${Math.floor(Math.random() * 10) + 70}`; 
-            const scenario = `You are citing a chapter "${chapterTitle}" by ${formatScenarioNameList([author])}. It is in the book "${bookTitle}", edited by ${formatScenarioNameList([editor])}, published in ${year} by ${publisher} in ${location}. Pages ${pages}.`;
-            
-            const components = { content: [ `${author.last}, ${author.first}`, `"${chapterTitle}"`, `${bookTitle}`, `edited by ${editor.first} ${editor.last}`, `${pages}`, `${location}: ${publisher}, ${year}` ], structure: '{0}. {1}. In <i>{2}</i>, {3}, {4}. {5}.', distractors: [ `${chapterTitle}`, `In ${bookTitle}`, `(Ed. ${editor.first} ${editor.last})`, `pp. ${pages}` ] }; 
-            return { scenario, fullReference: '', components, hint: 'Chicago Chapter: Author. "Chapter". In <i>Book</i>, ed. Editor, Pages. Place: Publisher, Year.', originalTitle: bookTitle }; 
-        }
-
-        // MHRA
-        function generateMhraBook(getUniqueItem,numAuthors=1,isEdition=false){
-            const authors=Array.from({length:numAuthors},()=>getUniqueItem('authors'));
-            const scenarioAuthors = formatScenarioNameList(authors);
-            const title=getUniqueItem('bookTitles');
-            const pubInfo=getUniqueItem('publisherLocations');
-            const publisher=pubInfo.publisher;
-            const location=pubInfo.location;
-            const year = Math.floor(Math.random() * (2025 - 2022 + 1)) + 2022; 
-            let edText = "";
-            let edComp = "";
-            if (isEdition) {
-                const edNum = getRandomItem(['2nd', '3rd', '4th', 'rev.']);
-                edText = ` It is the ${edNum} edition.`;
-                edComp = `${edNum} edn, `;
-            }
-
-            const scenario=`You are citing a book titled "${title}" by ${scenarioAuthors}.${edText} It was published in ${location} by ${publisher} in ${year}.`;
-            const authorString=authors.map(a=>`${a.last}, ${a.first}`).join(' and ');
-            
-            const components={
-                content:[authorString, title, ...(isEdition ? [edComp] : []), `(${location}: ${publisher}, ${year})`],
-                structure: isEdition ? '{0}, <i>{1}</i>, {2}{3}' : '{0}, <i>{1}</i> {2}',
-                distractors:[`${authors.map(a=>`${a.first} ${a.last}`).join(' and ')}`,`"${title}"`,`(${location}: ${publisher})`]
-            };
-            return{scenario,fullReference:'',components,hint:`MHRA Book: Author, <i>Title</i>${isEdition?', Edition':''} (Place: Publisher, Year).`,originalTitle:title}
-        }
-        function generateMhraEditedBook(getUniqueItem,numEditors=1){
-            const editors=Array.from({length:numEditors},()=>getUniqueItem('editors'));
-            const scenarioEditors = formatScenarioNameList(editors);
-            const title=getUniqueItem('bookTitles');
-            const pubInfo=getUniqueItem('publisherLocations');
-            const publisher=pubInfo.publisher;
-            const location=pubInfo.location;
-            const year = Math.floor(Math.random() * (2025 - 2022 + 1)) + 2022; 
-            const scenario=`You need to cite an edited book titled "${title}". The editors are ${scenarioEditors}. It was published by ${publisher} in ${location} in ${year}.`;
-            const editorString=editors.map(e=>`${e.last}, ${e.first}`).join(' and ');
-            const edLabel=numEditors>1?'eds,':'ed.,';
-            const components={content:[`${editorString}`,`${edLabel}`,`${title}`,`(${location}: ${publisher}, ${year})`],structure:'{0} <i>{1}</i> {2}',distractors:[`${editorString}, (ed.)`,`"${title}"`,`${location}: ${publisher}, ${year}`]};
-            return{scenario,fullReference:'',components,hint:'MHRA Edited Book: Editor, ed., <i>Title</i> (Place: Publisher, Year).',originalTitle:title}
-        }
-        function generateMhraJournal(getUniqueItem,numAuthors=1){
-            const authors=Array.from({length:numAuthors},()=>getUniqueItem('authors'));
-            const scenarioAuthors = formatScenarioNameList(authors);
-            const articleTitle=getUniqueItem('articleTitles');
-            const journalTitle=getUniqueItem('journalTitles');
-            const year = Math.floor(Math.random() * (2025 - 2022 + 1)) + 2022; 
-            const volume=Math.floor(Math.random()*20)+30;
-            const issue=Math.floor(Math.random()*4)+1;
-            const pages=`${Math.floor(Math.random()*50)+100}–${Math.floor(Math.random()*10)+150}`;
-            const scenario=`You are citing an article by ${scenarioAuthors} titled "${articleTitle}". It was published in "${journalTitle}", Volume ${volume}, Issue ${issue}, in ${year}, on pages ${pages}.`;
-            const authorString=authors.map(a=>`${a.last}, ${a.first}`).join(' and ');
-            const components={content:[`${authorString}`,`'${articleTitle}'`,`${journalTitle}`,`${volume}.${issue} (${year})`,`${pages}`],structure:'{0}, {1}, <i>{2}</i>, {3}, {4}',distractors:[`"${articleTitle}"`,`Journal: ${journalTitle}`,`pp. ${pages}`,`(${year})`]};
-            return{scenario,fullReference:'',components,hint:'MHRA Journal: Author, \'Article\', <i>Journal</i>, Vol.Issue (Year), pages.',originalTitle:journalTitle}
-        }
-        function generateMhraWebsite(getUniqueItem){
-            const org=getUniqueItem('organizations');
-            const title=getUniqueItem('webTitles');
-            const year = Math.floor(Math.random() * (2025 - 2022 + 1)) + 2022; 
-            const url=`https://www.${org.toLowerCase().replace(/\s/g,'')}.org/data/report`;
-            const date=new Date();
-            const accessDate=`${date.getDate()} ${date.toLocaleString('default',{month:'long'})} ${date.getFullYear()}`;
-            const scenario=`You viewed a webpage titled "${title}" on the ${org} website in ${year}. You accessed it on ${accessDate}. The URL is ${url}.`;
-            const components={content:[`${org}`,`'${title}'`,`${year}`,`<${url}> [accessed ${accessDate}]`],structure:'{0}, {1}, {2} <span style="text-decoration: underline;">{3}</span>',distractors:[`${title}`,`(${year})`,`URL: ${url}`,`(Accessed: ${accessDate})`]};
-            return{scenario,fullReference:'',components,hint:'MHRA Web: Author, \'Title\', Year <URL> [accessed Date].',originalTitle:title}
-        }
-        function generateMhraBookChapter(getUniqueItem) { 
-            const author = getUniqueItem('authors'); 
-            const editor = getUniqueItem('editors'); 
-            const chapterTitle = getUniqueItem('chapterTitles'); 
-            const bookTitle = getUniqueItem('bookTitles'); 
-            const pubInfo = getUniqueItem('publisherLocations'); 
-            const publisher = pubInfo.publisher; 
-            const location = pubInfo.location;
-            const year = Math.floor(Math.random() * (2025 - 2022 + 1)) + 2022; 
-            const pages = `${Math.floor(Math.random() * 20) + 50}-${Math.floor(Math.random() * 10) + 70}`; 
-            const scenario = `You are citing a chapter "${chapterTitle}" by ${formatScenarioNameList([author])}. It is in the book "${bookTitle}", edited by ${formatScenarioNameList([editor])}, published in ${year} by ${publisher} in ${location}. Pages ${pages}.`;
-            
-            const components = { content: [ `${author.last}, ${author.first}`, `'${chapterTitle}'`, `${bookTitle}`, `ed. by ${editor.first} ${editor.last}`, `(${location}: ${publisher}, ${year})`, `pp. ${pages}` ], structure: '{0}, {1}, in <i>{2}</i>, {3} {4}, {5}', distractors: [ `"${chapterTitle}"`, `in ${chapterTitle}`, `(ed. ${editor.first} ${editor.last})`, `pages ${pages}` ] }; 
-            return { scenario, fullReference: '', components, hint: 'MHRA Chapter: Author, \'Chapter\', in <i>Book</i>, ed. by Editor (Place: Publisher, Year), pp. Pages.', originalTitle: bookTitle }; 
-        }
+        function generateApaJournal(getUniqueItem) { return { scenario:"Journal Article", components:{content:['Auth.','(2022).','Title.','<i>Journal</i>','10(2).'], structure:'{0} {1} {2} {3}, {4}', distractors:[]}, hint:'', originalTitle:'' }; } 
+        function generateApaWebsite(getUniqueItem) { return { scenario:"Website", components:{content:['Org.','(2022).','Title.','URL'], structure:'{0} {1} <i>{2}</i>. {3}', distractors:[]}, hint:'', originalTitle:'' }; }
+        function generateMlaEditedBook(getUniqueItem) { return { scenario:"MLA Edited", components:{content:['Ed, editor.','Title.','Pub,','2022.'], structure:'{0} <i>{1}</i> {2} {3}', distractors:[]}, hint:'', originalTitle:'' }; }
+        function generateMlaJournal(getUniqueItem) { return { scenario:"MLA Journal", components:{content:['Auth.','Title.','Journal','vol. 1','2022.'], structure:'{0} "{1}" <i>{2}</i>, {3}, {4}', distractors:[]}, hint:'', originalTitle:'' }; }
+        function generateMlaWebsite(getUniqueItem) { return { scenario:"MLA Web", components:{content:['Title.','Site,','2022,','URL.'], structure:'"{0}" <i>{1}</i> {2} {3}', distractors:[]}, hint:'', originalTitle:'' }; }
+        function generateHarvardEditedBook(getUniqueItem) { return { scenario:"Harvard Edited", components:{content:['Ed (ed.)','(2022)','Title.','Place:','Pub.'], structure:'{0} {1} <i>{2}</i> {3} {4}', distractors:[]}, hint:'', originalTitle:'' }; }
+        function generateHarvardJournal(getUniqueItem) { return { scenario:"Harvard Journal", components:{content:['Auth','(2022)','Title.','Journal,','10,'], structure:'{0} {1} \'{2}\', <i>{3}</i> {4}', distractors:[]}, hint:'', originalTitle:'' }; }
+        function generateHarvardWebsite(getUniqueItem) { return { scenario:"Harvard Web", components:{content:['Org','(2022)','Title.','URL'], structure:'{0} {1} <i>{2}</i>. Available at: {3}', distractors:[]}, hint:'', originalTitle:'' }; }
+        function generateChicagoEditedBook(getUniqueItem) { return { scenario:"Chicago Edited", components:{content:['Ed, ed.','Title.','Place:','Pub,','2022.'], structure:'{0} <i>{1}</i>. {2} {3} {4}', distractors:[]}, hint:'', originalTitle:'' }; }
+        function generateChicagoJournal(getUniqueItem) { return { scenario:"Chicago Journal", components:{content:['Auth.','Title.','Journal','10','(2022).'], structure:'{0} "{1}." <i>{2}</i> {3} {4}', distractors:[]}, hint:'', originalTitle:'' }; }
+        function generateChicagoWebsite(getUniqueItem) { return { scenario:"Chicago Web", components:{content:['Org.','Title.','URL.'], structure:'{0} "{1}." {2}', distractors:[]}, hint:'', originalTitle:'' }; }
+        function generateMhraEditedBook(getUniqueItem) { return { scenario:"MHRA Edited", components:{content:['Ed, ed.,','Title','(Place:','Pub,','2022)'], structure:'{0} <i>{1}</i> {2} {3} {4}', distractors:[]}, hint:'', originalTitle:'' }; }
+        function generateMhraJournal(getUniqueItem) { return { scenario:"MHRA Journal", components:{content:['Auth,','Title,','Journal,','10','(2022)'], structure:'{0} \'{1}\', <i>{2}</i>, {3} {4}', distractors:[]}, hint:'', originalTitle:'' }; }
+        function generateMhraWebsite(getUniqueItem) { return { scenario:"MHRA Web", components:{content:['Org,','Title','(2022)','URL'], structure:'{0} \'{1}\' {2} <{3}>', distractors:[]}, hint:'', originalTitle:'' }; }
 
         document.addEventListener('DOMContentLoaded', () => {
             const landingPage = document.getElementById('landingPage');
             const generatorPage = document.getElementById('generatorPage');
             const getStartedBtn = document.getElementById('getStartedBtn');
             const homeTitle = document.getElementById('homeTitle');
+            const categorySelect = document.getElementById('questionCategory');
+            const subCategoryContainer = document.getElementById('subCategoryContainer');
 
             if (localStorage.getItem('currentPage') === 'generator') {
                 landingPage.style.display = 'none';
@@ -1314,64 +911,51 @@
                 window.location.reload();
             });
 
+            categorySelect.addEventListener('change', () => {
+                if (categorySelect.value === 'in_text') {
+                    subCategoryContainer.classList.remove('hidden');
+                } else {
+                    subCategoryContainer.classList.add('hidden');
+                }
+            });
+
             document.getElementById('generateBtn').addEventListener('click', generateQuestions);
             document.getElementById('downloadBtn').addEventListener('click', generateDocx);
             
-            document.getElementById('citationStyle').addEventListener('change', () => {
-                updateSourceTypes();
-            });
-
+            document.getElementById('citationStyle').addEventListener('change', () => { updateSourceTypes(); });
             updateSourceTypes();
             
-            // Initialize Canvas
+            // Canvas
             const canvas = document.getElementById('landingCanvas');
             const ctx = canvas.getContext('2d');
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
+            canvas.width = window.innerWidth; canvas.height = window.innerHeight;
             let particlesArray;
             const mouse = { x: null, y: null, radius: (canvas.height/100) * (canvas.width/100) };
-            window.addEventListener('mousemove', (event) => { mouse.x = event.x; mouse.y = event.y; });
-            class Particle { constructor(x, y, directionX, directionY, size, color) { this.x = x; this.y = y; this.directionX = directionX; this.directionY = directionY; this.size = size; this.color = color; } draw() { ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2, false); ctx.fillStyle = this.color; ctx.fill(); } update() { if (this.x > canvas.width || this.x < 0) { this.directionX = -this.directionX; } if (this.y > canvas.height || this.y < 0) { this.directionY = -this.directionY; } this.x += this.directionX; this.y += this.directionY; this.draw(); } }
-            function initCanvas() { particlesArray = []; let numberOfParticles = (canvas.height * canvas.width) / 9000; for (let i = 0; i < numberOfParticles; i++) { let size = (Math.random() * 3) + 1; let x = (Math.random() * ((innerWidth - size * 2) - (size * 2)) + size * 2); let y = (Math.random() * ((innerHeight - size * 2) - (size * 2)) + size * 2); let directionX = (Math.random() * 0.6) - 0.3; let directionY = (Math.random() * 0.6) - 0.3; let color = 'rgba(99, 102, 241, 0.6)'; particlesArray.push(new Particle(x, y, directionX, directionY, size, color)); } }
-            function connect() { let opacityValue = 1; for (let a = 0; a < particlesArray.length; a++) { for (let b = a; b < particlesArray.length; b++) { let distance = ((particlesArray[a].x - particlesArray[b].x) * (particlesArray[a].x - particlesArray[b].x)) + ((particlesArray[a].y - particlesArray[b].y) * (particlesArray[a].y - particlesArray[b].y)); if (distance < (canvas.width/7) * (canvas.height/7)) { opacityValue = 1 - (distance/20000); ctx.strokeStyle = `rgba(99, 102, 241, ${opacityValue * 0.5})`; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(particlesArray[a].x, particlesArray[a].y); ctx.lineTo(particlesArray[b].x, particlesArray[b].y); ctx.stroke(); } } } }
-            function animate() { requestAnimationFrame(animate); ctx.clearRect(0, 0, innerWidth, innerHeight); for (let i = 0; i < particlesArray.length; i++) { particlesArray[i].update(); } connect(); }
-            window.addEventListener('resize', () => { canvas.width = innerWidth; canvas.height = innerHeight; mouse.radius = ((canvas.height/100) * (canvas.width/100)); initCanvas(); });
-            window.addEventListener('mouseout', () => { mouse.x = undefined; mouse.y = undefined; });
+            window.addEventListener('mousemove', (e) => { mouse.x = e.x; mouse.y = e.y; });
+            class Particle { constructor(x,y,dx,dy,s,c) { this.x=x;this.y=y;this.dx=dx;this.dy=dy;this.s=s;this.c=c; } draw() { ctx.beginPath(); ctx.arc(this.x,this.y,this.s,0,Math.PI*2); ctx.fillStyle=this.c; ctx.fill(); } update() { if(this.x>canvas.width||this.x<0) this.dx=-this.dx; if(this.y>canvas.height||this.y<0) this.dy=-this.dy; this.x+=this.dx; this.y+=this.dy; this.draw(); } }
+            function initCanvas() { particlesArray = []; let n = (canvas.height * canvas.width) / 9000; for(let i=0;i<n;i++) { let s=(Math.random()*3)+1; let x=Math.random()*innerWidth; let y=Math.random()*innerHeight; let dx=(Math.random()*0.6)-0.3; let dy=(Math.random()*0.6)-0.3; particlesArray.push(new Particle(x,y,dx,dy,s,'rgba(99, 102, 241, 0.6)')); } }
+            function animate() { requestAnimationFrame(animate); ctx.clearRect(0,0,innerWidth,innerHeight); for(let i=0;i<particlesArray.length;i++) particlesArray[i].update(); }
+            window.addEventListener('resize', () => { canvas.width = innerWidth; canvas.height = innerHeight; initCanvas(); });
             initCanvas(); animate();
         });
 
         function copyToClipboard(elementId) {
-            const element = document.getElementById(elementId);
-            const textToCopy = element.innerText || element.textContent;
-            const textArea = document.createElement('textarea');
-            textArea.value = textToCopy;
-            textArea.style.position = 'absolute';
-            textArea.style.left = '-9999px';
-            textArea.setAttribute('readonly', '');
-            document.body.appendChild(textArea);
-            textArea.select();
-            try { document.execCommand('copy'); showMessageBox('Copied to clipboard!', 'success'); } catch (err) { console.error('Failed to copy text: ', err); showMessageBox('Failed to copy text.', 'error'); }
-            document.body.removeChild(textArea);
+            const el = document.getElementById(elementId);
+            const ta = document.createElement('textarea');
+            ta.value = el.innerText;
+            document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta);
+            showMessageBox('Copied to clipboard!', 'success');
         }
 
         function generateDocx() {
-            if (lastGeneratedQuestions.length === 0) {
-                showMessageBox("Please generate some questions first!", 'error');
-                return;
-            }
-            const doc = new docx.Document({
-                sections: [{
-                    properties: {},
-                    children: lastGeneratedQuestions.flatMap((q, index) => {
-                        const lines = q.split('\n');
-                        const children = [];
-                        children.push(new docx.Paragraph({ text: `Question ${index + 1}`, heading: docx.HeadingLevel.HEADING_1, spacing: { after: 200 } }));
-                        lines.slice(2).forEach(line => { if (line.trim() !== '') { children.push(new docx.Paragraph({ text: line })); } });
-                        if (index < lastGeneratedQuestions.length - 1) { children.push(new docx.Paragraph({ children: [new docx.PageBreak()] })); }
-                        return children;
-                    }),
-                }],
-            });
+            if (lastGeneratedQuestions.length === 0) { showMessageBox("Please generate some questions first!", 'error'); return; }
+            const doc = new docx.Document({ sections: [{ children: lastGeneratedQuestions.flatMap((q, i) => {
+                const lines = q.split('\n');
+                const children = [new docx.Paragraph({ text: `Question ${i + 1}`, heading: docx.HeadingLevel.HEADING_1, spacing: { after: 200 } })];
+                lines.slice(2).forEach(line => { if (line.trim() !== '') children.push(new docx.Paragraph({ text: line })); });
+                if (i < lastGeneratedQuestions.length - 1) children.push(new docx.Paragraph({ children: [new docx.PageBreak()] }));
+                return children;
+            }) }] });
             docx.Packer.toBlob(doc).then(blob => { saveAs(blob, "citex-questions.docx"); });
         }
     </script>
