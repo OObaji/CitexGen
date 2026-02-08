@@ -440,6 +440,7 @@
 
         // --- BOOK SCENARIO GENERATOR (8 Scenarios) ---
         function generateBookScenarioData(getUniqueItem, style) {
+            // 1=Single, 2=Two, 3=Three, 4=Four+, 5=Edition, 6=Place, 7=Publisher, 8=Corp/Anon
             const scenario = getRandomItem([1, 2, 3, 4, 5, 6, 7, 8]);
             
             let authors = [];
@@ -448,7 +449,7 @@
             let edition = "";
             let place = getUniqueItem('publisherLocations').location;
             let pub = getUniqueItem('publisherLocations').publisher;
-            let year = Math.floor(Math.random() * (2027 - 2023 + 1)) + 2023; 
+            let year = Math.floor(Math.random() * (2027 - 2023 + 1)) + 2023; // Newer years per examples
             let title = getUniqueItem('bookTitles');
             let distractors = [];
             let scenarioName = "";
@@ -484,7 +485,7 @@
                 authors = [getUniqueItem('authors')];
                 distractors.push(`${pub} Press`, `Pub. ${pub}`);
             } else if (scenario === 8) { // Corp/Anon
-                scenarioName = "Special Author Cases - Corporate (Scenario 8)"; 
+                scenarioName = "Special Author Cases - Corporate (Scenario 8)"; // Or Anon
                 if (Math.random() > 0.5) {
                     isCorp = true;
                     authors = [{ last: getUniqueItem('organizations'), first: '' }];
@@ -498,37 +499,45 @@
             }
             
             let authText = "";
-            if (isCorp) authText = `${authors[0].last}`;
+            if (isCorp) authText = `${authors[0].last}`; // Use full name directly
             else if (isAnon) authText = `an anonymous author`;
             else authText = formatScenarioNameList(authors);
             
             let edText = edition ? `, ${edition} edition` : "";
+            // Exact wording from example: "You are citing a [Year] book titled "[Title]" written by [Authors] published by [Publisher] in [City]."
             let scenarioText = `You are citing a ${edition ? edition + ' edition of a ' : ''}${year} book titled "${title}" ${isCorp || isAnon ? 'published' : 'written'} by ${authText} published by ${pub} in ${place}.`;
 
+            // Style-Specific Formatting Logic
             let components = {};
             let hint = getScenarioHint(style, scenario);
             
             if (style === 'apa7') {
+                // APA 7: Author. (Year). Title (Edition). Publisher. (No Place)
                 let authorStr = "";
-                if (isAnon) authorStr = title; 
+                if (isAnon) authorStr = title; // Title moves to author position
                 else if (isCorp) authorStr = authors[0].last + ".";
                 else {
                     const names = authors.map(a => `${a.last}, ${a.first.charAt(0)}.`);
                     if (names.length > 1) authorStr = names.slice(0, -1).join(', ') + ', & ' + names.slice(-1);
                     else authorStr = names[0];
                 }
+
                 let titleStr = `<i>${title}</i>`;
                 let edStr = edition ? `(${edition} ed.).` : "";
+                
                 if(isAnon) {
                      components = { content: [`<i>${title}</i>.`, `(${year}).`, `${pub}.`], structure: '{0} {1} {2}', distractors: [...distractors, `Anonymous.`] };
                 } else {
+                    // Structure depends on presence of edition
                     components = {
                         content: [authorStr, `(${year}).`, titleStr, ...(edition ? [edStr] : []), `${pub}.`],
-                        structure: edition ? '{0} {1} {2} {3} {4}' : '{0} {1} {2}. {3}', 
+                        structure: edition ? '{0} {1} {2} {3} {4}' : '{0} {1} {2}. {3}',
                         distractors: [...distractors, `${place}`]
                     };
                 }
+            
             } else if (style === 'mla9') {
+                // MLA 9: Author. Title. Publisher, Year.
                 let authorStr = "";
                 if (isAnon) authorStr = "";
                 else if (isCorp) authorStr = authors[0].last + ".";
@@ -539,21 +548,28 @@
                 }
                 let titleStr = `<i>${title}</i>.`;
                 let edStr = edition ? `${edition} ed.,` : "";
+                
                 let content = [];
                 if(authorStr) content.push(authorStr);
                 content.push(titleStr);
                 if(edition) content.push(edStr);
                 content.push(pub + ",", year + ".");
                 
+                // Construct dynamic string based on indices present in content array
+                // e.g. [Auth, Title, Ed, Pub, Year] -> {0} {1} {2} {3} {4}
                 let s = "";
                 for(let i=0; i<content.length; i++) s += `{${i}} `;
                 s = s.trim();
+
                 components = { content: content, structure: s, distractors: [...distractors, `${place}`] };
+            
             } else if (style === 'harvard') {
+                // Harvard: Author (Year) Title. Place: Publisher.
                 let authorStr = "";
                 if (isAnon) authorStr = "Anon.";
                 else if (isCorp) authorStr = authors[0].last;
                 else {
+                    // Scenario 4: 4+ authors -> Use et al. in Harvard (per user request)
                     if (scenario === 4) {
                         authorStr = `${authors[0].last}, ${authors[0].first.charAt(0)}. et al.`;
                     } else {
@@ -563,11 +579,14 @@
                     }
                 }
                 let edStr = edition ? `${edition} edn.` : "";
+                
+                // content array indices: 0=auth, 1=year, 2=title, [3=ed], 3/4=place, 4/5=pub
                 components = {
                     content: [authorStr, `(${year})`, `<i>${title}</i>.`, ...(edition?[edStr]:[]), `${place}:`, `${pub}.`],
-                    structure: edition ? '{0} {1} {2} {3} {4} {5}' : '{0} {1} {2} {3} {4}', 
+                    structure: edition ? '{0} {1} {2} {3} {4} {5}' : '{0} {1} {2} {3} {4}',
                     distractors: distractors
                 };
+
             } else if (style === 'chicago') {
                  let authorStr = "";
                 if(isAnon) authorStr = ""; 
@@ -588,10 +607,14 @@
                 content.push(`${place}:`);
                 content.push(`${pub},`);
                 content.push(`${year}.`);
+                
+                // dynamic structure
                 let s = "";
                 for(let i=0; i<content.length; i++) s += `{${i}} `;
                 s = s.trim();
+
                 components = { content: content, structure: s, distractors: distractors };
+
             } else if (style === 'mhra') {
                 let authorStr = "";
                  if(isAnon) authorStr = "Anon.,";
@@ -602,9 +625,10 @@
                      else authorStr = names[0] + ",";
                  }
                  let edStr = edition ? `, ${edition} edn` : "";
+                 // content indices: 0=auth, 1=title, [2=ed], 2/3=place, 3/4=pub, 4/5=year
                  components = {
                      content: [authorStr, `<i>${title}</i>`, ...(edition?[edStr]:[]), `(${place}:`, `${pub},`, `${year})`],
-                     structure: edition ? '{0} {1}{2} {3} {4} {5}' : '{0} {1} {3} {4} {5}', 
+                     structure: edition ? '{0} {1}{2} {3} {4} {5}' : '{0} {1} {3} {4} {5}',
                      distractors: distractors
                  };
             }
@@ -618,6 +642,7 @@
             const { baseTitle, scenario, components, hint, scenarioName } = questionData;
             
             const totalItems = components.content.length;
+            // Limit to 4 blanks max as requested
             let maxHide = 4;
             let minHide = 2;
             if (totalItems < minHide) minHide = totalItems;
@@ -628,9 +653,13 @@
             const shuffledIndices = shuffleArray(allIndices);
             const draggableIndices = new Set(shuffledIndices.slice(0, draggableCount));
             
+            // Get correct items sorted BY INDEX (so they match the order of appearance in citation)
+            // Filter preserves order of the original array (which is 0, 1, 2...)
             let correctDragItems = components.content.filter((_, i) => draggableIndices.has(i));
-            correctDragItems = shuffleArray([...correctDragItems]);
-
+            
+            // DO NOT SHUFFLE correctDragItems. Keep them in correct sequence order.
+            
+            // Construct Correct Answer Full String
             let fullCorrectString = components.structure;
             allIndices.forEach(i => {
                 fullCorrectString = fullCorrectString.replace(`{${i}}`, components.content[i]);
@@ -638,26 +667,22 @@
             fullCorrectString = cleanHtmlTags(fullCorrectString);
 
             let fixedPartsString = components.structure;
-            const GAP_TOKEN = "___MISSING___";
-            
             allIndices.forEach(i => {
                 const placeholder = `{${i}}`;
                 if (draggableIndices.has(i)) {
-                    fixedPartsString = fixedPartsString.replace(placeholder, GAP_TOKEN);
+                    fixedPartsString = fixedPartsString.replace(placeholder, '||'); 
                 } else {
                     fixedPartsString = fixedPartsString.replace(placeholder, components.content[i]);
                 }
             });
             
-            // Logic to replace GAP_TOKEN based on position
-            fixedPartsString = fixedPartsString.replace(/^\s*___MISSING___/, '|');
-            fixedPartsString = fixedPartsString.replace(/___MISSING___(\s*[.,;:)]*)$/, '|$1');
-            fixedPartsString = fixedPartsString.replace(/___MISSING___/g, '||');
-            
-            // Formatting
-            fixedPartsString = fixedPartsString.replace(/\s+/g, ' ');
-            fixedPartsString = fixedPartsString.replace(/(\|\|?)/g, ' $1 ');
+            // Format pipes
+            fixedPartsString = fixedPartsString.replace(/\s+/g, ' ').replace(/\|\|/g, ' || '); 
             fixedPartsString = fixedPartsString.replace(/\s+/g, ' ').trim();
+            // Start/End single pipe
+            if (fixedPartsString.startsWith('||')) fixedPartsString = '|' + fixedPartsString.substring(2);
+            if (fixedPartsString.endsWith('||')) fixedPartsString = fixedPartsString.substring(0, fixedPartsString.length-2) + '|';
+
 
             const allCorrectComponents = components.content.map(item => cleanHtmlTags(String(item)));
             let smartDistractors = [];
